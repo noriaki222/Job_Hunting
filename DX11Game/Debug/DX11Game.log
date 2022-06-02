@@ -1,0 +1,6 @@
+﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(377,5): warning MSB8004: Output ディレクトリの末尾がスラッシュではありません。Output ディレクトリが適切に評価されるようにするために、このビルド インスタンスによってスラッシュが追加されます。
+  main.cpp
+c:\users\mothu\onedrive\ドキュメント\github\job_hunting\dx11game\main.h(59): warning C4091: 'typedef ': 変数が何も宣言されていないときは、'VERTEX_2D' の左辺を無視します。
+c:\users\mothu\onedrive\ドキュメント\github\job_hunting\dx11game\main.h(67): warning C4091: 'typedef ': 変数が何も宣言されていないときは、'VERTEX_3D' の左辺を無視します。
+LIBCMTD.lib(exe_main.obj) : error LNK2019: 未解決の外部シンボル _main が関数 "int __cdecl invoke_main(void)" (?invoke_main@@YAHXZ) で参照されました。
+C:\Users\mothu\OneDrive\ドキュメント\GitHub\Job_Hunting\Build\DX11Game.exe : fatal error LNK1120: 1 件の未解決の外部参照

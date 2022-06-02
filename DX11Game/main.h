@@ -1,0 +1,77 @@
+// メイン処理
+// Author:Noriaki Osaki
+#pragma once
+
+// インクルード
+#define NOMINMAX
+#include <windows.h>
+#include <tchar.h>
+#include <math.h>
+#include <mmsystem.h>
+#include <DirectXMath.h>
+#include <d3d11.h>
+
+// マクロ定義
+#ifndef SAFE_RELEASE
+#define SAFE_RELEASE(x) {if(x){(x)->Release();x=nullptr;}}
+#endif
+#ifndef SAFE_DELETE
+#define SAFE_DELETE(x) {if(x){delete(x);x=nullptr;}}
+#endif
+#ifndef SAFE_DELETE_ARRAY
+#define SAFE_DELETE_ARRAY(x) {if(x){delete[](x);x=nullptr;}}
+#endif
+
+#define SCREEN_WIDTH	(1280)				// ウインドウの幅
+#define SCREEN_HEIGHT	(720)				// ウインドウの高さ
+#define SCREEN_CENTER_X	(SCREEN_WIDTH/2)	// ウインドウの中心Ｘ座標
+#define SCREEN_CENTER_Y	(SCREEN_HEIGHT/2)	// ウインドウの中心Ｙ座標
+
+#define	NUM_VERTEX		(4)					// 頂点数
+#define	NUM_POLYGON		(2)					// ポリゴン数
+
+#define SinDeg(degree)	sinf(XMConvertToRadians(degree))
+#define CosDeg(degree)	cosf(XMConvertToRadians(degree))
+
+enum EBlendState {
+	BS_NONE = 0,							// 半透明合成無し
+	BS_ALPHABLEND,							// 半透明合成
+	BS_ADDITIVE,							// 加算合成
+	BS_SUBTRACTION,							// 減算合成
+
+	MAX_BLENDSTATE
+};
+
+enum ECullMode {
+	CULLMODE_NONE = 0,						// カリングしない
+	CULLMODE_CW,							// 前面カリング
+	CULLMODE_CCW,							// 背面カリング
+
+	MAX_CULLMODE
+};
+
+// 構造体定義
+typedef struct VERTEX_2D
+{
+	DirectX::XMFLOAT3 vtx;		// 頂点座標
+	DirectX::XMFLOAT4 diffuse;	// 拡散反射光
+	DirectX::XMFLOAT2 tex;		// テクスチャ座標
+};
+
+typedef struct VERTEX_3D
+{
+	DirectX::XMFLOAT3 vtx;		// 頂点座標
+	DirectX::XMFLOAT3 nor;		// 法線ベクトル
+	DirectX::XMFLOAT4 diffuse;	// 拡散反射光
+	DirectX::XMFLOAT2 tex;		// テクスチャ座標
+};
+
+// プロトタイプ宣言
+HWND GetMainWnd();
+HINSTANCE GetInstance();
+ID3D11Device* GetDevice();
+ID3D11DeviceContext* GetDeviceContext();
+void SetZBuffer(bool bEnable);
+void SetZWrite(bool bEnable);
+void SetBlendState(int nBlendState);
+void SetCullMode(int nCullMode);
