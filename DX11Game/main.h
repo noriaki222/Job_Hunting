@@ -1,5 +1,4 @@
 // メイン処理
-// Author:Noriaki Osaki
 #pragma once
 
 // インクルード
