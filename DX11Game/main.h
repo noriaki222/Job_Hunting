@@ -50,26 +50,27 @@ enum ECullMode {
 };
 
 // 構造体定義
-typedef struct VERTEX_2D
+typedef struct
 {
 	DirectX::XMFLOAT3 vtx;		// 頂点座標
 	DirectX::XMFLOAT4 diffuse;	// 拡散反射光
 	DirectX::XMFLOAT2 tex;		// テクスチャ座標
-};
+} VERTEX_2D;
 
-typedef struct VERTEX_3D
+typedef struct
 {
 	DirectX::XMFLOAT3 vtx;		// 頂点座標
 	DirectX::XMFLOAT3 nor;		// 法線ベクトル
 	DirectX::XMFLOAT4 diffuse;	// 拡散反射光
 	DirectX::XMFLOAT2 tex;		// テクスチャ座標
-};
+} VERTEX_3D;
 
 // プロトタイプ宣言
 HWND GetMainWnd();
 HINSTANCE GetInstance();
 ID3D11Device* GetDevice();
 ID3D11DeviceContext* GetDeviceContext();
+ID3D11RenderTargetView* GetRenderTargetView();
 void SetZBuffer(bool bEnable);
 void SetZWrite(bool bEnable);
 void SetBlendState(int nBlendState);

@@ -2,6 +2,8 @@
 
 // インクルード
 #include "main.h"
+#include "Polygon.h"
+#include "Camera.h"
 
 // ライブラリリンク
 #pragma comment(lib, "winmm")
@@ -36,6 +38,8 @@ ID3D11BlendState*			g_pBlendState[MAX_BLENDSTATE];// ブレンド ステート
 ID3D11DepthStencilState*	g_pDSS[2];				// Z/ステンシル ステート
 
 int							g_nCountFPS;			// FPSカウンタ
+
+CCamera g_camera;	// カメラ
 
 
 // メイン関数
@@ -338,6 +342,12 @@ HRESULT Init(HWND hWnd, BOOL bWindow)
 
 	// 以下各クラスの初期化処理を書く
 
+	hr = Polygon::Init(g_pDevice);
+	if (FAILED(hr))
+		return hr;
+
+	g_camera.Init();
+
 	return hr;
 }
 
@@ -354,6 +364,8 @@ void ReleaseBackBuffer()
 void Uninit(void)
 {
 	// 以下各クラスの初期化処理を書く
+
+	Polygon::Fin();
 
 	// 深度ステンシルステート解放
 	for (int i = 0; i < _countof(g_pDSS); ++i) {
@@ -393,7 +405,16 @@ void Update(void)
 // 描画処理
 void Draw(void)
 {
+	//float color[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
+	//g_pDeviceContext->ClearRenderTargetView(g_pRenderTargetView, color);
 	// 各クラスの描画処理を書く
+	
+	g_camera.Clear();
+
+	Polygon::SetPos(0.0f, 0.0f);
+	Polygon::SetSize(500.0f, 500.0f);
+	Polygon::SetColor(0.2f, 0.2f, 1.0f, 1.0f);
+	Polygon::Draw(g_pDeviceContext);
 
 	// バックバッファとフロントバッファの入れ替え
 	g_pSwapChain->Present(g_uSyncInterval, 0);
@@ -421,6 +442,11 @@ ID3D11Device* GetDevice()
 ID3D11DeviceContext* GetDeviceContext()
 {
 	return g_pDeviceContext;
+}
+
+ID3D11RenderTargetView * GetRenderTargetView()
+{
+	return g_pRenderTargetView;
 }
 
 // Zバッファ有効無効制御
