@@ -4,6 +4,7 @@
 #include "main.h"
 #include "Polygon.h"
 #include "Camera.h"
+#include "Texture.h"
 
 // ライブラリリンク
 #pragma comment(lib, "winmm")
@@ -21,6 +22,11 @@ HRESULT Init(HWND hWnd, BOOL bWindow);
 void Uninit(void);
 void Update(void);
 void Draw(void);
+
+namespace
+{
+	const LPCWSTR g_pszPathTexTitle = L"data/texture/title_logo.png";
+}
 
 // グローバル変数
 HWND						g_hWnd;					// メイン ウィンドウ ハンドル
@@ -40,6 +46,8 @@ ID3D11DepthStencilState*	g_pDSS[2];				// Z/ステンシル ステート
 int							g_nCountFPS;			// FPSカウンタ
 
 CCamera g_camera;	// カメラ
+
+ID3D11ShaderResourceView* m_pTex;
 
 
 // メイン関数
@@ -348,6 +356,11 @@ HRESULT Init(HWND hWnd, BOOL bWindow)
 
 	g_camera.Init();
 
+	hr = CreateTextureFromFile(g_pDevice, g_pszPathTexTitle, &m_pTex);
+	if (FAILED(hr)) {
+		return false;
+	}
+
 	return hr;
 }
 
@@ -364,6 +377,8 @@ void ReleaseBackBuffer()
 void Uninit(void)
 {
 	// 以下各クラスの初期化処理を書く
+
+	SAFE_RELEASE(m_pTex);
 
 	Polygon::Fin();
 
@@ -405,15 +420,17 @@ void Update(void)
 // 描画処理
 void Draw(void)
 {
-	//float color[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
-	//g_pDeviceContext->ClearRenderTargetView(g_pRenderTargetView, color);
 	// 各クラスの描画処理を書く
 	
 	g_camera.Clear();
 
+	SetZBuffer(false);
+	SetBlendState(BS_ALPHABLEND);
+	Polygon::SetTexture(m_pTex);
 	Polygon::SetPos(0.0f, 0.0f);
+	Polygon::SetUV(0.0f, 0.0f);
 	Polygon::SetSize(500.0f, 500.0f);
-	Polygon::SetColor(0.2f, 0.2f, 1.0f, 1.0f);
+	Polygon::SetColor(1.0f, 1.0f, 1.0f, 1.0f);
 	Polygon::Draw(g_pDeviceContext);
 
 	// バックバッファとフロントバッファの入れ替え
