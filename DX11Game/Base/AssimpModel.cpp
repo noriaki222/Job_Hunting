@@ -6,7 +6,7 @@
 #include "AssimpModel.h"
 #include "Texture.h"
 #include "Shader.h"
-#include "main.h"
+#include "../main.h"
 
 #ifdef _DEBUG
 #pragma comment(lib, "assimp-vc141-mtd")

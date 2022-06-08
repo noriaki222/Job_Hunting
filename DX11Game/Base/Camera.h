@@ -1,7 +1,7 @@
 // ƒJƒƒ‰ƒNƒ‰ƒX
 
 #pragma once
-#include "main.h"
+#include "../main.h"
 
 class CCamera
 {

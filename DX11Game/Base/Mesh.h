@@ -1,6 +1,6 @@
 // ユーザ定義メッシュ [Mesh.h]
 #pragma once
-#include "main.h"
+#include "../main.h"
 
 class CMeshMaterial {
 public:

@@ -32,6 +32,8 @@
 #define SinDeg(degree)	sinf(XMConvertToRadians(degree))
 #define CosDeg(degree)	cosf(XMConvertToRadians(degree))
 
+#define GRAVITY	(0.8f)
+
 enum EBlendState {
 	BS_NONE = 0,							// 半透明合成無し
 	BS_ALPHABLEND,							// 半透明合成
@@ -64,6 +66,38 @@ typedef struct
 	DirectX::XMFLOAT4 diffuse;	// 拡散反射光
 	DirectX::XMFLOAT2 tex;		// テクスチャ座標
 } VERTEX_3D;
+
+struct Transform
+{
+	DirectX::XMFLOAT3 pos;		// 座標
+	DirectX::XMFLOAT3 rot;		// 回転
+	DirectX::XMFLOAT3 scale;	// スケール
+	
+	static Transform Zero()
+	{
+		Transform work;
+		work.pos = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
+		work.rot = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
+		work.scale = DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f);
+		return work;
+	}
+};
+
+struct RigidBody
+{
+	DirectX::XMFLOAT3 spd;	// 速度
+	DirectX::XMFLOAT3 acc;	// 加速度
+	bool isGravity = false;	// 重力フラグ
+
+	static RigidBody Zero()
+	{
+		RigidBody work;
+		work.spd = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
+		work.acc = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
+		work.isGravity = false;
+		return work;
+	}
+};
 
 // プロトタイプ宣言
 HWND GetMainWnd();

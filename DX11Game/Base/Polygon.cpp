@@ -175,6 +175,52 @@ void Polygon::Draw(ID3D11DeviceContext* pDeviceContext)
 	pDeviceContext->Draw(NUM_VERTEX, 0);
 }
 
+void Polygon::Draw(ID3D11DeviceContext * pDeviceContext, XMFLOAT4X4 mWorld)
+{
+	XMMATRIX mMat;
+	if (m_pTexture) {
+		// 拡縮
+		mMat = XMMatrixScaling(m_vSizeTexFrame.x, m_vSizeTexFrame.y, 1.0f);
+		// 移動
+		mMat *= XMMatrixTranslation(m_vPosTexFrame.x, m_vPosTexFrame.y, 0.0f);
+		// テクスチャ マトリックスに設定
+		XMStoreFloat4x4(&m_mTex, mMat);
+	}
+	else {
+		// テクスチャ無し
+		m_mTex._44 = 0.0f;
+	}
+
+	// 頂点バッファ更新
+	SetVertex();
+
+	pDeviceContext->VSSetShader(m_pVertexShader, nullptr, 0);
+	pDeviceContext->PSSetShader(m_pPixelShader, nullptr, 0);
+	pDeviceContext->IASetInputLayout(m_pInputLayout);
+
+	UINT stride = sizeof(VERTEX_2D);
+	UINT offset = 0;
+	pDeviceContext->IASetVertexBuffers(0, 1, &m_pVertexBuffer, &stride, &offset);
+
+	pDeviceContext->PSSetSamplers(0, 1, &m_pSamplerState);
+	pDeviceContext->PSSetShaderResources(0, 1, &m_pTexture);
+
+	SHADER_GLOBAL cb;
+	cb.mProj = XMMatrixTranspose(XMLoadFloat4x4(&m_mProj));
+	cb.mView = XMMatrixTranspose(XMLoadFloat4x4(&m_mView));
+	cb.mWorld = XMMatrixTranspose(XMLoadFloat4x4(&mWorld));
+	cb.mTex = XMMatrixTranspose(XMLoadFloat4x4(&m_mTex));
+	pDeviceContext->UpdateSubresource(m_pConstantBuffer, 0, nullptr, &cb, 0, 0);
+	pDeviceContext->VSSetConstantBuffers(0, 1, &m_pConstantBuffer);
+	pDeviceContext->PSSetConstantBuffers(0, 1, &m_pConstantBuffer);
+
+	// プリミティブ形状をセット
+	pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+
+	// ポリゴンの描画
+	pDeviceContext->Draw(NUM_VERTEX, 0);
+}
+
 // 頂点の作成
 HRESULT Polygon::MakeVertex(ID3D11Device* pDevice)
 {

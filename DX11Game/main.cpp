@@ -2,9 +2,11 @@
 
 // インクルード
 #include "main.h"
-#include "Polygon.h"
-#include "Camera.h"
-#include "Texture.h"
+#include "Base\Polygon.h"
+#include "Base\Camera.h"
+#include "Base\Texture.h"
+#include "Base\Model.h"
+#include "Test2DObj.h"
 
 // ライブラリリンク
 #pragma comment(lib, "winmm")
@@ -48,6 +50,7 @@ int							g_nCountFPS;			// FPSカウンタ
 CCamera g_camera;	// カメラ
 
 ID3D11ShaderResourceView* m_pTex;
+Test2DObj* g_test;
 
 
 // メイン関数
@@ -356,10 +359,16 @@ HRESULT Init(HWND hWnd, BOOL bWindow)
 
 	g_camera.Init();
 
-	hr = CreateTextureFromFile(g_pDevice, g_pszPathTexTitle, &m_pTex);
+	/*hr = CreateTextureFromFile(g_pDevice, g_pszPathTexTitle, &m_pTex);
 	if (FAILED(hr)) {
-		return false;
-	}
+		return hr;
+	}*/
+	g_test = new Test2DObj;
+	g_test->Init();
+
+	hr = CModel::LoadModel();
+	if (FAILED(hr))
+		return hr;
 
 	return hr;
 }
@@ -377,8 +386,12 @@ void ReleaseBackBuffer()
 void Uninit(void)
 {
 	// 以下各クラスの初期化処理を書く
+	CModel::ReleseModel();
 
-	SAFE_RELEASE(m_pTex);
+	//SAFE_RELEASE(m_pTex);
+	g_test->Uninit();
+	delete g_test;
+	g_test = nullptr;
 
 	Polygon::Fin();
 
@@ -424,14 +437,16 @@ void Draw(void)
 	
 	g_camera.Clear();
 
-	SetZBuffer(false);
+	/*SetZBuffer(false);
 	SetBlendState(BS_ALPHABLEND);
 	Polygon::SetTexture(m_pTex);
 	Polygon::SetPos(0.0f, 0.0f);
 	Polygon::SetUV(0.0f, 0.0f);
 	Polygon::SetSize(500.0f, 500.0f);
 	Polygon::SetColor(1.0f, 1.0f, 1.0f, 1.0f);
-	Polygon::Draw(g_pDeviceContext);
+	Polygon::Draw(g_pDeviceContext);*/
+
+	g_test->Draw();
 
 	// バックバッファとフロントバッファの入れ替え
 	g_pSwapChain->Present(g_uSyncInterval, 0);

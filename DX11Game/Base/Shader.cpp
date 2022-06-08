@@ -2,7 +2,7 @@
 
 #include <stdio.h>
 #include "Shader.h"
-#include "main.h"
+#include "../main.h"
 
 #ifdef D3DCOMPILER
 #include <d3dcompiler.h>

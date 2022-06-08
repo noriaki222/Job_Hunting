@@ -1,6 +1,6 @@
 // 2DÉ|ÉäÉSÉìèàóù
 #pragma once
-#include "main.h"
+#include "../main.h"
 
 class Polygon
 {
@@ -38,6 +38,7 @@ public:
 	static HRESULT Init(ID3D11Device* pDevice);
 	static void Fin();
 	static void Draw(ID3D11DeviceContext* pDeviceContext);
+	static void Draw(ID3D11DeviceContext* pDeviceContext, DirectX::XMFLOAT4X4 mWorld);
 	static void SetTexture(ID3D11ShaderResourceView* pTexture);
 	static void SetPos(float fX, float fY);
 	static void SetSize(float fScaleX, float fScaleY);
