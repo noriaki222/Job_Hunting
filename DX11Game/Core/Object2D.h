@@ -15,7 +15,7 @@ public:
 	virtual void Update();
 	virtual void Draw();
 
-	void SetBlendState(EBlendState state) { m_blendState = state; }
+	void SetLocalBlendState(EBlendState state) { m_blendState = state; }
 	void LoadTexture(const LPCWSTR texPath);
 	void ReleseTexture();
 
