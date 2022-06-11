@@ -30,8 +30,12 @@
 *.exe
 *.out
 *.app
+*.exp
+*.ilk
+*.pdb
 
 # Folder
 Library/
 Build/
 .vs/
+x64/
