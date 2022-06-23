@@ -1,32 +1,40 @@
-// モデル処理
+//=============================================================================
+//
+// モデル クラス定義 [Model.h]
+// Author : HIROHIKO HAMAYA
+//
+//=============================================================================
 #pragma once
+#include "../Core/GameObj.h"
 #include "AssimpModel.h"
 
-enum EModel
-{
-	MODEL_TEST = 0,	// テストモデル
+enum EModel {
+	MODEL_PLAYER = 0,	// プレイヤー モデル
+	MODEL_ENEMY,		// 敵モデル
+	MODEL_SKY,			// スカイドーム
 
 	MAX_MODEL
 };
 
-class CModel
+class CModel : public CGameObj
 {
+private:
+	static CAssimpModel* m_pModels[MAX_MODEL];
+	CAssimpModel* m_pModel;
+
 public:
-	CModel();
+	CModel(CScene* pScene);
 	virtual ~CModel();
 
-	static HRESULT LoadModel();
-	static void ReleseModel();
+	static HRESULT LoadAll();
+	static void ReleaseAll();
 
 	virtual HRESULT Init();
-	virtual void Uninit();
+	virtual void Fin();
 	virtual void Update();
 	virtual void Draw();
 	virtual void DrawAlpha();
 
-	void SetModel(EModel eModel);
-
-private:
-	CAssimpModel* m_pModel;
-	static CAssimpModel* m_pModels[MAX_MODEL];
+	void SetModel(EModel model);
+	static CAssimpModel* GetAssimp(EModel model);
 };

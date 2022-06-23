@@ -1,23 +1,24 @@
-// メイン処理
-
-// インクルード
 #include "main.h"
-#include "Base\Polygon.h"
-#include "Base\Camera.h"
-#include "Base\Texture.h"
 #include "Base\Model.h"
-#include "Test2DObj.h"
+#include "Core\Scene.h"
+#include "Base\Polygon.h"
+#include "Core\Fade.h"
+#include "Base\Mesh.h"
 
-// ライブラリリンク
+//-------- ライブラリのリンク
 #pragma comment(lib, "winmm")
 #pragma comment(lib, "imm32")
 #pragma comment(lib, "d3d11")
 
+//*****************************************************************************
 // マクロ定義
-#define CLASS_NAME	_T("AppClass")
-#define WINDOW_NAME _T("Base_Program")
+//*****************************************************************************
+#define CLASS_NAME		_T("AppClass")		// ウインドウのクラス名
+#define WINDOW_NAME		_T("AT13B192_07_大崎法明_課題03")		// ウインドウのキャプション名
 
+//*****************************************************************************
 // プロトタイプ宣言
+//*****************************************************************************
 LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 int OnCreate(HWND hWnd, LPCREATESTRUCT lpcs);
 HRESULT Init(HWND hWnd, BOOL bWindow);
@@ -25,12 +26,9 @@ void Uninit(void);
 void Update(void);
 void Draw(void);
 
-namespace
-{
-	const LPCWSTR g_pszPathTexTitle = L"data/texture/title_logo.png";
-}
-
-// グローバル変数
+//*****************************************************************************
+// グローバル変数:
+//*****************************************************************************
 HWND						g_hWnd;					// メイン ウィンドウ ハンドル
 HINSTANCE					g_hInst;				// インスタンス ハンドル
 
@@ -47,31 +45,37 @@ ID3D11DepthStencilState*	g_pDSS[2];				// Z/ステンシル ステート
 
 int							g_nCountFPS;			// FPSカウンタ
 
-CCamera g_camera;	// カメラ
-
-ID3D11ShaderResourceView* m_pTex;
-Test2DObj* g_test;
-
-
+//=============================================================================
 // メイン関数
+//=============================================================================
 int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow)
 {
-	UNREFERENCED_PARAMETER(hPrevInstance);
-	UNREFERENCED_PARAMETER(lpCmdLine);
+	UNREFERENCED_PARAMETER(hPrevInstance);	// 未使用宣言
+	UNREFERENCED_PARAMETER(lpCmdLine);		// 未使用宣言
 
 	DWORD dwExecLastTime;
 	DWORD dwFPSLastTime;
 	DWORD dwCurrentTime;
 	DWORD dwFrameCount;
 
-	WNDCLASSEX wcex = { sizeof(WNDCLASSEX), CS_CLASSDC, WndProc, 0, 0, hInstance, nullptr,
-	LoadCursor(nullptr, IDC_ARROW), (HBRUSH)(COLOR_WINDOW + 1), nullptr, CLASS_NAME, nullptr };
-
+	WNDCLASSEX wcex = {
+		sizeof(WNDCLASSEX),
+		CS_CLASSDC,
+		WndProc,
+		0,
+		0,
+		hInstance,
+		NULL,
+		LoadCursor(nullptr, IDC_ARROW),
+		(HBRUSH)(COLOR_WINDOW + 1),
+		nullptr,
+		CLASS_NAME,
+		nullptr
+	};
 	MSG msg;
 
 	// COM初期化
-	if (FAILED(CoInitializeEx(nullptr, COINIT_MULTITHREADED))) 
-	{
+	if (FAILED(CoInitializeEx(nullptr, COINIT_MULTITHREADED))) {
 		MessageBox(NULL, _T("COMの初期化に失敗しました。"), _T("error"), MB_OK);
 		return -1;
 	}
@@ -82,63 +86,66 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdL
 	// ウィンドウクラスの登録
 	RegisterClassEx(&wcex);
 
-	// ウィンドウ サイズ算出
-	DWORD dwStyle = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_BORDER | WS_MINIMIZEBOX;
+	// クライアント領域サイズからウィンドウ サイズ算出
+	DWORD dwStyle = WS_OVERLAPPED | WS_CAPTION
+		| WS_SYSMENU | WS_BORDER | WS_MINIMIZEBOX;
 	DWORD dwExStyle = 0;
 	RECT rc = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
 	AdjustWindowRectEx(&rc, dwStyle, FALSE, dwExStyle);
 
 	// ウィンドウの作成
-	g_hWnd = CreateWindowEx(dwExStyle, CLASS_NAME, WINDOW_NAME, dwStyle, CW_USEDEFAULT, CW_USEDEFAULT,
-		rc.right - rc.left, rc.bottom - rc.top,	nullptr, nullptr, hInstance, nullptr);
+	g_hWnd = CreateWindowEx(dwExStyle,
+		CLASS_NAME,
+		WINDOW_NAME,
+		dwStyle,
+		CW_USEDEFAULT,		// ウィンドウの左座標
+		CW_USEDEFAULT,		// ウィンドウの上座標
+		rc.right - rc.left,	// ウィンドウ横幅
+		rc.bottom - rc.top,	// ウィンドウ縦幅
+		nullptr,
+		nullptr,
+		hInstance,
+		nullptr);
 
 	// フレームカウント初期化
 	timeBeginPeriod(1);				// 分解能を設定
 	dwExecLastTime = dwFPSLastTime = timeGetTime();
 	dwCurrentTime = dwFrameCount = 0;
 
-	// ウインドウの表示
+	// ウインドウの表示(初期化処理の後に呼ばないと駄目)
 	ShowWindow(g_hWnd, nCmdShow);
 	UpdateWindow(g_hWnd);
 
-	// DirectXの初期化
-	if (FAILED(Init(g_hWnd, true))) { return -1;}
+	// DirectXの初期化(ウィンドウを作成してから行う)
+	if (FAILED(Init(g_hWnd, true))) {
+		return -1;
+	}
 
 	// メッセージループ
-	for (;;) 
-	{
-		if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)) 
-		{
-			if (msg.message == WM_QUIT) 
-			{
+	for (;;) {
+		if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)) {
+			if (msg.message == WM_QUIT) {
 				// PostQuitMessage()が呼ばれたらループ終了
 				break;
 			}
-			else 
-			{
+			else {
 				// メッセージの翻訳とディスパッチ
 				TranslateMessage(&msg);
 				DispatchMessage(&msg);
 			}
 		}
-		else 
-		{
+		else {
 			dwCurrentTime = timeGetTime();
-			if ((dwCurrentTime - dwFPSLastTime) >= 500) 
-			{	
-				// 0.5秒ごとに実行
+			if ((dwCurrentTime - dwFPSLastTime) >= 500) {	// 0.5秒ごとに実行
 				g_nCountFPS = dwFrameCount * 1000 / (dwCurrentTime - dwFPSLastTime);
 				dwFPSLastTime = dwCurrentTime;
 				dwFrameCount = 0;
 			}
-			if ((dwCurrentTime - dwExecLastTime) >= (1000 / 60)) 
-			{
+			if ((dwCurrentTime - dwExecLastTime) >= (1000 / 60)) {
 				dwExecLastTime = dwCurrentTime;
-
 				// 更新処理
 				Update();
 			}
-
 			// 描画処理
 			Draw();
 			dwFrameCount++;
@@ -160,25 +167,21 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdL
 	return (int)msg.wParam;
 }
 
+//=============================================================================
 // プロシージャ
+//=============================================================================
 LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	switch (uMsg)
-	{
-	case WM_CREATE:					
-		// ウィンドウが生成された
+	switch (uMsg) {
+	case WM_CREATE:					//----- ウィンドウが生成された
 		return OnCreate(hWnd, (LPCREATESTRUCT)lParam);
-	case WM_DESTROY:				
-		// ウィンドウ破棄指示がきた
-		PostQuitMessage(0);				// システムにスレッドの終了
+	case WM_DESTROY:				//----- ウィンドウ破棄指示がきた
+		PostQuitMessage(0);				// システムにスレッドの終了を要求
 		break;
-	case WM_KEYDOWN:				
-		// キーボードが押された
-		switch (wParam) 
-		{
-		case VK_ESCAPE:
-			// [x]が押されたように振舞う
-			PostMessage(hWnd, WM_CLOSE, 0, 0);
+	case WM_KEYDOWN:				//----- キーボードが押された
+		switch (wParam) {
+		case VK_ESCAPE:					// [ESC]キーが押された
+			PostMessage(hWnd, WM_CLOSE, 0, 0);	// [x]が押されたように振舞う
 			return 0;
 		}
 		break;
@@ -191,16 +194,17 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	return DefWindowProc(hWnd, uMsg, wParam, lParam);
 }
 
-// メッセージハンドラ
+//=============================================================================
+// WM_CREATEメッセージハンドラ
+//=============================================================================
 int OnCreate(HWND hWnd, LPCREATESTRUCT lpcs)
 {
-	// クライアント領域サイズを再設定
+	// クライアント領域サイズをSCREEN_WIDTH×SCREEN_HEIGHTに再設定.
 	RECT rcClnt;
 	GetClientRect(hWnd, &rcClnt);
 	rcClnt.right -= rcClnt.left;
 	rcClnt.bottom -= rcClnt.top;
-	if (rcClnt.right != SCREEN_WIDTH || rcClnt.bottom != SCREEN_HEIGHT) 
-	{
+	if (rcClnt.right != SCREEN_WIDTH || rcClnt.bottom != SCREEN_HEIGHT) {
 		RECT rcWnd;
 		GetWindowRect(hWnd, &rcWnd);
 		SIZE sizeWnd;
@@ -212,10 +216,12 @@ int OnCreate(HWND hWnd, LPCREATESTRUCT lpcs)
 	// IME無効化
 	ImmAssociateContext(hWnd, nullptr);
 
-	return 0;
+	return 0;	// -1を返すとCreateWindow[Ex]が失敗する.
 }
 
+//=============================================================================
 // バックバッファ生成
+//=============================================================================
 HRESULT CreateBackBuffer(void)
 {
 	// レンダーターゲットビュー生成
@@ -237,7 +243,9 @@ HRESULT CreateBackBuffer(void)
 	td.Usage = D3D11_USAGE_DEFAULT;
 	td.BindFlags = D3D11_BIND_DEPTH_STENCIL;
 	HRESULT hr = g_pDevice->CreateTexture2D(&td, nullptr, &g_pDepthStencilTexture);
-	if (FAILED(hr)) { return hr; }
+	if (FAILED(hr)) {
+		return hr;
+	}
 
 	// Zバッファターゲットビュー生成
 	D3D11_DEPTH_STENCIL_VIEW_DESC dsvd;
@@ -246,7 +254,9 @@ HRESULT CreateBackBuffer(void)
 	dsvd.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2DMS;
 	hr = g_pDevice->CreateDepthStencilView(g_pDepthStencilTexture,
 		&dsvd, &g_pDepthStencilView);
-	if (FAILED(hr)) { return hr; }
+	if (FAILED(hr)) {
+		return hr;
+	}
 
 	// 各ターゲットビューをレンダーターゲットに設定
 	g_pDeviceContext->OMSetRenderTargets(1, &g_pRenderTargetView, g_pDepthStencilView);
@@ -264,7 +274,9 @@ HRESULT CreateBackBuffer(void)
 	return S_OK;
 }
 
+//=============================================================================
 // 初期化処理
+//=============================================================================
 HRESULT Init(HWND hWnd, BOOL bWindow)
 {
 	HRESULT hr = S_OK;
@@ -284,8 +296,7 @@ HRESULT Init(HWND hWnd, BOOL bWindow)
 	scd.SampleDesc.Quality = 0;
 	scd.Windowed = bWindow;
 
-	D3D_FEATURE_LEVEL featureLevels[] = 
-	{
+	D3D_FEATURE_LEVEL featureLevels[] = {
 		D3D_FEATURE_LEVEL_11_1,
 		D3D_FEATURE_LEVEL_11_0,
 		D3D_FEATURE_LEVEL_10_1,
@@ -298,11 +309,15 @@ HRESULT Init(HWND hWnd, BOOL bWindow)
 	hr = D3D11CreateDeviceAndSwapChain(nullptr, D3D_DRIVER_TYPE_HARDWARE,
 		nullptr, 0, featureLevels, _countof(featureLevels), D3D11_SDK_VERSION, &scd,
 		&g_pSwapChain, &g_pDevice, nullptr, &g_pDeviceContext);
-	if (FAILED(hr)) { return hr; }
+	if (FAILED(hr)) {
+		return hr;
+	}
 
 	// バックバッファ生成
 	hr = CreateBackBuffer();
-	if (FAILED(hr)) { return hr; }
+	if (FAILED(hr)) {
+		return hr;
+	}
 
 	// ラスタライズ設定
 	D3D11_RASTERIZER_DESC rd;
@@ -351,48 +366,59 @@ HRESULT Init(HWND hWnd, BOOL bWindow)
 	dsd2.DepthEnable = FALSE;
 	g_pDevice->CreateDepthStencilState(&dsd2, &g_pDSS[1]);
 
-	// 以下各クラスの初期化処理を書く
-
+	// ポリゴン表示初期化
 	hr = Polygon::Init(g_pDevice);
 	if (FAILED(hr))
 		return hr;
 
-	g_camera.Init();
+	// モデル初期化
+	hr = CModel::LoadAll();
+	if (FAILED(hr))
+		return E_FAIL;
 
-	/*hr = CreateTextureFromFile(g_pDevice, g_pszPathTexTitle, &m_pTex);
-	if (FAILED(hr)) {
-		return hr;
-	}*/
-	g_test = new Test2DObj;
-	g_test->Init();
+	// フェード初期化
+	CFade::Init();
 
-	hr = CModel::LoadModel();
+	// メッシュ用シェーダー初期化
+	hr = CMesh::InitShader();
 	if (FAILED(hr))
 		return hr;
+
+	// シーン初期化
+	if (!CScene::InitAll())
+		return E_FAIL;
 
 	return hr;
 }
 
+//=============================================================================
 // バックバッファ解放
+//=============================================================================
 void ReleaseBackBuffer()
 {
-	if (g_pDeviceContext) {	g_pDeviceContext->OMSetRenderTargets(0, nullptr, nullptr); }
+	if (g_pDeviceContext) {
+		g_pDeviceContext->OMSetRenderTargets(0, nullptr, nullptr);
+	}
 	SAFE_RELEASE(g_pDepthStencilView);
 	SAFE_RELEASE(g_pDepthStencilTexture);
 	SAFE_RELEASE(g_pRenderTargetView);
 }
 
+//=============================================================================
 // 終了処理
+//=============================================================================
 void Uninit(void)
 {
-	// 以下各クラスの初期化処理を書く
-	CModel::ReleseModel();
+	// シーン終了処理
+	CScene::FinAll();
 
-	//SAFE_RELEASE(m_pTex);
-	g_test->Uninit();
-	delete g_test;
-	g_test = nullptr;
+	// メッシュ用シェーダー終了処理
+	CMesh::FinShader();
 
+	// モデル解放処理
+	CModel::ReleaseAll();
+
+	// ポリゴン表示終了処理
 	Polygon::Fin();
 
 	// 深度ステンシルステート解放
@@ -423,77 +449,84 @@ void Uninit(void)
 	SAFE_RELEASE(g_pDevice);
 }
 
+//=============================================================================
 // 更新処理
+//=============================================================================
 void Update(void)
 {
-	// 各クラスの更新処理を書く
+	// シーン更新
+	CScene::UpdateAll();
 
+	// フェード更新
+	CFade::Update();
 }
 
+//=============================================================================
 // 描画処理
+//=============================================================================
 void Draw(void)
 {
-	// 各クラスの描画処理を書く
-	
-	g_camera.Clear();
+	// シーン描画
+	CScene::DrawAll();
 
-	/*SetZBuffer(false);
-	SetBlendState(BS_ALPHABLEND);
-	Polygon::SetTexture(m_pTex);
-	Polygon::SetPos(0.0f, 0.0f);
-	Polygon::SetUV(0.0f, 0.0f);
-	Polygon::SetSize(500.0f, 500.0f);
-	Polygon::SetColor(1.0f, 1.0f, 1.0f, 1.0f);
-	Polygon::Draw(g_pDeviceContext);*/
-
-	g_test->Draw();
+	// フェード描画
+	CFade::Draw();
 
 	// バックバッファとフロントバッファの入れ替え
 	g_pSwapChain->Present(g_uSyncInterval, 0);
 }
 
-// メインウィンドウハンドル取得
+//=============================================================================
+// メイン ウィンドウ ハンドル取得
+//=============================================================================
 HWND GetMainWnd()
 {
 	return g_hWnd;
 }
 
-// インスタンスハンドル取得
+//=============================================================================
+// インスタンス ハンドル取得
+//=============================================================================
 HINSTANCE GetInstance()
 {
 	return g_hInst;
 }
 
+//=============================================================================
 // デバイス取得
+//=============================================================================
 ID3D11Device* GetDevice()
 {
 	return g_pDevice;
 }
 
-// デバイスコンテキスト取得
+//=============================================================================
+// デバイス コンテキスト取得
+//=============================================================================
 ID3D11DeviceContext* GetDeviceContext()
 {
 	return g_pDeviceContext;
 }
 
-ID3D11RenderTargetView * GetRenderTargetView()
-{
-	return g_pRenderTargetView;
-}
-
-// Zバッファ有効無効制御
+//=============================================================================
+// 深度バッファ有効無効制御
+//=============================================================================
 void SetZBuffer(bool bEnable)
 {
 	g_pDeviceContext->OMSetDepthStencilState((bEnable) ? nullptr : g_pDSS[1], 0);
 }
 
-// Zバッファ更新有効無効制御
+//=============================================================================
+// 深度バッファ更新有効無効制御
+//=============================================================================
 void SetZWrite(bool bEnable)
 {
 	g_pDeviceContext->OMSetDepthStencilState((bEnable) ? nullptr : g_pDSS[0], 0);
 }
 
-// ブレンドステート設定
+//=============================================================================
+// ブレンド ステート設定
+//=============================================================================
 void SetBlendState(int nBlendState)
 {
 	if (nBlendState >= 0 && nBlendState < MAX_BLENDSTATE) {
@@ -502,7 +535,9 @@ void SetBlendState(int nBlendState)
 	}
 }
 
+//=============================================================================
 // カリング設定
+//=============================================================================
 void SetCullMode(int nCullMode)
 {
 	if (nCullMode >= 0 && nCullMode < MAX_CULLMODE) {
