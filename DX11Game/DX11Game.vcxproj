@@ -159,9 +159,11 @@
     <ClCompile Include="Base\Shader.cpp" />
     <ClCompile Include="Base\Texture.cpp" />
     <ClCompile Include="Core\Object2D.cpp" />
+    <ClCompile Include="Core\Object3D.cpp" />
     <ClCompile Include="Core\ObjectBase.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Test2DObj.cpp" />
+    <ClCompile Include="Test3D.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base\AssimpModel.h" />
@@ -172,9 +174,11 @@
     <ClInclude Include="Base\Shader.h" />
     <ClInclude Include="Base\Texture.h" />
     <ClInclude Include="Core\Object2D.h" />
+    <ClInclude Include="Core\Object3D.h" />
     <ClInclude Include="Core\ObjectBase.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="Test2DObj.h" />
+    <ClInclude Include="Test3D.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Asset\Shader\AssimpPixel.hlsl">

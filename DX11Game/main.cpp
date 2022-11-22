@@ -7,6 +7,7 @@
 #include "Base\Texture.h"
 #include "Base\Model.h"
 #include "Test2DObj.h"
+#include "Test3D.h"
 
 // ライブラリリンク
 #pragma comment(lib, "winmm")
@@ -51,6 +52,7 @@ CCamera g_camera;	// カメラ
 
 ID3D11ShaderResourceView* m_pTex;
 Test2DObj* g_test;
+Test3D* g_test3D;
 
 
 // メイン関数
@@ -363,12 +365,16 @@ HRESULT Init(HWND hWnd, BOOL bWindow)
 	if (FAILED(hr)) {
 		return hr;
 	}*/
-	g_test = new Test2DObj;
-	g_test->Init();
-
 	hr = CModel::LoadModel();
 	if (FAILED(hr))
 		return hr;
+
+	g_test = new Test2DObj;
+	g_test->Init();
+
+	g_test3D = new Test3D;
+	g_test3D->Init();
+
 
 	return hr;
 }
@@ -386,12 +392,17 @@ void ReleaseBackBuffer()
 void Uninit(void)
 {
 	// 以下各クラスの初期化処理を書く
-	CModel::ReleseModel();
 
 	//SAFE_RELEASE(m_pTex);
+	g_test3D->Uninit();
+	delete g_test3D;
+	g_test3D = nullptr;
+
 	g_test->Uninit();
 	delete g_test;
 	g_test = nullptr;
+
+	CModel::ReleseModel();
 
 	Polygon::Fin();
 
@@ -427,7 +438,7 @@ void Uninit(void)
 void Update(void)
 {
 	// 各クラスの更新処理を書く
-
+	g_camera.Update();
 }
 
 // 描画処理
@@ -437,14 +448,7 @@ void Draw(void)
 	
 	g_camera.Clear();
 
-	/*SetZBuffer(false);
-	SetBlendState(BS_ALPHABLEND);
-	Polygon::SetTexture(m_pTex);
-	Polygon::SetPos(0.0f, 0.0f);
-	Polygon::SetUV(0.0f, 0.0f);
-	Polygon::SetSize(500.0f, 500.0f);
-	Polygon::SetColor(1.0f, 1.0f, 1.0f, 1.0f);
-	Polygon::Draw(g_pDeviceContext);*/
+	g_test3D->Draw();
 
 	g_test->Draw();
 

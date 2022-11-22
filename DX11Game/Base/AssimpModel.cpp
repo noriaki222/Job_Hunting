@@ -472,19 +472,22 @@ void CAssimpMesh::SetBoneMatrix(ID3D11DeviceContext* pDC, XMFLOAT4X4 mtxBone[])
 }
 
 // 描画
-void CAssimpMesh::Draw(ID3D11DeviceContext* pDC, XMFLOAT4X4& m44World, EByOpacity byOpacity)
+void CAssimpMesh::Draw(ID3D11DeviceContext* pDC, XMFLOAT4X4& m44World, float alpha,EByOpacity byOpacity)
 {
 	// ユーザ定義マテリアル
 	TAssimpMaterial* pMaterial = m_pModel->GetMaterial();
 	if (!pMaterial)
 		pMaterial = &m_material;
+
+	XMFLOAT4 AlphaDiff = pMaterial->Kd;
+	AlphaDiff.w *= alpha;
 	// 透明度による描画切替
 	switch (byOpacity) {
 	case eOpacityOnly:
-		if (pMaterial->Kd.w < 1.0f) return;
+		if (AlphaDiff.w < 1.0f) return;
 		break;
 	case eTransparentOnly:
-		if (pMaterial->Kd.w >= 1.0f) return;
+		if (AlphaDiff.w >= 1.0f) return;
 		break;
 	default:
 		break;
@@ -538,7 +541,7 @@ void CAssimpMesh::Draw(ID3D11DeviceContext* pDC, XMFLOAT4X4& m44World, EByOpacit
 	if (SUCCEEDED(pDC->Map(m_pConstantBuffer1, 0, D3D11_MAP_WRITE_DISCARD, 0, &pData))) {
 		SHADER_MATERIAL sg;
 		sg.vAmbient = XMLoadFloat4(&pMaterial->Ka);
-		sg.vDiffuse = XMLoadFloat4(&pMaterial->Kd);
+		sg.vDiffuse = XMLoadFloat4(&AlphaDiff);
 		sg.vSpecular = XMLoadFloat4(&pMaterial->Ks);
 		sg.vEmissive = XMLoadFloat4(&pMaterial->Ke);
 		sg.vFlags = XMLoadUInt4(&vFlags);
@@ -573,7 +576,7 @@ ID3D11PixelShader* CAssimpModel::m_pPixelShader;
 ID3D11SamplerState* CAssimpModel::m_pSampleLinear;
 
 // コンストラクタ
-CAssimpModel::CAssimpModel() : m_pMaterial(nullptr), m_pScene(nullptr), m_pAnimator(nullptr)
+CAssimpModel::CAssimpModel() : m_pMaterial(nullptr), m_pScene(nullptr), m_pAnimator(nullptr), m_alpha(1.0f)
 {
 	XMStoreFloat4x4(&m_mtxTexture, XMMatrixIdentity());
 	XMStoreFloat4x4(&m_mtxWorld, XMMatrixIdentity());

@@ -198,7 +198,7 @@ public:
 	CAssimpMesh(ID3D11Device* pDevice, CAssimpModel* pModel, std::vector<TAssimpVertex> aVertex, std::vector<UINT> aIndex, TAssimpMaterial& material);
 	virtual ~CAssimpMesh();
 
-	void Draw(ID3D11DeviceContext* pDC, DirectX::XMFLOAT4X4& mtxWorld, EByOpacity byOpacity = eNoAffect);
+	void Draw(ID3D11DeviceContext* pDC, DirectX::XMFLOAT4X4& mtxWorld, float alpha = 1.0f, EByOpacity byOpacity = eNoAffect);
 	void Release();
 
 	void SetBoneMatrix(ID3D11DeviceContext* pDC, DirectX::XMFLOAT4X4 mtxBone[]);
@@ -248,6 +248,7 @@ public:
 
 	DirectX::XMFLOAT4X4& GetTextureMatrix();
 	void SetTextureMatrix(DirectX::XMFLOAT4X4& mtxTexture);
+	void SetAlpha(float alpha = 1.0f) { m_alpha = alpha; }
 	bool Load(ID3D11Device* pDevice, ID3D11DeviceContext* pDC, std::string filename);
 	void Draw(ID3D11DeviceContext* pDC, DirectX::XMFLOAT4X4& mtxWorld, EByOpacity byOpacity = eNoAffect);
 	void DrawNode(ID3D11DeviceContext* pDC, aiNode* piNode, const aiMatrix4x4& piMatrix, EByOpacity byOpacity);
@@ -269,6 +270,7 @@ public:
 	void GetVertex(TAssimpVertex* pVertex, UINT* pIndex);
 
 private:
+	float m_alpha;
 	void ScaleAsset();
 	void CalculateBounds(aiNode* piNode, aiVector3D* p_avOut, const aiMatrix4x4& piMatrix);
 	void CalculateRadius(aiNode* piNode, float& fRadius, const aiMatrix4x4& piMatrix);

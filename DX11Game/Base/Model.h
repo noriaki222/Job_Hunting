@@ -1,4 +1,4 @@
-// モデル処理
+// モデルデータ
 #pragma once
 #include "AssimpModel.h"
 
@@ -18,15 +18,8 @@ public:
 	static HRESULT LoadModel();
 	static void ReleseModel();
 
-	virtual HRESULT Init();
-	virtual void Uninit();
-	virtual void Update();
-	virtual void Draw();
-	virtual void DrawAlpha();
-
-	void SetModel(EModel eModel);
+	static CAssimpModel* GetModel(EModel eModel);
 
 private:
-	CAssimpModel* m_pModel;
 	static CAssimpModel* m_pModels[MAX_MODEL];
 };

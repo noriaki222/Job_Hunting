@@ -1,4 +1,4 @@
-// モデル処理
+// モデルデータ
 #include "Model.h"
 
 namespace
@@ -6,7 +6,7 @@ namespace
 	// ファイル名
 	LPCSTR g_pszModelPath[MAX_MODEL] =
 	{
-		"data/model/flyModel.x",
+		"data/model/sky.fbx",
 	};
 }
 
@@ -56,27 +56,11 @@ void CModel::ReleseModel()
 	CAssimpModel::UninitShader();
 }
 
-HRESULT CModel::Init()
+CAssimpModel * CModel::GetModel(EModel eModel)
 {
-	return S_OK;
-}
-
-void CModel::Uninit()
-{
-}
-
-void CModel::Update()
-{
-}
-
-void CModel::Draw()
-{
-}
-
-void CModel::DrawAlpha()
-{
-}
-
-void CModel::SetModel(EModel eModel)
-{
+	if (eModel >= EModel::MODEL_TEST && eModel < EModel::MAX_MODEL)
+	{
+		return m_pModels[eModel];
+	}
+	return nullptr;
 }
