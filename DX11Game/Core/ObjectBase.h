@@ -1,3 +1,4 @@
+// オブジェクト継承用クラス
 #pragma once
 #include "../main.h"
 
