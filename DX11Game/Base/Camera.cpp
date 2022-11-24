@@ -53,7 +53,7 @@ void CCamera::Init()
 void CCamera::Update()
 {
 	// マトリックス更新
-	UpdateMatrix();
+	//UpdateMatrix();
 }
 
 // 画面クリア

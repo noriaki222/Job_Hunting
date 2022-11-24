@@ -4,6 +4,7 @@
 #include "Base\Polygon.h"
 #include "Core\Fade.h"
 #include "Base\Mesh.h"
+#include "Test3D.h"
 
 //-------- ライブラリのリンク
 #pragma comment(lib, "winmm")
@@ -455,10 +456,12 @@ void Uninit(void)
 void Update(void)
 {
 	// シーン更新
-	CScene::UpdateAll();
+	//CScene::UpdateAll();
+
+	CCamera::Get()->UpdateMatrix();
 
 	// フェード更新
-	CFade::Update();
+	//CFade::Update();
 }
 
 //=============================================================================
@@ -466,11 +469,21 @@ void Update(void)
 //=============================================================================
 void Draw(void)
 {
+	CCamera::Get()->Clear();
+	
 	// シーン描画
-	CScene::DrawAll();
+	//CScene::DrawAll();
+
+	CAssimpModel* model = CModel::GetAssimp(MODEL_PLAYER);
+	DirectX::XMMATRIX mat = DirectX::XMMatrixIdentity();
+	DirectX::XMFLOAT4X4 world;
+	DirectX::XMStoreFloat4x4(&world, mat);
+	model->Draw(GetDeviceContext(), world, eOpacityOnly);
 
 	// フェード描画
-	CFade::Draw();
+	//CFade::Draw();
+
+
 
 	// バックバッファとフロントバッファの入れ替え
 	g_pSwapChain->Present(g_uSyncInterval, 0);

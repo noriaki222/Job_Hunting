@@ -93,7 +93,7 @@ void CScene::DrawAll()
 	if (m_pScene) {
 		CCamera* pCamera = CCamera::Get();
 		if (pCamera) {
-			pCamera->Clear();
+			//pCamera->Clear();
 		}
 		m_pScene->Draw();
 	}
