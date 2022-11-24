@@ -450,7 +450,7 @@ void Draw(void)
 	
 	g_camera.Clear();
 
-	g_test3D->Draw();
+	//g_test3D->Draw();
 
 	CAssimpModel* model = CModel::GetModel(EModel::MODEL_TEST);
 	DirectX::XMFLOAT4X4 mat;
@@ -459,7 +459,7 @@ void Draw(void)
 	model->SetAlpha(1.0f);
 	model->Draw(GetDeviceContext(), mat, eOpacityOnly);
 
-	g_test->Draw();
+	//g_test->Draw();
 
 	// バックバッファとフロントバッファの入れ替え
 	g_pSwapChain->Present(g_uSyncInterval, 0);
