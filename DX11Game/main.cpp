@@ -3,7 +3,6 @@
 // インクルード
 #include "main.h"
 #include "Base\Polygon.h"
-#include "Base\Camera.h"
 #include "Base\Texture.h"
 #include "Base\Model.h"
 #include "Test2DObj.h"
@@ -26,11 +25,6 @@ void Uninit(void);
 void Update(void);
 void Draw(void);
 
-namespace
-{
-	const LPCWSTR g_pszPathTexTitle = L"data/texture/title_logo.png";
-}
-
 // グローバル変数
 HWND						g_hWnd;					// メイン ウィンドウ ハンドル
 HINSTANCE					g_hInst;				// インスタンス ハンドル
@@ -48,9 +42,6 @@ ID3D11DepthStencilState*	g_pDSS[2];				// Z/ステンシル ステート
 
 int							g_nCountFPS;			// FPSカウンタ
 
-CCamera g_camera;	// カメラ
-
-ID3D11ShaderResourceView* m_pTex;
 Test2DObj* g_test;
 Test3D* g_test3D;
 
@@ -359,12 +350,6 @@ HRESULT Init(HWND hWnd, BOOL bWindow)
 	if (FAILED(hr))
 		return hr;
 
-	g_camera.Init();
-
-	/*hr = CreateTextureFromFile(g_pDevice, g_pszPathTexTitle, &m_pTex);
-	if (FAILED(hr)) {
-		return hr;
-	}*/
 	hr = CModel::LoadModel();
 	if (FAILED(hr))
 		return hr;
@@ -392,8 +377,6 @@ void ReleaseBackBuffer()
 void Uninit(void)
 {
 	// 以下各クラスの初期化処理を書く
-
-	//SAFE_RELEASE(m_pTex);
 	g_test3D->Uninit();
 	delete g_test3D;
 	g_test3D = nullptr;
@@ -438,28 +421,18 @@ void Uninit(void)
 void Update(void)
 {
 	// 各クラスの更新処理を書く
-	g_camera.Update();
-
-	g_test3D->Update();
+	CCamera::Get()->UpdateMatrix();
 }
 
 // 描画処理
 void Draw(void)
 {
 	// 各クラスの描画処理を書く
-	
-	g_camera.Clear();
+	CCamera::Get()->Clear();
 
-	//g_test3D->Draw();
+	g_test3D->Draw();
 
-	CAssimpModel* model = CModel::GetModel(EModel::MODEL_TEST);
-	DirectX::XMFLOAT4X4 mat;
-	DirectX::XMMATRIX mtx = DirectX::XMMatrixIdentity();
-	DirectX::XMStoreFloat4x4(&mat, mtx);
-	model->SetAlpha(1.0f);
-	model->Draw(GetDeviceContext(), mat, eOpacityOnly);
-
-	//g_test->Draw();
+	g_test->Draw();
 
 	// バックバッファとフロントバッファの入れ替え
 	g_pSwapChain->Present(g_uSyncInterval, 0);

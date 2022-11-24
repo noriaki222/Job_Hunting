@@ -63,7 +63,7 @@ void CCamera::Clear()
 	extern ID3D11RenderTargetView* g_pRenderTargetView;
 	extern ID3D11DepthStencilView* g_pDepthStencilView;
 
-	float ClearColor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
+	float ClearColor[4] = { 0.117647f, 0.254902f, 0.352941f, 1.0f };
 	ID3D11DeviceContext* pDC = GetDeviceContext();
 	pDC->ClearRenderTargetView(g_pRenderTargetView, ClearColor);
 	pDC->ClearDepthStencilView(g_pDepthStencilView,
