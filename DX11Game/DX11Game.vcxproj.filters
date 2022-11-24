@@ -119,6 +119,9 @@
     <ClInclude Include="Core\Object3D.h">
       <Filter>ヘッダー ファイル\Core</Filter>
     </ClInclude>
+    <ClInclude Include="Base\Mesh.h">
+      <Filter>ヘッダー ファイル\Base</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Asset\Shader\Pixel2D.hlsl">

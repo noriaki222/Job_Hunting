@@ -27,6 +27,7 @@ void Object3D::Draw()
 	
 	ID3D11DeviceContext* pDC = GetDeviceContext();
 	// •s“§–¾•`‰æ
+	SetBlendState(BS_NONE);
 	m_model->SetAlpha(m_color.w);
 	m_model->Draw(pDC, m_mWorld, eOpacityOnly);
 

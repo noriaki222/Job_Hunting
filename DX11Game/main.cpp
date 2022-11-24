@@ -439,6 +439,8 @@ void Update(void)
 {
 	// 各クラスの更新処理を書く
 	g_camera.Update();
+
+	g_test3D->Update();
 }
 
 // 描画処理
@@ -449,6 +451,13 @@ void Draw(void)
 	g_camera.Clear();
 
 	g_test3D->Draw();
+
+	CAssimpModel* model = CModel::GetModel(EModel::MODEL_TEST);
+	DirectX::XMFLOAT4X4 mat;
+	DirectX::XMMATRIX mtx = DirectX::XMMatrixIdentity();
+	DirectX::XMStoreFloat4x4(&mat, mtx);
+	model->SetAlpha(1.0f);
+	model->Draw(GetDeviceContext(), mat, eTransparentOnly);
 
 	g_test->Draw();
 
