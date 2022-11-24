@@ -1,10 +1,7 @@
 #include "main.h"
 #include "Base\Model.h"
-#include "Core\Scene.h"
 #include "Base\Polygon.h"
-#include "Core\Fade.h"
 #include "Base\Mesh.h"
-#include "Test3D.h"
 
 //-------- ライブラリのリンク
 #pragma comment(lib, "winmm")
@@ -378,16 +375,16 @@ HRESULT Init(HWND hWnd, BOOL bWindow)
 		return E_FAIL;
 
 	// フェード初期化
-	CFade::Init();
+	//CFade::Init();
 
 	// メッシュ用シェーダー初期化
-	hr = CMesh::InitShader();
+	/*hr = CMesh::InitShader();
 	if (FAILED(hr))
-		return hr;
+		return hr;*/
 
-	// シーン初期化
-	if (!CScene::InitAll())
-		return E_FAIL;
+	//// シーン初期化
+	//if (!CScene::InitAll())
+	//	return E_FAIL;
 
 	return hr;
 }
@@ -411,10 +408,10 @@ void ReleaseBackBuffer()
 void Uninit(void)
 {
 	// シーン終了処理
-	CScene::FinAll();
+	//CScene::FinAll();
 
 	// メッシュ用シェーダー終了処理
-	CMesh::FinShader();
+	//CMesh::FinShader();
 
 	// モデル解放処理
 	CModel::ReleaseAll();

@@ -1,2 +1,29 @@
-﻿  main.cpp
+﻿  compilation object save succeeded; see C:\Users\mothu\OneDrive\ドキュメント\GitHub\Job_Hunting\DX11Game\data\shader\AssimpPixel.cso
+  compilation object save succeeded; see C:\Users\mothu\OneDrive\ドキュメント\GitHub\Job_Hunting\DX11Game\data\shader\AssimpVertex.cso
+  compilation object save succeeded; see C:\Users\mothu\OneDrive\ドキュメント\GitHub\Job_Hunting\DX11Game\data\shader\Pixel.cso
+  compilation object save succeeded; see C:\Users\mothu\OneDrive\ドキュメント\GitHub\Job_Hunting\DX11Game\data\shader\Pixel2D.cso
+  compilation object save succeeded; see C:\Users\mothu\OneDrive\ドキュメント\GitHub\Job_Hunting\DX11Game\data\shader\Vertex.cso
+  compilation object save succeeded; see C:\Users\mothu\OneDrive\ドキュメント\GitHub\Job_Hunting\DX11Game\data\shader\Vertex2D.cso
+  AssimpModel.cpp
+  Camera.cpp
+  Light.cpp
+  Mesh.cpp
+  Model.cpp
+  Polygon.cpp
+  Shader.cpp
+  Texture.cpp
+  Fade.cpp
+  GameObj.cpp
+  Object2D.cpp
+  ObjectBase.cpp
+  Scene.cpp
+c:\users\mothu\onedrive\ドキュメント\github\job_hunting\dx11game\scene\game.h(10): warning C4067: プリプロセッサ ディレクティブの後に余分な文字がありました - 改行が必要です
+  main.cpp
+  Game.cpp
+c:\users\mothu\onedrive\ドキュメント\github\job_hunting\dx11game\scene\game.h(10): warning C4067: プリプロセッサ ディレクティブの後に余分な文字がありました - 改行が必要です
+  Title.cpp
+  Test2DObj.cpp
+  Test3D.cpp
+  コードを生成中...
+     ライブラリ C:\Users\mothu\OneDrive\ドキュメント\GitHub\Job_Hunting\DX11Game\DX11Game.lib とオブジェクト C:\Users\mothu\OneDrive\ドキュメント\GitHub\Job_Hunting\DX11Game\DX11Game.exp を作成中
   DX11Game.vcxproj -> C:\Users\mothu\OneDrive\ドキュメント\GitHub\Job_Hunting\DX11Game\DX11Game.exe
