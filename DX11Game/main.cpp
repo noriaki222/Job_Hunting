@@ -457,7 +457,7 @@ void Draw(void)
 	DirectX::XMMATRIX mtx = DirectX::XMMatrixIdentity();
 	DirectX::XMStoreFloat4x4(&mat, mtx);
 	model->SetAlpha(1.0f);
-	model->Draw(GetDeviceContext(), mat, eTransparentOnly);
+	model->Draw(GetDeviceContext(), mat, eOpacityOnly);
 
 	g_test->Draw();
 
