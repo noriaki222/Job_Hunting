@@ -18,9 +18,6 @@ ID3D11ShaderResourceView*	Polygon::m_pTexture;				// テクスチャへのポインタ
 
 VERTEX_2D					Polygon::m_vertexWk[NUM_VERTEX];	// 頂点情報格納ワーク
 
-XMFLOAT3					Polygon::m_vPos;					// ポリゴンの移動量
-XMFLOAT3					Polygon::m_vAngle;					// ポリゴンの回転量
-XMFLOAT3					Polygon::m_vScale;					// ポリゴンのサイズ
 XMFLOAT4					Polygon::m_vColor;					// ポリゴンの頂点カラー
 bool						Polygon::m_bInvalidate;			// 頂点データ更新フラグ
 
@@ -87,9 +84,6 @@ HRESULT Polygon::Init(ID3D11Device* pDevice)
 	XMStoreFloat4x4(&m_mTex, XMMatrixIdentity());
 	m_mTex._44 = 0.0f;
 
-	m_vPos = XMFLOAT3(0.0f, 0.0f, 0.0f);
-	m_vAngle = XMFLOAT3(0.0f, 0.0f, 0.0f);
-	m_vScale = XMFLOAT3(1.0f, 1.0f, 1.0f);
 	m_vColor = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	m_bInvalidate = false;
 
@@ -120,61 +114,6 @@ void Polygon::Fin(void)
 }
 
 // 描画
-void Polygon::Draw(ID3D11DeviceContext* pDeviceContext)
-{
-	// 拡縮
-	XMMATRIX mWorld = XMMatrixScaling(m_vScale.x, m_vScale.y, m_vScale.z);
-	// 回転
-	mWorld *= XMMatrixRotationRollPitchYaw(XMConvertToRadians(m_vAngle.x),
-		XMConvertToRadians(m_vAngle.y), XMConvertToRadians(m_vAngle.z));
-	// 移動
-	mWorld *= XMMatrixTranslation(m_vPos.x, m_vPos.y, m_vPos.z);
-	// ワールド マトリックスに設定
-	XMStoreFloat4x4(&m_mWorld, mWorld);
-
-	if (m_pTexture) {
-		// 拡縮
-		mWorld = XMMatrixScaling(m_vSizeTexFrame.x, m_vSizeTexFrame.y, 1.0f);
-		// 移動
-		mWorld *= XMMatrixTranslation(m_vPosTexFrame.x, m_vPosTexFrame.y, 0.0f);
-		// テクスチャ マトリックスに設定
-		XMStoreFloat4x4(&m_mTex, mWorld);
-	}
-	else {
-		// テクスチャ無し
-		m_mTex._44 = 0.0f;
-	}
-
-	// 頂点バッファ更新
-	SetVertex();
-
-	pDeviceContext->VSSetShader(m_pVertexShader, nullptr, 0);
-	pDeviceContext->PSSetShader(m_pPixelShader, nullptr, 0);
-	pDeviceContext->IASetInputLayout(m_pInputLayout);
-
-	UINT stride = sizeof(VERTEX_2D);
-	UINT offset = 0;
-	pDeviceContext->IASetVertexBuffers(0, 1, &m_pVertexBuffer, &stride, &offset);
-
-	pDeviceContext->PSSetSamplers(0, 1, &m_pSamplerState);
-	pDeviceContext->PSSetShaderResources(0, 1, &m_pTexture);
-
-	SHADER_GLOBAL cb;
-	cb.mProj = XMMatrixTranspose(XMLoadFloat4x4(&m_mProj));
-	cb.mView = XMMatrixTranspose(XMLoadFloat4x4(&m_mView));
-	cb.mWorld = XMMatrixTranspose(XMLoadFloat4x4(&m_mWorld));
-	cb.mTex = XMMatrixTranspose(XMLoadFloat4x4(&m_mTex));
-	pDeviceContext->UpdateSubresource(m_pConstantBuffer, 0, nullptr, &cb, 0, 0);
-	pDeviceContext->VSSetConstantBuffers(0, 1, &m_pConstantBuffer);
-	pDeviceContext->PSSetConstantBuffers(0, 1, &m_pConstantBuffer);
-
-	// プリミティブ形状をセット
-	pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
-
-	// ポリゴンの描画
-	pDeviceContext->Draw(NUM_VERTEX, 0);
-}
-
 void Polygon::Draw(ID3D11DeviceContext * pDeviceContext, XMFLOAT4X4 mWorld)
 {
 	XMMATRIX mMat;
@@ -291,26 +230,6 @@ void Polygon::SetTexture(ID3D11ShaderResourceView* pTexture)
 {
 	m_pTexture = pTexture;
 	m_mTex._44 = (m_pTexture) ? 1.0f : 0.0f;
-}
-
-// 表示座標の設定
-void Polygon::SetPos(float fX, float fY)
-{
-	m_vPos.x = fX;
-	m_vPos.y = fY;
-}
-
-// 表示サイズの設定
-void Polygon::SetSize(float fScaleX, float fScaleY)
-{
-	m_vScale.x = fScaleX;
-	m_vScale.y = fScaleY;
-}
-
-// 表示角度の設定(単位:度)
-void Polygon::SetAngle(float fAngle)
-{
-	m_vAngle.z = fAngle;
 }
 
 // 左上テクスチャ座標の設定 (0.0≦fU＜1.0, 0.0≦fV＜1.0)

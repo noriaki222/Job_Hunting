@@ -5,13 +5,19 @@ Object2D::Object2D()
 {
 	m_blendState = BS_ALPHABLEND;
 	m_pTex = nullptr;
+	m_billboard = BILLBOARD_NONE;
+	m_color = DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	m_uv = DirectX::XMFLOAT2(0.0f, 0.0f);
 }
 
 Object2D::Object2D(const LPCWSTR path)
 {
 	m_blendState = BS_ALPHABLEND;
 	m_pTex = nullptr;
+	m_billboard = BILLBOARD_NONE;
 	LoadTexture(path);
+	m_color = DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	m_uv = DirectX::XMFLOAT2(0.0f, 0.0f);
 }
 
 Object2D::~Object2D()
@@ -38,12 +44,11 @@ void Object2D::Draw()
 	ID3D11DeviceContext* pDC = GetDeviceContext();
 	SetZBuffer(false);
 	SetBlendState(m_blendState);
-	Polygon::SetColor(1.0f, 1.0f, 1.0f, 1.0f);
-	Polygon::SetPos(0.0f, 0.0f);
-	Polygon::SetUV(0.0f, 0.0f);
-	Polygon::SetSize(500.0f, 500.0f);
+	Polygon::SetColor(m_color.x, m_color.y, m_color.z, m_color.w);
+	Polygon::SetUV(m_uv.x, m_uv.y);
 	Polygon::SetTexture(m_pTex);
-	Polygon::Draw(pDC);
+	Polygon::Draw(pDC, m_mWorld);
+	SetBlendState(BS_NONE);
 }
 
 void Object2D::LoadTexture(const LPCWSTR texPath)
