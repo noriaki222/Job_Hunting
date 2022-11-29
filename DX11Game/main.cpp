@@ -5,6 +5,7 @@
 #include "Base\Polygon.h"
 #include "Base\Texture.h"
 #include "Base\Model.h"
+#include "Base\Input.h"
 
 #include "Manager\SceneManager.h"
 
@@ -344,15 +345,20 @@ HRESULT Init(HWND hWnd, BOOL bWindow)
 	g_pDevice->CreateDepthStencilState(&dsd2, &g_pDSS[1]);
 
 	// 以下各クラスの初期化処理を書く
-
+	// ポリゴン表示初期化
 	hr = Polygon::Init(g_pDevice);
 	if (FAILED(hr))
 		return hr;
 
+	// 入力処理初期化
+	hr = InitInput();
+
+	// モデル読み込み
 	hr = CModel::LoadModel();
 	if (FAILED(hr))
 		return hr;
 
+	// シーンマネージャー初期化
 	SceneManager::Create();
 	g_pScneManager = SceneManager::GetInstance();
 
@@ -375,6 +381,8 @@ void Uninit(void)
 	SceneManager::Destroy();
 
 	CModel::ReleseModel();
+
+	UninitInput();
 
 	Polygon::Fin();
 
@@ -410,11 +418,10 @@ void Uninit(void)
 void Update(void)
 {
 	// 各クラスの更新処理を書く
+	UpdateInput();
 	CCamera::Get()->UpdateMatrix();
 
 	g_pScneManager->Update();
-
-	// ObjectManager::GetInstance()->Update();
 }
 
 // 描画処理
@@ -424,8 +431,6 @@ void Draw(void)
 	CCamera::Get()->Clear();
 
 	g_pScneManager->Draw();
-
-	// ObjectManager::GetInstance()->Draw();
 
 	// バックバッファとフロントバッファの入れ替え
 	g_pSwapChain->Present(g_uSyncInterval, 0);

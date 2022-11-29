@@ -1,5 +1,6 @@
 #include "Test3D.h"
 #include <time.h>
+#include "Base\Input.h"
 
 Test3D::Test3D()
 {
@@ -15,9 +16,10 @@ Test3D::~Test3D()
 
 void Test3D::Update()
 {
-	if ((*m_it)->GetType() == TYPE_3D)
+	if (IsKeyPress(VK_SPACE))
 	{
-		bool answer = true;
+		m_animNo = 3;
 	}
+
 	Object3D::Update();
 }

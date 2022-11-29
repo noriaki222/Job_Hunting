@@ -152,6 +152,7 @@
   <ItemGroup>
     <ClCompile Include="Base\AssimpModel.cpp" />
     <ClCompile Include="Base\Camera.cpp" />
+    <ClCompile Include="Base\Input.cpp" />
     <ClCompile Include="Base\Light.cpp" />
     <ClCompile Include="Base\Mesh.cpp" />
     <ClCompile Include="Base\Model.cpp" />
@@ -174,6 +175,7 @@
   <ItemGroup>
     <ClInclude Include="Base\AssimpModel.h" />
     <ClInclude Include="Base\Camera.h" />
+    <ClInclude Include="Base\Input.h" />
     <ClInclude Include="Base\Light.h" />
     <ClInclude Include="Base\Mesh.h" />
     <ClInclude Include="Base\Model.h" />
