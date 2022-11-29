@@ -1,5 +1,7 @@
 #include "ObjectBase.h"
 
+#include "../Manager/ObjectManager.h"
+
 using namespace DirectX;
 
 ObjectBase::ObjectBase()
@@ -7,10 +9,22 @@ ObjectBase::ObjectBase()
 	m_transform = Transform::Zero();
 	m_rigidbody = RigidBody::Zero();
 	m_enable = true;
+	m_visible = true;
 	m_color = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	m_tag = TAG_NONE;
+	m_type = TYPE_2D;
 	XMMATRIX zeroMat = XMMatrixIdentity();
 	XMStoreFloat4x4(&m_mWorld, zeroMat);
+
+	int m_updateOrder = 0;
+	int m_drawOrder = 0;
+
+	m_it = ObjectManager::GetInstance()->AddManager(this);
+}
+
+ObjectBase::~ObjectBase()
+{
+	ObjectManager::GetInstance()->Release(m_it);
 }
 
 void ObjectBase::UpdateMatrix()

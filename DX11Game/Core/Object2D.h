@@ -3,7 +3,7 @@
 #include "../main.h"
 #include "../Base/Polygon.h"
 
-enum BILLBORDTYPE
+enum EBillbordType
 {
 	BILLBOARD_NONE,
 	BILLBOARD_ALL,
@@ -29,8 +29,7 @@ public:
 protected:
 	EBlendState m_blendState;
 	ID3D11ShaderResourceView* m_pTex;
-	BILLBORDTYPE m_billboard;
+	EBillbordType m_billboard;
 
-	DirectX::XMFLOAT4 m_color;
 	DirectX::XMFLOAT2 m_uv;
 };

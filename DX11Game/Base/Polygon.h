@@ -9,7 +9,10 @@ private:
 
 	static VERTEX_2D m_vertexWk[NUM_VERTEX];		// 頂点情報格納ワーク
 
-	static DirectX::XMFLOAT4 m_vColor;						// ポリゴンの頂点カラー
+	static DirectX::XMFLOAT3 m_vPos;							// ポリゴンの移動量
+	static DirectX::XMFLOAT3 m_vAngle;						// ポリゴンの回転量
+	static DirectX::XMFLOAT3 m_vScale;						// ポリゴンのサイズ
+	static DirectX::XMFLOAT4 m_vColor;				// ポリゴンの頂点カラー
 	static bool m_bInvalidate;						// 頂点データ更新フラグ
 
 	static DirectX::XMFLOAT2 m_vPosTexFrame;					// UV座標
@@ -37,6 +40,9 @@ public:
 	static void Draw(ID3D11DeviceContext* pDeviceContext);
 	static void Draw(ID3D11DeviceContext* pDeviceContext, DirectX::XMFLOAT4X4 mWorld);
 	static void SetTexture(ID3D11ShaderResourceView* pTexture);
+	static void SetPos(float fX, float fY);
+	static void SetSize(float fScaleX, float fScaleY);
+	static void SetAngle(float fAngle);
 	static void SetUV(float fU, float fV);
 	static void SetFrameSize(float fWidth, float fHeight);
 	static void SetColor(float fRed, float fGreen, float fBlue);

@@ -1,6 +1,11 @@
 // オブジェクト継承用クラス
 #pragma once
 #include "../main.h"
+#include <list>
+
+#define DEFAULT_2D_ORDER	(0)
+#define DEFAULT_3D_ORDER	(10)
+#define DEFAULT_UI_ORDER	(20)
 
 enum EObjTag
 {
@@ -9,11 +14,19 @@ enum EObjTag
 	MAX_TAG
 };
 
+enum EObjType
+{
+	TYPE_2D = 0,
+	TYPE_3D,
+
+	MAX_TYPE
+};
+
 class ObjectBase
 {
 public:
 	ObjectBase();
-	virtual ~ObjectBase() {};
+	virtual ~ObjectBase();
 
 	virtual void Init() = 0;
 	virtual void Uninit() = 0;
@@ -23,10 +36,13 @@ public:
 	void UpdateMatrix();
 
 	EObjTag GetTag() { return m_tag; }
+	EObjType GetType() { return m_type; }
 	bool GetEnable() { return m_enable; }
+	bool GetVisible() { return m_visible; }
 	Transform GetTransform() { return m_transform; }
 	RigidBody GetRigidbody() { return m_rigidbody; }
 	DirectX::XMFLOAT4 GetColor() { return m_color; }
+	int GetDrawOrder() { return m_drawOrder; }
 
 	DirectX::XMFLOAT4X4 GetWorld() { return m_mWorld; }
 	DirectX::XMFLOAT3 GetLocalX() { return DirectX::XMFLOAT3(m_mWorld._11, m_mWorld._12, m_mWorld._13); }
@@ -34,7 +50,9 @@ public:
 	DirectX::XMFLOAT3 GetLocalZ() { return DirectX::XMFLOAT3(m_mWorld._31, m_mWorld._32, m_mWorld._33); }
 
 	void SetTag(EObjTag tag) { m_tag = tag; }
+	void SetType(EObjType type) { m_type = type; }
 	void SetEnable(bool flg) { m_enable = flg; }
+	void SetVisible(bool flg) { m_visible = flg; }
 	void SetTransform(Transform transform) { m_transform = transform; }
 	void SetRigidbody(RigidBody rb) { m_rigidbody = rb; }
 	void SetColor(DirectX::XMFLOAT4 color) { m_color = color; }
@@ -43,10 +61,17 @@ public:
 
 protected:
 	EObjTag m_tag;					// タグ
-	bool m_enable;					// シーンに存在するか(true: Update/Draw中止)
+	EObjType m_type;
+	bool m_enable;					// シーンに存在するか(false: Update/Draw中止)
+	bool m_visible;					// シーンに表示されるか(false: Draw中止)
 	Transform m_transform;			// 座標 回転 大きさ
 	RigidBody m_rigidbody;			// 速度 加速度
 	DirectX::XMFLOAT4 m_color;		// 色
 
 	DirectX::XMFLOAT4X4 m_mWorld;	// ワールド変換
+
+	int m_updateOrder;				// 更新順番(小さい程先に処理される)(default: 2D = 0, 3D = 10, UI = 20
+	int m_drawOrder;				// 描画順番(小さい程先に処理される)(default: 2D = 0, 3D = 10, UI = 20
+
+	std::list<ObjectBase*>::iterator m_it;
 };

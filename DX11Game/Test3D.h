@@ -7,6 +7,7 @@ public:
 	Test3D();
 	~Test3D();
 
-private:
+	void Update();
 
+private:
 };

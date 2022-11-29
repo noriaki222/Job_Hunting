@@ -7,6 +7,7 @@ namespace
 	LPCSTR g_pszModelPath[MAX_MODEL] =
 	{
 		"data/model/Sword And Shield.fbx",
+		"data/model/flyModel.x",
 	};
 }
 

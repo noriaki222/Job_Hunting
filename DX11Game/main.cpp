@@ -5,8 +5,8 @@
 #include "Base\Polygon.h"
 #include "Base\Texture.h"
 #include "Base\Model.h"
-#include "Test2DObj.h"
-#include "Test3D.h"
+
+#include "Manager\SceneManager.h"
 
 // ライブラリリンク
 #pragma comment(lib, "winmm")
@@ -42,8 +42,7 @@ ID3D11DepthStencilState*	g_pDSS[2];				// Z/ステンシル ステート
 
 int							g_nCountFPS;			// FPSカウンタ
 
-Test2DObj* g_test;
-Test3D* g_test3D;
+static SceneManager* g_pScneManager;
 
 
 // メイン関数
@@ -354,12 +353,8 @@ HRESULT Init(HWND hWnd, BOOL bWindow)
 	if (FAILED(hr))
 		return hr;
 
-	g_test = new Test2DObj;
-	g_test->Init();
-
-	g_test3D = new Test3D;
-	g_test3D->Init();
-
+	SceneManager::Create();
+	g_pScneManager = SceneManager::GetInstance();
 
 	return hr;
 }
@@ -377,13 +372,7 @@ void ReleaseBackBuffer()
 void Uninit(void)
 {
 	// 以下各クラスの初期化処理を書く
-	g_test3D->Uninit();
-	delete g_test3D;
-	g_test3D = nullptr;
-
-	g_test->Uninit();
-	delete g_test;
-	g_test = nullptr;
+	SceneManager::Destroy();
 
 	CModel::ReleseModel();
 
@@ -422,6 +411,10 @@ void Update(void)
 {
 	// 各クラスの更新処理を書く
 	CCamera::Get()->UpdateMatrix();
+
+	g_pScneManager->Update();
+
+	// ObjectManager::GetInstance()->Update();
 }
 
 // 描画処理
@@ -430,9 +423,9 @@ void Draw(void)
 	// 各クラスの描画処理を書く
 	CCamera::Get()->Clear();
 
-	g_test3D->Draw();
+	g_pScneManager->Draw();
 
-	g_test->Draw();
+	// ObjectManager::GetInstance()->Draw();
 
 	// バックバッファとフロントバッファの入れ替え
 	g_pSwapChain->Present(g_uSyncInterval, 0);

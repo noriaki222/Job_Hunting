@@ -18,4 +18,7 @@ public:
 	void SetModel(CAssimpModel* model);
 protected:
 	CAssimpModel* m_model;
+	bool m_isAnim;		// アニメーションするか
+	int m_animNo;		// アニメーションNo.
+	double m_animTime;	// 再生時間
 };
