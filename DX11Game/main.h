@@ -99,6 +99,22 @@ struct RigidBody
 	}
 };
 
+struct Collider
+{
+	DirectX::XMFLOAT3 center;	// 当たり判定の中心
+	DirectX::XMFLOAT3 size;	// 当たり判定の大きさ(ローカル座標軸
+	bool isCollision;
+
+	static Collider Zero()
+	{
+		Collider work;
+		work.center = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
+		work.size = DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f);
+		work.isCollision = false;
+		return work;
+	}
+};
+
 // プロトタイプ宣言
 HWND GetMainWnd();
 HINSTANCE GetInstance();

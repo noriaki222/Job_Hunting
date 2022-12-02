@@ -63,6 +63,7 @@ OBJiterator ObjectManager::AddManager(ObjectBase * obj)
 	{
 		if (m_pObjlist.size() > 0)
 		{
+			// ˆ—‡‚Ì•À‚Ñ‘Ö‚¦
 			if ((*retit)->GetDrawOrder() > obj->GetDrawOrder())
 			{
 				// ƒŠƒXƒg‚Ì—v‘f‚ª1‚Â‚¾‚Á‚½ê‡æ“ª‚É“ü‚ê‚é
