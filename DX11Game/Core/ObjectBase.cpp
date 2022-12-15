@@ -39,6 +39,10 @@ void ObjectBase::UpdateMatrix()
 		m_rigidbody.spd.y -= GRAVITY;
 	}
 
+	m_transform.pos.x += m_rigidbody.spd.x;
+	m_transform.pos.y += m_rigidbody.spd.y;
+	m_transform.pos.z += m_rigidbody.spd.z;
+
 	if (m_transform.rot.x > 180.0f)
 	{
 		m_transform.rot.x -= 360.f;
@@ -84,11 +88,27 @@ void ObjectBase::UpdateMatrix()
 	XMStoreFloat4x4(&m_mWorld, mtxWorld);
 }
 
+bool ObjectBase::Collision(EObjTag tag, ObjectBase* null = nullptr)
+{
+	ObjectBase* obj = ObjectManager::GetInstance()->FindObj(tag, null);
+	if (obj)
+	{
+		if (Collision(obj))
+		{
+			return true;
+		}
+		Collision(tag, obj);
+	}
+	return false;
+}
+
 bool ObjectBase::Collision(ObjectBase * obj)
 {
-	if (*m_it == obj) { return false; }
+	if (obj == nullptr) { return false; }
+	if (obj == this) { return false; }
 	if (!(*m_it)->m_coll.isCollision || !obj->m_coll.isCollision) { return false; }
 
+	
 	// ワールドマトリックス取得
 	XMFLOAT4X4 mW1 = m_mWorld;
 	XMFLOAT4X4 mW2 = obj->GetWorld();
@@ -110,14 +130,14 @@ bool ObjectBase::Collision(ObjectBase * obj)
 	vN[5] = XMVectorSet(obj->GetLocalZ().x, obj->GetLocalZ().y, obj->GetLocalZ().z, 0.0f);
 	// OBBの大きさを掛けたベクトルを求める
 	XMFLOAT3& vBox1 = m_coll.size;
-	XMFLOAT3& vBox2 = m_coll.size;
+	XMFLOAT3& vBox2 = obj->m_coll.size;
 	XMVECTOR vL[6];
 	vL[0] = XMVectorSet(GetLocalX().x * vBox1.x, GetLocalX().y * vBox1.x, GetLocalX().z * vBox1.x, 0.0f);
 	vL[1] = XMVectorSet(GetLocalY().x * vBox1.y, GetLocalY().y * vBox1.y, GetLocalY().z * vBox1.y, 0.0f);
 	vL[2] = XMVectorSet(GetLocalZ().x * vBox1.z, GetLocalZ().y * vBox1.z, GetLocalZ().z * vBox1.z, 0.0f);
-	vL[3] = XMVectorSet(obj->GetLocalX().x * vBox1.x, obj->GetLocalX().y * vBox1.x, obj->GetLocalX().z * vBox1.x, 0.0f);
-	vL[4] = XMVectorSet(obj->GetLocalY().x * vBox1.y, obj->GetLocalY().y * vBox1.y, obj->GetLocalY().z * vBox1.y, 0.0f);
-	vL[5] = XMVectorSet(obj->GetLocalZ().x * vBox1.z, obj->GetLocalZ().y * vBox1.z, obj->GetLocalZ().z * vBox1.z, 0.0f);
+	vL[3] = XMVectorSet(obj->GetLocalX().x * vBox2.x, obj->GetLocalX().y * vBox2.x, obj->GetLocalX().z * vBox2.x, 0.0f);
+	vL[4] = XMVectorSet(obj->GetLocalY().x * vBox2.y, obj->GetLocalY().y * vBox2.y, obj->GetLocalY().z * vBox2.y, 0.0f);
+	vL[5] = XMVectorSet(obj->GetLocalZ().x * vBox2.z, obj->GetLocalZ().y * vBox2.z, obj->GetLocalZ().z * vBox2.z, 0.0f);
 
 	// 分解軸候補が面の法線ベクトル(モデル座標軸
 	float fL, f, fD;
@@ -161,4 +181,5 @@ bool ObjectBase::Collision(ObjectBase * obj)
 	}
 
 	return true;
+	
 }

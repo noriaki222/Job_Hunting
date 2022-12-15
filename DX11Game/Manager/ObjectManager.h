@@ -21,6 +21,9 @@ public:
 	void Release(OBJiterator it);
 	void Clear() { m_pObjlist.clear(); }
 
+	// tag:探索するオブジェクトのTag, base:配列でbase以降のオブジェクトを探索
+	ObjectBase* FindObj(EObjTag tag, ObjectBase* base);
+
 private:
 	static ObjectManager *pInstance;
 	ObjectManager();

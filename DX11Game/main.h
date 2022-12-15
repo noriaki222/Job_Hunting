@@ -70,7 +70,7 @@ typedef struct
 struct Transform
 {
 	DirectX::XMFLOAT3 pos;		// 座標
-	DirectX::XMFLOAT3 rot;		// 回転
+	DirectX::XMFLOAT3 rot;		// 回転 degrees角
 	DirectX::XMFLOAT3 scale;	// スケール
 	
 	static Transform Zero()
@@ -103,7 +103,7 @@ struct Collider
 {
 	DirectX::XMFLOAT3 center;	// 当たり判定の中心
 	DirectX::XMFLOAT3 size;	// 当たり判定の大きさ(ローカル座標軸
-	bool isCollision;
+	bool isCollision;	// 当たり判定が有効か
 
 	static Collider Zero()
 	{

@@ -6,8 +6,10 @@
 #include "Base\Texture.h"
 #include "Base\Model.h"
 #include "Base\Input.h"
+#include "Base\Mesh.h"
 
 #include "Manager\SceneManager.h"
+#include "Core\Debug\Debug_Collision.h"
 
 // ライブラリリンク
 #pragma comment(lib, "winmm")
@@ -358,9 +360,18 @@ HRESULT Init(HWND hWnd, BOOL bWindow)
 	if (FAILED(hr))
 		return hr;
 
+	hr = CMesh::InitShader();
+	if (FAILED(hr))
+		return hr;
+
+#ifdef _DEBUG
+	Debug_Collision::Create();
+#endif // _DEBUG
+
 	// シーンマネージャー初期化
 	SceneManager::Create();
 	g_pScneManager = SceneManager::GetInstance();
+
 
 	return hr;
 }
@@ -379,6 +390,12 @@ void Uninit(void)
 {
 	// 以下各クラスの初期化処理を書く
 	SceneManager::Destroy();
+
+#ifdef _DEBUG
+	Debug_Collision::Destory();
+#endif // _DEBUG
+
+	CMesh::FinShader();
 
 	CModel::ReleseModel();
 
@@ -419,9 +436,15 @@ void Update(void)
 {
 	// 各クラスの更新処理を書く
 	UpdateInput();
+	CCamera::Get()->Update();
 	CCamera::Get()->UpdateMatrix();
 
 	g_pScneManager->Update();
+#ifdef _DEBUG
+	if (IsKeyRelease('B'))
+		Debug_Collision::GetInstance()->GetShow() ? Debug_Collision::GetInstance()->SetShow(false) : Debug_Collision::GetInstance()->SetShow(true);
+#endif // _DEBUG
+
 }
 
 // 描画処理

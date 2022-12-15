@@ -13,12 +13,12 @@ protected:
 	DirectX::XMFLOAT3 m_vAngle;		// カメラの角度
 	float m_fLengthInterval;		// カメラの視点と注視点の距離
 
-private:
 	float m_fAspectRatio;			// 縦横比
 	float m_fFovY;					// 視野角(Degree)
 	float m_fNearZ;					// 前方クリップ距離
 	float m_fFarZ;					// 後方クリップ距離
 
+private:
 	DirectX::XMFLOAT4X4 m_mtxWorld;	// ワールド マトリックス
 	DirectX::XMFLOAT4X4 m_mtxView;	// ビュー マトリックス
 	DirectX::XMFLOAT4X4 m_mtxProj;	// プロジェクション マトリックス

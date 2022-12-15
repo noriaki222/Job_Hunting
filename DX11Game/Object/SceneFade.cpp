@@ -40,7 +40,7 @@ void SceneFade::Update()
 	}
 	if (fadeState == FADESTATE_FADEOUT)
 	{
-		m_transform.pos.x = -(SCREEN_WIDTH * FADEWIDTHBUFFER) + (0.0f + -(SCREEN_WIDTH * FADEWIDTHBUFFER)) / (int)(0.5 * FRAMERATE) * tick;
+		m_transform.pos.x = (SCREEN_WIDTH * FADEWIDTHBUFFER) + (0.0f + -(SCREEN_WIDTH * FADEWIDTHBUFFER)) / (int)(0.5 * FRAMERATE) * tick;
 		++tick;
 		if (m_transform.pos.x == 0.0f)
 		{

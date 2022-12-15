@@ -9,6 +9,7 @@
 
 enum EObjTag
 {
+	TAG_COLLTEST = -1,
 	TAG_NONE = 0,
 
 	MAX_TAG
@@ -33,9 +34,10 @@ public:
 	virtual void Update() = 0;
 	virtual void Draw() = 0;
 
-	void UpdateMatrix();
+	virtual void UpdateMatrix();
 
 	// OBB‚Å‚Ì“–‚½‚è”»’è
+	bool Collision(EObjTag tag, ObjectBase* null);	// ‘æ“ñˆø”‚Íg‚í‚È‚¢
 	bool Collision(ObjectBase* obj);
 
 	EObjTag GetTag() { return m_tag; }
@@ -48,6 +50,7 @@ public:
 	DirectX::XMFLOAT4 GetColor() { return m_color; }
 	int GetDrawOrder() { return m_drawOrder; }
 	ObjectBase* GetObj() { return *m_it; }
+	std::list<ObjectBase*>::iterator GetIt() { return m_it; }
 
 	DirectX::XMFLOAT4X4 GetWorld() { return m_mWorld; }
 	DirectX::XMFLOAT3 GetLocalX() { return DirectX::XMFLOAT3(m_mWorld._11, m_mWorld._12, m_mWorld._13); }

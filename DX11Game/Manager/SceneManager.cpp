@@ -1,6 +1,8 @@
 #include "SceneManager.h"
 #include "../Base/Camera.h"
 #include "../Scene/TestScene.h"
+#include "../Scene/CollisionScene.h"
+#include "../Core/Debug/Debug_Collision.h"
 
 SceneManager* SceneManager::pInstance = nullptr;
 
@@ -37,7 +39,10 @@ void SceneManager::Update()
 		{
 			// Œ»Ý‚Ì‰æ–Ê‚ðI—¹
 			delete m_pActiceScene;
-			CCamera::Get()->Init();
+#ifdef _DEBUG
+			Debug_Collision::GetInstance()->ListClear();
+#endif // _DEBUG
+
 			m_eScene = m_eNextScene;
 
 			// ŽŸ‚Ì‰æ–Ê‚ð‰Šú‰»
@@ -46,9 +51,10 @@ void SceneManager::Update()
 			case SCENE_TEST:
 				m_pActiceScene = new TestScene;
 				break;
-			case SCENE_NONE:
+			case SCENE_COLLISION:
+				m_pActiceScene = new CollisionScene;
 				break;
-			case MAX_SCENE:
+			case SCENE_NONE:
 				break;
 			}
 			m_pSceneFade->FadeInScene();
@@ -63,6 +69,15 @@ void SceneManager::Draw()
 	SetBlendState(BS_ALPHABLEND);
 	m_pSceneFade->Draw();
 	SetBlendState(BS_NONE);
+
+#ifdef _DEBUG
+	SetBlendState(BS_ALPHABLEND);
+	SetZWrite(false);
+	Debug_Collision::GetInstance()->Draw();
+	SetZWrite(true);
+	SetBlendState(BS_NONE);
+#endif // _DEBUG
+
 }
 
 void SceneManager::SetSecne(EScene scene)

@@ -7,7 +7,7 @@ Object2D::Object2D()
 {
 	m_blendState = BS_ALPHABLEND;
 	m_pTex = nullptr;
-	m_billboard = BILLBOARD_ALL;
+	m_billboard = BILLBOARD_NONE;
 	m_color = DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	m_uv = DirectX::XMFLOAT2(0.0f, 0.0f);
 	m_updateOrder = DEFAULT_2D_ORDER;
@@ -18,7 +18,7 @@ Object2D::Object2D(const LPCWSTR path)
 {
 	m_blendState = BS_ALPHABLEND;
 	m_pTex = nullptr;
-	m_billboard = BILLBOARD_ALL;
+	m_billboard = BILLBOARD_NONE;
 	LoadTexture(path);
 	m_color = DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	m_uv = DirectX::XMFLOAT2(0.0f, 0.0f);
@@ -45,9 +45,7 @@ void Object2D::Update()
 }
 
 void Object2D::Draw()
-{
-	UpdateMatrix();
-	
+{	
 	CLight::Get()->SetDisable();
 	DirectX::XMFLOAT4X4 mView = CCamera::Get()->GetViewMatrix();
 

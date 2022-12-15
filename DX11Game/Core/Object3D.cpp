@@ -1,6 +1,7 @@
 #include "Object3D.h"
 #include <time.h>
 
+
 Object3D::Object3D()
 {
 	SetModel(CModel::GetModel(EModel::MODEL_TEST));
@@ -19,6 +20,9 @@ Object3D::~Object3D()
 
 void Object3D::Init()
 {
+#ifdef _DEBUG
+	debug_collit = Debug_Collision::GetInstance()->AddList(&m_coll, &m_mWorld, &m_transform);
+#endif // DEBUG
 }
 
 void Object3D::Uninit()
@@ -27,17 +31,6 @@ void Object3D::Uninit()
 
 void Object3D::Update()
 {
-	if (m_isAnim)
-	{
-		static double dLastTime = clock() / double(CLOCKS_PER_SEC);
-		double dNowTime = clock() / double(CLOCKS_PER_SEC);
-		double dSlice = dNowTime - dLastTime;
-		dLastTime = dNowTime;
-		m_animTime += dSlice;
-		if (m_animTime >= m_model->GetAnimDuration(m_animNo)) {
-			m_animTime = 0.0;
-		}
-	}
 }
 
 void Object3D::Draw()
@@ -47,7 +40,6 @@ void Object3D::Draw()
 		m_model->SetAnimIndex(m_animNo);
 		m_model->SetAnimTime(m_animTime);
 	}
-	UpdateMatrix();
 	
 	ID3D11DeviceContext* pDC = GetDeviceContext();
 	// 不透明描画
@@ -62,6 +54,23 @@ void Object3D::Draw()
 	SetZWrite(true);				// Zバッファ更新する
 	SetBlendState(BS_NONE);			// アルファブレンド無効
 	m_model->SetAlpha(1.0f);
+}
+
+void Object3D::UpdateMatrix()
+{
+	if (m_isAnim)
+	{
+		if (!m_lastTime) { m_lastTime = clock() / double(CLOCKS_PER_SEC); }
+		double dNowTime = clock() / double(CLOCKS_PER_SEC);
+		double dSlice = dNowTime - m_lastTime;
+		m_lastTime = dNowTime;
+		m_animTime += dSlice;
+		if (m_animTime >= m_model->GetAnimDuration(m_animNo)) {
+			m_animTime = 0.0;
+		}
+	}
+
+	ObjectBase::UpdateMatrix();
 }
 
 void Object3D::SetModel(CAssimpModel * model)

@@ -30,6 +30,7 @@ void ObjectManager::Update()
 			++it;
 			continue;
 		}
+		(*it)->UpdateMatrix();
 		(*it)->Update();
 		++it;
 	}
@@ -90,6 +91,25 @@ OBJiterator ObjectManager::AddManager(ObjectBase * obj)
 void ObjectManager::Release(OBJiterator it)
 {
 	m_pObjlist.erase(it);
+}
+
+ObjectBase * ObjectManager::FindObj(EObjTag tag, ObjectBase* base = nullptr)
+{
+	OBJiterator it = m_pObjlist.begin();
+	if (base)
+	{
+		it = base->GetIt();
+		++it;
+	}
+	while (it != m_pObjlist.end())
+	{
+		if ((*it)->GetTag() == tag)
+		{
+			return (*it);
+		}
+		++it;
+	}
+	return nullptr;
 }
 
 ObjectManager::ObjectManager()

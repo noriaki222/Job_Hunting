@@ -107,6 +107,7 @@
       <ConformanceMode>true</ConformanceMode>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <AdditionalIncludeDirectories>$(SolutionDir)Library\DirectXTex;$(SolutionDir)Library\Assimp\include</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -159,18 +160,24 @@
     <ClCompile Include="Base\Polygon.cpp" />
     <ClCompile Include="Base\Shader.cpp" />
     <ClCompile Include="Base\Texture.cpp" />
+    <ClCompile Include="Core\Debug\Box.cpp" />
+    <ClCompile Include="Core\Debug\Debug_Collision.cpp" />
     <ClCompile Include="Core\Object2D.cpp" />
     <ClCompile Include="Core\Object3D.cpp" />
     <ClCompile Include="Core\ObjectBase.cpp" />
     <ClCompile Include="Core\SceneBase.cpp" />
     <ClCompile Include="Core\ScreenObjectBase.cpp" />
+    <ClCompile Include="Core\ShaderList.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Manager\ObjectManager.cpp" />
     <ClCompile Include="Manager\SceneManager.cpp" />
     <ClCompile Include="Object\SceneFade.cpp" />
+    <ClCompile Include="Scene\CollisionScene.cpp" />
     <ClCompile Include="Scene\TestScene.cpp" />
     <ClCompile Include="Test2DObj.cpp" />
     <ClCompile Include="Test3D.cpp" />
+    <ClCompile Include="TestCamera.cpp" />
+    <ClCompile Include="TestCollision.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base\AssimpModel.h" />
@@ -182,19 +189,25 @@
     <ClInclude Include="Base\Polygon.h" />
     <ClInclude Include="Base\Shader.h" />
     <ClInclude Include="Base\Texture.h" />
+    <ClInclude Include="Core\Debug\Box.h" />
+    <ClInclude Include="Core\Debug\Debug_Collision.h" />
     <ClInclude Include="Core\Object2D.h" />
     <ClInclude Include="Core\Object3D.h" />
     <ClInclude Include="Core\ObjectBase.h" />
     <ClInclude Include="Core\SceneBase.h" />
     <ClInclude Include="Core\SceneData.h" />
     <ClInclude Include="Core\ScereenObjectBase.h" />
+    <ClInclude Include="Core\shaderList.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="Manager\ObjectManager.h" />
     <ClInclude Include="Manager\SceneManager.h" />
     <ClInclude Include="Object\SceneFade.h" />
+    <ClInclude Include="Scene\CollisionScene.h" />
     <ClInclude Include="Scene\TestScene.h" />
     <ClInclude Include="Test2DObj.h" />
     <ClInclude Include="Test3D.h" />
+    <ClInclude Include="TestCamera.h" />
+    <ClInclude Include="TestCollision.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Asset\Shader\AssimpPixel.hlsl">

@@ -52,6 +52,12 @@
     <Filter Include="ソース ファイル\Scene">
       <UniqueIdentifier>{aa44d986-0d73-4d88-877e-cc537f3a34e8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\Core\Debug">
+      <UniqueIdentifier>{da7721c5-42fe-4c8a-91aa-4a7463da53cf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Core\Debug">
+      <UniqueIdentifier>{b930e0b1-ab02-48aa-b86d-440afc794a77}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Base\AssimpModel.cpp">
@@ -116,6 +122,24 @@
     </ClCompile>
     <ClCompile Include="Base\Input.cpp">
       <Filter>ソース ファイル\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Debug\Debug_Collision.cpp">
+      <Filter>ソース ファイル\Core\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Debug\Box.cpp">
+      <Filter>ソース ファイル\Core\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="TestCamera.cpp">
+      <Filter>ソース ファイル\Test</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\CollisionScene.cpp">
+      <Filter>ソース ファイル\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="TestCollision.cpp">
+      <Filter>ソース ファイル\Test</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\ShaderList.cpp">
+      <Filter>ソース ファイル\Core</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -184,6 +208,24 @@
     </ClInclude>
     <ClInclude Include="Base\Input.h">
       <Filter>ヘッダー ファイル\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Debug\Debug_Collision.h">
+      <Filter>ヘッダー ファイル\Core\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Debug\Box.h">
+      <Filter>ヘッダー ファイル\Core\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="TestCamera.h">
+      <Filter>ヘッダー ファイル\Test</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\CollisionScene.h">
+      <Filter>ヘッダー ファイル\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="TestCollision.h">
+      <Filter>ヘッダー ファイル\Test</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\shaderList.h">
+      <Filter>ヘッダー ファイル\Core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
