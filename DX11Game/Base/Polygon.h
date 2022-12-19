@@ -1,6 +1,7 @@
 // 2Dポリゴン処理
 #pragma once
 #include "../main.h"
+#include "Shader.h"
 
 class Polygon
 {
@@ -30,6 +31,8 @@ private:
 	static DirectX::XMFLOAT4X4 m_mWorld;						// ワールド変換行列
 	static DirectX::XMFLOAT4X4 m_mTex;						// テクスチャ変換行列
 
+	static VertexShader* m_pVS;
+	static PixelShader* m_pPS;
 private:
 	static HRESULT MakeVertex(ID3D11Device* pDevice);
 	static void SetVertex(void);

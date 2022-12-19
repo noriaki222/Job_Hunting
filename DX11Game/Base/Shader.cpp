@@ -1,262 +1,210 @@
-//#define D3DCOMPILER
-
 #include <stdio.h>
 #include "Shader.h"
 #include "../main.h"
-
-#ifdef D3DCOMPILER
 #include <d3dcompiler.h>
 #pragma comment(lib, "d3dcompiler")
-#endif
 
-//---------------------------------------------------------------------------------------
-// シェーダ読み込み
-//---------------------------------------------------------------------------------------
-static LPCWSTR RT_SHADER = L"SHADER";
-static LPCWSTR g_pszCSODir = L"data\\shader\\";
-HRESULT LoadVertexShader(LPCWSTR pwszVSFName, ID3D11VertexShader** ppVertexShader,
-	ID3D11InputLayout** ppVertexLayout,
-	const D3D11_INPUT_ELEMENT_DESC* pInpElemDesc, UINT uNumElem)
+void SetTextureVS(ID3D11ShaderResourceView * pTex, UINT slot)
 {
-	WCHAR wszPath[_MAX_PATH], wszDrive[_MAX_DRIVE],
-		wszDir[_MAX_DIR], wszFName[_MAX_FNAME], wszCSODir[_MAX_DIR];
-	HRESULT hr = S_OK;
-	ID3DBlob* pCompiledShader = nullptr;
-	PBYTE pbData = nullptr;
-	long lSize = 0L;
+	GetDeviceContext()->VSSetShaderResources(slot, 1, &pTex);
+}
 
-	// シェーダバイナリ読み込み
-	HINSTANCE hInst = GetInstance();
-	HWND hWnd = GetMainWnd();
-	if (IS_INTRESOURCE(pwszVSFName)) {
-		HRSRC hResInfo = FindResourceW(hInst, pwszVSFName, RT_SHADER);
-		if (hResInfo) {
-			HGLOBAL hResData = LoadResource(hInst, hResInfo);
-			if (hResData) {
-				lSize = SizeofResource(hInst, hResInfo);
-				LPVOID pMem = LockResource(hResData);
-				if (pMem) {
-					pbData = new BYTE[lSize];
-					CopyMemory(pbData, pMem, lSize);
-					//UnlockResource(hResData);
-				}
-			}
-		}
-		if (!pbData) {
-			WCHAR wszMsg[_MAX_PATH * 2];
-			swprintf_s(wszMsg, _countof(wszMsg), L"頂点シェーダ(ID=%d) 読込エラー", (int)(ULONG_PTR)pwszVSFName);
-			MessageBoxW(hWnd, wszMsg, L"error", MB_OK);
-			return E_FAIL;
-		}
-	} else {
-		_wsplitpath_s(pwszVSFName, wszDrive, _countof(wszDrive),
-			wszDir, _countof(wszDir), wszFName, _countof(wszFName), nullptr, 0);
-		wcscpy_s(wszCSODir, _countof(wszCSODir), wszDir);
-		wcscat_s(wszCSODir, _countof(wszCSODir), g_pszCSODir);
-		_wmakepath_s(wszPath, _countof(wszPath), wszDrive, wszCSODir, wszFName, L".cso");
-		FILE* fp;
-		_wfopen_s(&fp, wszPath, L"rb");
-		if (fp) {
-			fseek(fp, 0L, SEEK_END);
-			lSize = ftell(fp);
-			fseek(fp, 0L, SEEK_SET);
-			pbData = new BYTE[lSize];
-			fread(pbData, lSize, 1, fp);
-			fclose(fp);
-		} else {
-#ifdef D3DCOMPILER
-			// hlslファイル読み込み、ブロブ作成
-			_wmakepath_s(wszPath, _countof(wszPath), wszDrive, wszDir, wszFName, L".hlsl");
-			hr = D3DCompileFromFile(wszPath, nullptr, nullptr,
-				"main", "vs_5_0", 0, 0, &pCompiledShader, nullptr);
-			if (FAILED(hr)) {
-				WCHAR wszMsg[_MAX_PATH * 2];
-				swprintf(wszMsg, _countof(wszMsg), L"頂点シェーダ(%s) コンパイル失敗", pwszVSFName);
-				MessageBoxW(hWnd, wszMsg, L"error", MB_OK);
-				return hr;
-			}
-			pbData = (PBYTE)pCompiledShader->GetBufferPointer();
-			lSize = (LONG)pCompiledShader->GetBufferSize();
-#else
-			WCHAR wszMsg[_MAX_PATH * 2];
-			swprintf(wszMsg, _countof(wszMsg), L"頂点シェーダ(%s) 読み込みエラー", pwszVSFName);
-			MessageBoxW(hWnd, wszMsg, L"error", MB_OK);
-			return E_FAIL;
-#endif
-		}
-	}
-	// ブロブからバーテックスシェーダ作成
-	ID3D11Device* pDevice = GetDevice();
-	hr = pDevice->CreateVertexShader(pbData, lSize, nullptr, ppVertexShader);
-	if (FAILED(hr)) {
-		if (pCompiledShader)
-			pCompiledShader->Release();
-		else
-			delete[] pbData;
-		WCHAR wszMsg[_MAX_PATH * 2];
-		swprintf_s(wszMsg, _countof(wszMsg), L"頂点シェーダ(%s) 生成失敗", pwszVSFName);
-		MessageBoxW(hWnd, wszMsg, L"error", MB_OK);
-		return hr;
-	}
+void SetTexturePS(ID3D11ShaderResourceView * pTex, UINT slot)
+{
+	GetDeviceContext()->PSSetShaderResources(slot, 1, &pTex);
+}
 
-	// 頂点フォーマットの定義、生成
-	static const D3D11_INPUT_ELEMENT_DESC layout[] = {
-		{"POSITION",    0, DXGI_FORMAT_R32G32B32_FLOAT,    0, 0,                            D3D11_INPUT_PER_VERTEX_DATA, 0},
-		{"NORMAL",      0, DXGI_FORMAT_R32G32B32_FLOAT,    0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
-		{"TEXCOORD",    0, DXGI_FORMAT_R32G32_FLOAT,       0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
-		{"BONE_INDEX",  0, DXGI_FORMAT_R32G32B32A32_UINT,  0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
-		{"BONE_WEIGHT", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
+Shader::Shader(Kind kind) : m_kind(kind)
+{
+}
+
+Shader::~Shader()
+{
+}
+
+HRESULT Shader::Load(const char * pFileName)
+{
+	HRESULT hr = E_FAIL;
+
+	// ファイル読み込み
+	FILE* fp;
+	fopen_s(&fp, pFileName, "rb");
+	if (!fp) { return hr; }
+
+	// ファイルサイズ
+	int fileSize = 0;
+	fseek(fp, 0, SEEK_END);
+	fileSize = ftell(fp);
+
+	// メモリ読み込み
+	fseek(fp, 0, SEEK_SET);
+	char* pData = new char[fileSize];
+	fread(pData, fileSize, 1, fp);
+	fclose(fp);
+
+	// シェーダー作成
+	hr = MakeShader(pData, fileSize);
+
+	// 終了処理
+	if (pData) { delete[] pData; }
+	return hr;
+}
+
+HRESULT Shader::Compile(const char * pCode)
+{
+	static const char *pTargetList[] =
+	{
+		"vs_5_0",
+		"ps_5_0"
 	};
-	if (!pInpElemDesc) {
-		pInpElemDesc = layout;
-		uNumElem = _countof(layout);
-	}
-	hr = pDevice->CreateInputLayout(pInpElemDesc, uNumElem, pbData, lSize, ppVertexLayout);
-	if (FAILED(hr)) {
-		if (pCompiledShader)
-			pCompiledShader->Release();
-		else
-			delete[] pbData;
-		WCHAR wszMsg[_MAX_PATH * 2];
-		swprintf_s(wszMsg, _countof(wszMsg), L"頂点フォーマット生成失敗(%s)", pwszVSFName);
-		MessageBoxW(hWnd, wszMsg, L"error", MB_OK);
-		return hr;
-	}
-	if (pCompiledShader)
-		pCompiledShader->Release();
-	else
-		delete[] pbData;
+
+	HRESULT hr;
+	ID3DBlob *pBlob;
+	ID3DBlob *error;
+	UINT compileFlg = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
+	hr = D3DCompile(pCode, strlen(pCode), nullptr, nullptr, nullptr, "main", pTargetList[m_kind], compileFlg, 0, &pBlob, &error);
+	if (FAILED(hr)) { return hr; }
+
+	// シェーダー作成
+	hr = MakeShader(pBlob->GetBufferPointer(), (UINT)pBlob->GetBufferSize());
+	SAFE_RELEASE(pBlob);
+	SAFE_RELEASE(error);
+
 	return hr;
 }
 
-HRESULT LoadPixelShader(LPCWSTR pwszPSFName, ID3D11PixelShader** ppPixelShader)
-{
-	WCHAR wszPath[_MAX_PATH], wszDrive[_MAX_DRIVE],
-		wszDir[_MAX_DIR], wszFName[_MAX_FNAME], wszCSODir[_MAX_DIR];
-	HRESULT hr = S_OK;
-	ID3DBlob* pCompiledShader = nullptr;
-	PBYTE pbData = nullptr;
-	long lSize = 0L;
-	HINSTANCE hInst = GetInstance();
-	HWND hWnd = GetMainWnd();
 
-	// シェーダバイナリ読み込み
-	if (IS_INTRESOURCE(pwszPSFName)) {
-		HRSRC hResInfo = FindResourceW(hInst, pwszPSFName, RT_SHADER);
-		if (hResInfo) {
-			HGLOBAL hResData = LoadResource(hInst, hResInfo);
-			if (hResData) {
-				lSize = SizeofResource(hInst, hResInfo);
-				LPVOID pMem = LockResource(hResData);
-				if (pMem) {
-					pbData = new BYTE[lSize];
-					CopyMemory(pbData, pMem, lSize);
-					//UnlockResource(hResData);
-				}
-			}
-		}
-		if (!pbData) {
-			WCHAR wszMsg[_MAX_PATH * 2];
-			swprintf_s(wszMsg, _countof(wszMsg), L"ピクセルシェーダ(ID=%d) 読込エラー", (int)(ULONG_PTR)pwszPSFName);
-			MessageBoxW(hWnd, wszMsg, L"error", MB_OK);
-			return E_FAIL;
-		}
-	} else {
-		_wsplitpath_s(pwszPSFName, wszDrive, _countof(wszDrive),
-			wszDir, _countof(wszDir), wszFName, _countof(wszFName), nullptr, 0);
-		wcscpy_s(wszCSODir, _countof(wszCSODir), wszDir);
-		wcscat_s(wszCSODir, _countof(wszCSODir), g_pszCSODir);
-		_wmakepath_s(wszPath, _countof(wszPath), wszDrive, wszCSODir, wszFName, L".cso");
-		FILE* fp = nullptr;
-		_wfopen_s(&fp, wszPath, L"rb");
-		if (fp) {
-			fseek(fp, 0L, SEEK_END);
-			lSize = ftell(fp);
-			fseek(fp, 0L, SEEK_SET);
-			pbData = new BYTE[lSize];
-			fread(pbData, lSize, 1, fp);
-			fclose(fp);
-		} else {
-#ifdef D3DCOMPILER
-			// ブロブからピクセルシェーダ作成
-			_wmakepath_s(wszPath, _countof(wszPath), wszDrive, wszDir, wszFName, L".hlsl");
-			hr = D3DCompileFromFile(wszPath, nullptr, nullptr,
-				"main", "ps_5_0", 0, 0, &pCompiledShader, nullptr);
-			if (FAILED(hr)) {
-				WCHAR wszMsg[_MAX_PATH * 2];
-				swprintf_s(wszMsg, _countof(wszMsg), L"ピクセルシェーダ(%s) コンパイル失敗", pwszPSFName);
-				MessageBoxW(hWnd, wszMsg, L"error", MB_OK);
-				return hr;
-			}
-			pbData = (PBYTE)pCompiledShader->GetBufferPointer();
-			lSize = (LONG)pCompiledShader->GetBufferSize();
-#else
-			WCHAR wszMsg[_MAX_PATH * 2];
-			swprintf_s(wszMsg, _countof(wszMsg), L"ピクセルシェーダ(%s) 読み込みエラー", pwszPSFName);
-			MessageBoxW(hWnd, wszMsg, L"error", MB_OK);
-			return E_FAIL;
-#endif
-		}
+VertexShader::ILList VertexShader::m_list;
+void VertexShader::ReleaseInputLayout()
+{
+	ILList::iterator it = m_list.begin();
+	while (it != m_list.end())
+	{
+		SAFE_RELEASE((it->second));
+		++it;
 	}
+}
+
+VertexShader::VertexShader() : Shader(Shader::VertexShader), m_pVS(nullptr), m_pInputLayout(nullptr)
+{
+}
+
+VertexShader::~VertexShader()
+{
+	SAFE_RELEASE(m_pVS);
+}
+
+void VertexShader::Bind()
+{
+	ID3D11DeviceContext* pContext = GetDeviceContext();
+	pContext->VSSetShader(m_pVS, NULL, 0);
+	pContext->IASetInputLayout(m_pInputLayout);
+}
+
+HRESULT VertexShader::MakeShader(void * pData, UINT size)
+{
+	HRESULT hr;
 	ID3D11Device* pDevice = GetDevice();
-	hr = pDevice->CreatePixelShader(pbData, lSize, nullptr, ppPixelShader);
-	if (pCompiledShader)
-		pCompiledShader->Release();
-	else
-		delete[] pbData;
-	if (FAILED(hr)) {
-		WCHAR wszMsg[_MAX_PATH * 2];
-		swprintf_s(wszMsg, _countof(wszMsg), L"ピクセルシェーダ(%s) 生成失敗", pwszPSFName);
-		MessageBoxW(hWnd, wszMsg, L"error", MB_OK);
-		return hr;
+
+	// シェーダー作成
+	hr = pDevice->CreateVertexShader(pData, size, NULL, &m_pVS);
+	if (FAILED(hr)) { return hr; }
+	
+	// 動的に入力レイアウトを取得
+	ID3D11ShaderReflection *pReflection;
+	D3D11_SHADER_DESC shaderDesc;
+	D3D11_INPUT_ELEMENT_DESC* pInputDesc;
+	D3D11_SIGNATURE_PARAMETER_DESC sigDesc;
+	std::string key = "";
+
+	DXGI_FORMAT formats[][4] =
+	{
+		{ DXGI_FORMAT_R32_UINT, DXGI_FORMAT_R32G32_UINT, DXGI_FORMAT_R32G32B32_UINT, DXGI_FORMAT_R32G32B32A32_UINT,},
+		{ DXGI_FORMAT_R32_SINT,	DXGI_FORMAT_R32G32_SINT, DXGI_FORMAT_R32G32B32_SINT, DXGI_FORMAT_R32G32B32A32_SINT,},
+		{ DXGI_FORMAT_R32_FLOAT, DXGI_FORMAT_R32G32_FLOAT, DXGI_FORMAT_R32G32B32_FLOAT, DXGI_FORMAT_R32G32B32A32_FLOAT,},
+	};
+
+	hr = D3DReflect(pData, size, IID_PPV_ARGS(&pReflection));
+	if (FAILED(hr)) { return hr; }
+
+	pReflection->GetDesc(&shaderDesc);
+	pInputDesc = new D3D11_INPUT_ELEMENT_DESC[shaderDesc.InputParameters];
+	for (UINT i = 0; i < shaderDesc.InputParameters; ++i)
+	{
+		pReflection->GetInputParameterDesc(i, &sigDesc);
+		pInputDesc[i].SemanticName = sigDesc.SemanticName;
+		pInputDesc[i].SemanticIndex = sigDesc.SemanticIndex;
+
+		// 立っているビットの数を数える
+		BYTE elementCount = sigDesc.Mask;
+		elementCount = (elementCount & 0x05) + ((elementCount >> 1) & 0x05);
+		elementCount = (elementCount & 0x03) + ((elementCount >> 2) & 0x03);
+
+		switch (sigDesc.ComponentType)
+		{
+		case D3D_REGISTER_COMPONENT_UINT32:
+			pInputDesc[i].Format = formats[0][elementCount - 1];
+			break;
+		case D3D_REGISTER_COMPONENT_SINT32:
+			pInputDesc[i].Format = formats[1][elementCount - 1];
+			break;
+		case D3D_REGISTER_COMPONENT_FLOAT32:
+			pInputDesc[i].Format = formats[2][elementCount - 1];
+			break;
+		}
+		pInputDesc[i].InputSlot = 0;
+		pInputDesc[i].AlignedByteOffset = i == 0 ? 0 : D3D11_APPEND_ALIGNED_ELEMENT;
+		pInputDesc[i].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+		pInputDesc[i].InstanceDataStepRate = 0;
+
+		key += sigDesc.SemanticName;
+		key += '0' + sigDesc.SemanticIndex;
 	}
+
+	ILList::iterator it = m_list.begin();
+	while (it != m_list.end())
+	{
+		if (it->first == key)
+		{
+			m_pInputLayout = it->second;
+			break;
+		}
+		++it;
+	}
+	if (it == m_list.end())
+	{
+		hr = pDevice->CreateInputLayout(pInputDesc, shaderDesc.InputParameters, pData, size, &m_pInputLayout);
+		if (SUCCEEDED(hr)) 
+		{ 
+			m_list.insert(ILkey(key, m_pInputLayout)); 
+		}
+	}
+
+	delete[] pInputDesc;
+	pReflection->Release();
 	return hr;
 }
 
-HRESULT LoadShader(LPCWSTR pwszVSFName, LPCWSTR pwszPSFName,
-	ID3D11VertexShader** ppVertexShader, ID3D11InputLayout** ppVertexLayout,
-	ID3D11PixelShader** ppPixelShader,
-	const D3D11_INPUT_ELEMENT_DESC* pInpElemDesc, UINT uNumElem)
+PixelShader::PixelShader() : Shader(Shader::PixelShader), m_pPS(nullptr)
 {
-	// 頂点シェーダ読み込み
-	HRESULT hr = LoadVertexShader(pwszVSFName, ppVertexShader, ppVertexLayout, pInpElemDesc, uNumElem);
-	if (FAILED(hr)) return hr;
-	// ピクセルシェーダ読み込み
-	return LoadPixelShader(pwszPSFName, ppPixelShader);
 }
 
-HRESULT LoadVertexShader(LPCSTR pszVSFName, ID3D11VertexShader** ppVertexShader,
-	ID3D11InputLayout** ppVertexLayout,
-	const D3D11_INPUT_ELEMENT_DESC* pInpElemDesc, UINT uNumElem)
+PixelShader::~PixelShader()
 {
-	if (IS_INTRESOURCE(pszVSFName)) {
-		return LoadVertexShader((LPCWSTR)pszVSFName, ppVertexShader, ppVertexLayout, pInpElemDesc, uNumElem);
-	}
-	WCHAR wszVSFName[_MAX_PATH];
-	int nLen = MultiByteToWideChar(CP_ACP, 0, pszVSFName, lstrlenA(pszVSFName), wszVSFName, _countof(wszVSFName));
-	if (nLen <= 0) return E_FAIL;
-	wszVSFName[nLen] = L'\0';
-	return LoadVertexShader(wszVSFName, ppVertexShader, ppVertexLayout, pInpElemDesc, uNumElem);
+	SAFE_RELEASE(m_pPS);
 }
 
-HRESULT LoadPixelShader(LPCSTR pszPSFName, ID3D11PixelShader** ppPixelShader)
+void PixelShader::Bind()
 {
-	if (IS_INTRESOURCE(pszPSFName)) {
-		return LoadPixelShader((LPCWSTR)pszPSFName, ppPixelShader);
-	}
-	WCHAR wszPSFName[_MAX_PATH];
-	int nLen = MultiByteToWideChar(CP_ACP, 0, pszPSFName, lstrlenA(pszPSFName), wszPSFName, _countof(wszPSFName));
-	if (nLen <= 0) return E_FAIL;
-	wszPSFName[nLen] = L'\0';
-	return LoadPixelShader(wszPSFName, ppPixelShader);
+	ID3D11DeviceContext* pContext = GetDeviceContext();
+	pContext->PSSetShader(m_pPS, nullptr, 0);
 }
 
-HRESULT LoadShader(LPCSTR pszVSFName, LPCSTR pszPSFName,
-	ID3D11VertexShader** ppVertexShader, ID3D11InputLayout** ppVertexLayout,
-	ID3D11PixelShader** ppPixelShader,
-	const D3D11_INPUT_ELEMENT_DESC* pInpElemDesc, UINT uNumElem)
+HRESULT PixelShader::MakeShader(void * pData, UINT size)
 {
-	HRESULT hr = LoadVertexShader(pszVSFName, ppVertexShader, ppVertexLayout, pInpElemDesc, uNumElem);
-	if (FAILED(hr)) return hr;
-	return LoadPixelShader(pszPSFName, ppPixelShader);
+	HRESULT hr;
+	ID3D11Device* pDevice = GetDevice();
+	hr = pDevice->CreatePixelShader(pData, size, NULL, &m_pPS);
+
+	return hr;
 }

@@ -7,6 +7,7 @@
 #include "Texture.h"
 #include "Shader.h"
 #include "../main.h"
+#include "../Core/shaderList.h"
 
 #ifdef _DEBUG
 #pragma comment(lib, "assimp-vc141-mtd")
@@ -570,9 +571,6 @@ void CAssimpMesh::Draw(ID3D11DeviceContext* pDC, XMFLOAT4X4& m44World, float alp
 
 // モデル クラス
 // 静的メンバ変数
-ID3D11InputLayout* CAssimpModel::m_pVertexLayout;
-ID3D11VertexShader* CAssimpModel::m_pVertexShader;
-ID3D11PixelShader* CAssimpModel::m_pPixelShader;
 ID3D11SamplerState* CAssimpModel::m_pSampleLinear;
 
 // コンストラクタ
@@ -581,6 +579,9 @@ CAssimpModel::CAssimpModel() : m_pMaterial(nullptr), m_pScene(nullptr), m_pAnima
 	XMStoreFloat4x4(&m_mtxTexture, XMMatrixIdentity());
 	XMStoreFloat4x4(&m_mtxWorld, XMMatrixIdentity());
 	m_dCurrent = m_dLastPlaying = 0.0;
+
+	m_pVS = GetVS(VS_ASSIMP);
+	m_pPS = GetPS(PS_ASSIMP);
 }
 
 // デストラクタ
@@ -603,23 +604,13 @@ XMFLOAT4X4& CAssimpModel::GetTextureMatrix()
 // シェーダ初期化
 bool CAssimpModel::InitShader(ID3D11Device* pDevice)
 {
-	// シェーダ読み込み
-	HRESULT hr = LoadShader("AssimpVertex", "AssimpPixel",
-		&m_pVertexShader, &m_pVertexLayout, &m_pPixelShader);
-	if (FAILED(hr)) {
-#ifdef _DEBUG
-		MessageBoxW(0, L"hlsl読み込み失敗", nullptr, MB_OK);
-#endif
-		return false;
-	}
-
 	// テクスチャ用サンプラ作成
 	CD3D11_DEFAULT def;
 	CD3D11_SAMPLER_DESC sd(def);
 	sd.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
 	sd.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
 	sd.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
-	hr = pDevice->CreateSamplerState(&sd, &m_pSampleLinear);
+	HRESULT hr = pDevice->CreateSamplerState(&sd, &m_pSampleLinear);
 	if (FAILED(hr)) {
 #ifdef _DEBUG
 		MessageBoxW(0, L"テクスチャ用サンプラ作成失敗", nullptr, MB_OK);
@@ -634,9 +625,6 @@ bool CAssimpModel::InitShader(ID3D11Device* pDevice)
 void CAssimpModel::UninitShader()
 {
 	SAFE_RELEASE(m_pSampleLinear);
-	SAFE_RELEASE(m_pPixelShader);
-	SAFE_RELEASE(m_pVertexLayout);
-	SAFE_RELEASE(m_pVertexShader);
 }
 
 // モデル読み込み
@@ -716,10 +704,8 @@ void CAssimpModel::Draw(ID3D11DeviceContext* pDC, XMFLOAT4X4& mtxWorld, EByOpaci
 
 	m_mtxWorld = mtxWorld;
 	// 使用するシェーダーの登録	
-	pDC->VSSetShader(m_pVertexShader, nullptr, 0);
-	pDC->PSSetShader(m_pPixelShader, nullptr, 0);
-	// 頂点インプットレイアウトをセット
-	pDC->IASetInputLayout(m_pVertexLayout);
+	m_pVS->Bind();
+	m_pPS->Bind();
 	// プリミティブ形状をセット
 	pDC->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	// テクスチャサンプラをセット

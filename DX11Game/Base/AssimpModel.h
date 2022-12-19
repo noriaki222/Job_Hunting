@@ -15,6 +15,7 @@
 #include <assimp/postprocess.h>
 #include "Camera.h"
 #include "Light.h"
+#include "Shader.h"
 
 // マクロ
 #ifndef SAFE_RELEASE
@@ -234,10 +235,9 @@ private:
 	double m_dCurrent;
 	double m_dLastPlaying;
 
-	static ID3D11InputLayout* m_pVertexLayout;
-	static ID3D11VertexShader* m_pVertexShader;
-	static ID3D11PixelShader* m_pPixelShader;
 	static ID3D11SamplerState* m_pSampleLinear;
+	VertexShader* m_pVS;
+	PixelShader* m_pPS;
 
 public:
 	CAssimpModel();
@@ -255,6 +255,8 @@ public:
 	DirectX::XMFLOAT4X4& GetWorldMatrix() { return m_mtxWorld; }
 	void SetMaterial(TAssimpMaterial* pMaterial = nullptr) { m_pMaterial = pMaterial; }
 	TAssimpMaterial* GetMaterial() { return m_pMaterial; }
+	void SetVS(VertexShader* vs) { m_pVS = vs; }
+	void SetPS(PixelShader* ps) { m_pPS = ps; }
 	void SetAnimIndex(int nAnimIndex);
 	UINT GetAnimCount();
 	double GetAnimDuration(int nAnimIndex = -1/* -1:現在のアニメ */);

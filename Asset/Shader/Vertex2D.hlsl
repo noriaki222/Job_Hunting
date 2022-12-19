@@ -11,8 +11,8 @@ cbuffer global : register(b0) {
 // ÉpÉâÉÅÅ[É^
 struct VS_INPUT {
 	float3	Position	: POSITION;
-	float2	TexCoord	: TEXCOORD0;
 	float4	Diffuse		: COLOR0;
+	float2	TexCoord	: TEXCOORD0;
 };
 
 struct VS_OUTPUT {

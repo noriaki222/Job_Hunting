@@ -5,16 +5,20 @@
 enum VertexShaderKind
 {
 	VS_ASSIMP,
+	VS_2D,
+	VS_3D,
 	VS_MAX
 };
 
 enum PixelShaderKind
 {
 	PS_ASSIMP,
+	PS_2D,
+	PS_3D,
 	PS_MAX
 };
 
 void InitShaderList();
 void UninitShaderList();
-ID3D11VertexShader* GetVS(VertexShaderKind kind);
-ID3D11PixelShader* GetPS(PixelShaderKind kind);
+VertexShader* GetVS(VertexShaderKind kind);
+PixelShader* GetPS(PixelShaderKind kind);

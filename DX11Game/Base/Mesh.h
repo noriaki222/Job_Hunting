@@ -1,6 +1,7 @@
 // ユーザ定義メッシュ [Mesh.h]
 #pragma once
 #include "../main.h"
+#include "../Core/shaderList.h"
 
 class CMeshMaterial {
 public:
@@ -13,8 +14,6 @@ public:
 
 class CMesh
 {
-	static ID3D11PixelShader* m_pPixelShader;	// ピクセルシェーダ
-
 public:
 	CMesh();
 	virtual ~CMesh();
@@ -33,6 +32,8 @@ public:
 private:
 	ID3D11Buffer* m_pVertexBuffer;	// 頂点バッファインターフェースへのポインタ
 	ID3D11Buffer* m_pIndexBuffer;	// インデックスバッファインターフェースへのポインタ
+	VertexShader* m_pVS;
+	PixelShader* m_pPS;
 
 	int m_nNumVertex;				// 総頂点数	
 	int m_nNumIndex;				// 総インデックス数
@@ -43,6 +44,4 @@ private:
 
 	static ID3D11Buffer* m_pConstantBuffer[2];	// 定数バッファ
 	static ID3D11SamplerState* m_pSamplerState;	// テクスチャ サンプラ
-	static ID3D11VertexShader* m_pVertexShader;	// 頂点シェーダ
-	static ID3D11InputLayout* m_pInputLayout;	// 頂点フォーマット
 };

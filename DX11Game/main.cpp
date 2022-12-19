@@ -7,6 +7,7 @@
 #include "Base\Model.h"
 #include "Base\Input.h"
 #include "Base\Mesh.h"
+#include "Core\shaderList.h"
 
 #include "Manager\SceneManager.h"
 #include "Core\Debug\Debug_Collision.h"
@@ -347,6 +348,8 @@ HRESULT Init(HWND hWnd, BOOL bWindow)
 	g_pDevice->CreateDepthStencilState(&dsd2, &g_pDSS[1]);
 
 	// 以下各クラスの初期化処理を書く
+	InitShaderList();
+
 	// ポリゴン表示初期化
 	hr = Polygon::Init(g_pDevice);
 	if (FAILED(hr))
@@ -402,6 +405,8 @@ void Uninit(void)
 	UninitInput();
 
 	Polygon::Fin();
+
+	UninitShaderList();
 
 	// 深度ステンシルステート解放
 	for (int i = 0; i < _countof(g_pDSS); ++i) {

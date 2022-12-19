@@ -40,15 +40,14 @@ struct SHADER_GLOBAL2 {
 // 静的メンバ
 ID3D11Buffer* CMesh::m_pConstantBuffer[2];	// 定数バッファ
 ID3D11SamplerState* CMesh::m_pSamplerState;	// テクスチャ サンプラ
-ID3D11VertexShader* CMesh::m_pVertexShader;	// 頂点シェーダ
-ID3D11InputLayout* CMesh::m_pInputLayout;	// 頂点フォーマット
-ID3D11PixelShader* CMesh::m_pPixelShader;	// ピクセルシェーダ
 
 // コンストラクタ
 CMesh::CMesh()
 {
 	m_pVertexBuffer = nullptr;
 	m_pIndexBuffer = nullptr;
+	m_pVS = GetVS(VS_3D);
+	m_pPS = GetPS(PS_3D);
 }
 
 // デストラクタ
@@ -61,18 +60,6 @@ HRESULT CMesh::InitShader()
 {
 	HRESULT hr = S_OK;
 	ID3D11Device* pDevice = GetDevice();
-
-	// シェーダ初期化
-	static const D3D11_INPUT_ELEMENT_DESC layout[] = {
-		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT,    0, 0,                            D3D11_INPUT_PER_VERTEX_DATA, 0},
-		{"NORMAL",   0, DXGI_FORMAT_R32G32B32_FLOAT,    0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
-		{"COLOR",    0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
-		{"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT,       0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
-	};
-	hr = LoadShader("Vertex", "Pixel", &m_pVertexShader, &m_pInputLayout, &m_pPixelShader, layout, _countof(layout));
-	if (FAILED(hr)) {
-		return hr;
-	}
 
 	// 定数バッファ生成
 	D3D11_BUFFER_DESC bd;
@@ -109,12 +96,6 @@ void CMesh::FinShader()
 	for (int i = 0; i < _countof(m_pConstantBuffer); ++i) {
 		SAFE_RELEASE(m_pConstantBuffer[i]);
 	}
-	// ピクセルシェーダ解放
-	SAFE_RELEASE(m_pPixelShader);
-	// 頂点フォーマット解放
-	SAFE_RELEASE(m_pInputLayout);
-	// 頂点シェーダ解放
-	SAFE_RELEASE(m_pVertexShader);
 }
 
 // 初期化
@@ -172,9 +153,8 @@ void CMesh::Draw()
 {
 	// シェーダ設定
 	ID3D11DeviceContext* pDeviceContext = GetDeviceContext();
-	pDeviceContext->VSSetShader(m_pVertexShader, nullptr, 0);
-	pDeviceContext->PSSetShader(m_pPixelShader, nullptr, 0);
-	pDeviceContext->IASetInputLayout(m_pInputLayout);
+	m_pVS->Bind();
+	m_pPS->Bind();
 
 	// 頂点バッファをセット
 	UINT stride = sizeof(VERTEX_3D);

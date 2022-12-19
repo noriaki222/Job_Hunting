@@ -1,2 +1,27 @@
-﻿  TestScene.cpp
+﻿  AssimpModel.cpp
+c:\users\mothu\onedrive\ドキュメント\github\job_hunting\dx11game\base\assimpmodel.cpp(758): warning C4244: '引数': 'EByOpacity' から 'float' への変換です。データが失われる可能性があります。
+  Camera.cpp
+  Mesh.cpp
+  Model.cpp
+  Polygon.cpp
+  Shader.cpp
+  Box.cpp
+  Debug_Collision.cpp
+  Object2D.cpp
+  Object3D.cpp
+  SceneBase.cpp
+  ScreenObjectBase.cpp
+  ShaderList.cpp
+  SceneManager.cpp
+  SceneFade.cpp
+  CollisionScene.cpp
+  TestScene.cpp
+  Test2DObj.cpp
+  Test3D.cpp
+  TestCollision.cpp
+  コードを生成中...
+  コンパイル中...
+  main.cpp
+  コードを生成中...
+     ライブラリ C:\Users\mothu\OneDrive\ドキュメント\GitHub\Job_Hunting\DX11Game\DX11Game.lib とオブジェクト C:\Users\mothu\OneDrive\ドキュメント\GitHub\Job_Hunting\DX11Game\DX11Game.exp を作成中
   DX11Game.vcxproj -> C:\Users\mothu\OneDrive\ドキュメント\GitHub\Job_Hunting\DX11Game\DX11Game.exe

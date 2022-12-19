@@ -1,7 +1,7 @@
 // 2Dポリゴン処理
 
 #include "Polygon.h"
-#include "Shader.h"
+#include "../Core/shaderList.h"
 
 using namespace DirectX;
 
@@ -39,19 +39,17 @@ XMFLOAT4X4					Polygon::m_mView;					// ビュー変換行列
 XMFLOAT4X4					Polygon::m_mWorld;					// ワールド変換行列
 XMFLOAT4X4					Polygon::m_mTex;					// テクスチャ変換行列
 
+VertexShader*				Polygon::m_pVS;
+PixelShader*				Polygon::m_pPS;
+
 // 初期化
 HRESULT Polygon::Init(ID3D11Device* pDevice)
 {
 	HRESULT hr = S_OK;
 
 	// シェーダ初期化
-	static const D3D11_INPUT_ELEMENT_DESC layout[] = {
-		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT,    0, 0,                            D3D11_INPUT_PER_VERTEX_DATA, 0},
-		{"COLOR",    0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
-		{"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT,       0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
-	};
-	hr = LoadShader("Vertex2D", "Pixel2D",
-		&m_pVertexShader, &m_pInputLayout, &m_pPixelShader, layout, _countof(layout));
+	m_pVS = GetVS(VS_2D);
+	m_pPS = GetPS(PS_2D);
 	if (FAILED(hr)) {
 		return hr;
 	}
@@ -147,9 +145,8 @@ void Polygon::Draw(ID3D11DeviceContext * pDeviceContext)
 	// 頂点バッファ更新
 	SetVertex();
 
-	pDeviceContext->VSSetShader(m_pVertexShader, nullptr, 0);
-	pDeviceContext->PSSetShader(m_pPixelShader, nullptr, 0);
-	pDeviceContext->IASetInputLayout(m_pInputLayout);
+	m_pVS->Bind();
+	m_pPS->Bind();
 
 	UINT stride = sizeof(VERTEX_2D);
 	UINT offset = 0;
@@ -194,9 +191,8 @@ void Polygon::Draw(ID3D11DeviceContext * pDeviceContext, XMFLOAT4X4 mWorld)
 	// 頂点バッファ更新
 	SetVertex();
 
-	pDeviceContext->VSSetShader(m_pVertexShader, nullptr, 0);
-	pDeviceContext->PSSetShader(m_pPixelShader, nullptr, 0);
-	pDeviceContext->IASetInputLayout(m_pInputLayout);
+	m_pVS->Bind();
+	m_pPS->Bind();
 
 	UINT stride = sizeof(VERTEX_2D);
 	UINT offset = 0;
