@@ -20,8 +20,9 @@ public:
 	void UpdateMatrix();
 
 	void SetModel(CAssimpModel* model);
+	void SetVS(VertexShaderKind kind) { m_model->SetVS(GetVS(kind)); }
+	void SetPS(PixelShaderKind kind) { m_model->SetPS(GetPS(kind)); }
 protected:
-	CAssimpModel* m_model;
 	bool m_isAnim;		// アニメーションするか
 	int m_animNo;		// アニメーションNo.
 	double m_animTime;	// 再生時間
@@ -31,6 +32,7 @@ protected:
 #endif // _DEBUG
 
 private:
+	CAssimpModel* m_model;
 	double m_lastTime = NULL;
 
 };
