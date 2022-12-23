@@ -6,6 +6,7 @@ TestScene::TestScene()
 	m_pTest3D = CreateObj(m_pTest3D);
 	m_pSky = CreateObj(m_pSky);
 	CCamera::Set(&m_camera);
+	CCamera::Get()->SetSky(m_pSky);
 }
 
 TestScene::~TestScene()

@@ -16,7 +16,6 @@ SkyBox::~SkyBox()
 
 void SkyBox::Draw()
 {
-	m_transform.pos = CCamera::Get()->GetPos();
 	SetZBuffer(false);
 	CLight* pLight = CLight::Get();
 	pLight->SetDisable();

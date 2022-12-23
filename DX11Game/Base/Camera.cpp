@@ -1,6 +1,6 @@
 // カメラクラス
 #include "Camera.h"
-
+#include "../Object/SkyBox.h"
 
 using namespace DirectX;
 
@@ -66,6 +66,8 @@ void CCamera::Init()
 	for (int i = 0; i < 4; ++i)
 		XMStoreFloat4(&m_frus[i], XMPlaneNormalize(XMLoadFloat4(&m_frus[i])));
 
+	m_pSky = nullptr;
+
 	CalcWorldMatrix();
 }
 
@@ -98,6 +100,11 @@ void CCamera::Clear()
 
 	SetZBuffer(true);
 	SetBlendState(BS_NONE);
+
+	if (m_pSky)
+	{
+		m_pSky->SetPos(m_vPos);
+	}
 }
 
 // ビュー/プロジェクション マトリックス更新

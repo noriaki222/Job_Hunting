@@ -4,6 +4,7 @@
 #include "../main.h"
 
 class CAssimpModel;
+class SkyBox;
 class CCamera
 {
 protected:
@@ -26,6 +27,8 @@ private:
 
 	DirectX::XMFLOAT4 m_frus[6];	// 視錐台
 	DirectX::XMFLOAT4 m_frusw[6];	// 視錐台(ワールド座標
+
+	SkyBox* m_pSky;		// スカイボックス
 
 	static CCamera* m_pCamera;		// 現在のカメラ
 
@@ -54,6 +57,7 @@ public:
 	DirectX::XMFLOAT4X4& GetProjMatrix() { return m_mtxProj; }
 	DirectX::XMFLOAT3& GetAngle() { return m_vAngle; }
 	int CollisionViewFrustum(DirectX::XMFLOAT3* pCenter, float fRadius);
+	void SetSky(SkyBox* sky) { m_pSky = sky; }
 
 	static CCamera* Get() { return m_pCamera; }
 	static void Set(CCamera* pCamera = nullptr);
