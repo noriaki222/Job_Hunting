@@ -16,6 +16,7 @@ HRESULT SceneManager::Create()
 	if (!pInstance)
 	{
 		pInstance = new SceneManager;
+		CCamera::Get()->Init();
 		return S_OK;
 	}
 	return S_FALSE;
@@ -58,6 +59,7 @@ void SceneManager::Update()
 				break;
 			}
 			m_pSceneFade->FadeInScene();
+			CCamera::Get()->Init();
 			m_isChange = false;
 		}
 	}

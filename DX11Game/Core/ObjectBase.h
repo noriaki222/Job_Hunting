@@ -11,6 +11,7 @@ enum EObjTag
 {
 	TAG_COLLTEST = -1,
 	TAG_NONE = 0,
+	TAG_SKY,
 
 	MAX_TAG
 };
@@ -45,6 +46,7 @@ public:
 	bool GetEnable() { return m_enable; }
 	bool GetVisible() { return m_visible; }
 	Transform GetTransform() { return m_transform; }
+	DirectX::XMFLOAT3 GetPos() { return m_transform.pos; }
 	RigidBody GetRigidbody() { return m_rigidbody; }
 	Collider GetCollider() { return m_coll; }
 	DirectX::XMFLOAT4 GetColor() { return m_color; }
@@ -85,3 +87,13 @@ protected:
 
 	std::list<ObjectBase*>::iterator m_it;
 };
+
+bool comp(ObjectBase* c1, ObjectBase* c2);
+
+template<class T>
+T* CreateObj(T* ptr)
+{
+	ptr = new T;
+	ptr->Init();
+	return ptr;
+}

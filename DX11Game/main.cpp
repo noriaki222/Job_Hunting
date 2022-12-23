@@ -375,7 +375,6 @@ HRESULT Init(HWND hWnd, BOOL bWindow)
 	SceneManager::Create();
 	g_pScneManager = SceneManager::GetInstance();
 
-
 	return hr;
 }
 

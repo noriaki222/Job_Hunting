@@ -183,3 +183,8 @@ bool ObjectBase::Collision(ObjectBase * obj)
 	return true;
 	
 }
+
+bool comp(ObjectBase * c1, ObjectBase * c2)
+{
+	return c1->GetDrawOrder() < c2->GetDrawOrder();
+}

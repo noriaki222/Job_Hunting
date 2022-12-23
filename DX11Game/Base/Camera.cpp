@@ -1,6 +1,6 @@
 // カメラクラス
 #include "Camera.h"
-#include "AssimpModel.h"
+
 
 using namespace DirectX;
 
@@ -46,6 +46,26 @@ void CCamera::Init()
 	fVecZ = m_vPos.z - m_vTarget.z;
 	m_fLengthInterval = sqrtf(fVecX * fVecX + fVecZ * fVecZ);
 
+	// 視錐台の初期化
+	float fTan = tanf(XMConvertToRadians(m_fFovY * 0.5f));
+	m_frus[0].x = 0.0f; m_frus[0].y = -1.0f;
+	m_frus[0].z = fTan; m_frus[0].w = 0.0f;
+	m_frus[1].x = 0.0f; m_frus[1].y = 1.0f;
+	m_frus[1].z = fTan; m_frus[1].w = 0.0f;
+	fTan *= m_fAspectRatio;
+	m_frus[2].x = 1.0f; m_frus[2].y = 0.0f;
+	m_frus[2].z = fTan; m_frus[2].w = 0.0f;
+	m_frus[3].x = -1.0f; m_frus[3].y = 0.0f;
+	m_frus[3].z = fTan; m_frus[3].w = 0.0f;
+	m_frus[4].x = 0.0f; m_frus[4].y = 0.0f;
+	m_frus[4].z = 1.0f; m_frus[4].w = -m_fNearZ;
+	m_frus[5].x = 0.0f; m_frus[5].y = 0.0f;
+	m_frus[5].z = -1.0f; m_frus[5].w = m_fFarZ;
+
+	// 正規化
+	for (int i = 0; i < 4; ++i)
+		XMStoreFloat4(&m_frus[i], XMPlaneNormalize(XMLoadFloat4(&m_frus[i])));
+
 	CalcWorldMatrix();
 }
 
@@ -54,6 +74,13 @@ void CCamera::Update()
 {
 	// マトリックス更新
 	UpdateMatrix();
+	CalcWorldMatrix();
+
+	XMMATRIX mW = XMLoadFloat4x4(&m_mtxWorld);
+	mW = XMMatrixInverse(nullptr, mW);
+	mW = XMMatrixTranspose(mW);
+	for (int i = 0; i < 6; ++i)
+		XMStoreFloat4(&m_frusw[i], XMPlaneTransform(XMLoadFloat4(&m_frus[i]), mW));
 }
 
 // 画面クリア
@@ -123,6 +150,25 @@ XMFLOAT4X4& CCamera::CalcWorldMatrix()
 	m_mtxWorld._44 = 1.0f;
 
 	return m_mtxWorld;
+}
+
+// 戻り値：0→非表示, -1→部分表示, 1:表示
+int CCamera::CollisionViewFrustum(DirectX::XMFLOAT3 * pCenter, float fRadius)
+{
+	bool bHit = false;
+	XMVECTOR frusw, center, dot;
+	float fDot;
+	center = DirectX::XMLoadFloat3(pCenter);
+	for (int i = 0; i < 6; ++i)
+	{
+		frusw = DirectX::XMLoadFloat4(&m_frusw[i]);
+		dot = XMPlaneDotCoord(frusw, center);
+		XMStoreFloat(&fDot, dot);
+		if (fDot < -fRadius) return 0;	// 完全に外 
+		if (fDot <= fRadius) bHit = true;
+	}
+	if (bHit) return -1;	// 面を跨ぐ
+	return 1;
 }
 
 // カメラ インスタンス設定

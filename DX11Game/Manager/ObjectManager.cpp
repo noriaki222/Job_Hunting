@@ -1,4 +1,5 @@
 #include "ObjectManager.h"
+#include "../Base/Camera.h"
 
 ObjectManager *ObjectManager::pInstance = nullptr;
 
@@ -50,7 +51,14 @@ void ObjectManager::Draw()
 		if ((*it)->GetType() == TYPE_2D)
 			SetBlendState(BS_ALPHABLEND);
 		if ((*it)->GetType() == TYPE_3D)
+		{
+			if (CCamera::Get()->CollisionViewFrustum(&(*it)->GetPos(), 0.0f) == 0 && (*it)->GetTag() != TAG_SKY)
+			{
+				++it;
+				continue;
+			}
 			SetBlendState(BS_NONE);
+		}
 		(*it)->Draw();
 		++it;
 		SetBlendState(BS_NONE);
@@ -59,31 +67,8 @@ void ObjectManager::Draw()
 
 OBJiterator ObjectManager::AddManager(ObjectBase * obj)
 {
-	OBJiterator retit = m_pObjlist.begin();
-	while (retit != m_pObjlist.end())
-	{
-		if (m_pObjlist.size() > 0)
-		{
-			// ˆ—‡‚Ì•À‚Ñ‘Ö‚¦
-			if ((*retit)->GetDrawOrder() > obj->GetDrawOrder())
-			{
-				// ƒŠƒXƒg‚Ì—v‘f‚ª1‚Â‚¾‚Á‚½ê‡æ“ª‚É“ü‚ê‚é
-				if (m_pObjlist.size() == 1)
-				{
-					m_pObjlist.push_front(obj);
-					return m_pObjlist.begin();
-				}
-				--retit;
-				m_pObjlist.insert(retit, obj);
-				++retit;
-				return retit;
-			}
-		}
-		++retit;
-	}
-
 	m_pObjlist.push_back(obj);
-	retit = m_pObjlist.end();
+	OBJiterator retit = m_pObjlist.end();
 	--retit;
 	return retit;
 }

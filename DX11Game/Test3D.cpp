@@ -1,10 +1,9 @@
 #include "Test3D.h"
-#include <time.h>
 #include "Base\Input.h"
 
 Test3D::Test3D()
 {
-	SetModel(CModel::GetModel(EModel::MODEL_TEST));
+	SetModel(CModel::GetModel(MODEL_TEST));
 	m_transform.scale = DirectX::XMFLOAT3(0.1f, 0.1f, 0.1f);
 	m_coll.size = DirectX::XMFLOAT3(40.0f, 80.0f, 50.0f);
 	m_coll.center = DirectX::XMFLOAT3(0.0f, 80.0f, 0.0f);

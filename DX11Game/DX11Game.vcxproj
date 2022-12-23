@@ -172,6 +172,7 @@
     <ClCompile Include="Manager\ObjectManager.cpp" />
     <ClCompile Include="Manager\SceneManager.cpp" />
     <ClCompile Include="Object\SceneFade.cpp" />
+    <ClCompile Include="Object\SkyBox.cpp" />
     <ClCompile Include="Scene\CollisionScene.cpp" />
     <ClCompile Include="Scene\TestScene.cpp" />
     <ClCompile Include="Test2DObj.cpp" />
@@ -202,6 +203,7 @@
     <ClInclude Include="Manager\ObjectManager.h" />
     <ClInclude Include="Manager\SceneManager.h" />
     <ClInclude Include="Object\SceneFade.h" />
+    <ClInclude Include="Object\SkyBox.h" />
     <ClInclude Include="Scene\CollisionScene.h" />
     <ClInclude Include="Scene\TestScene.h" />
     <ClInclude Include="Test2DObj.h" />

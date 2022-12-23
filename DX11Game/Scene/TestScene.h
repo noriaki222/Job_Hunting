@@ -3,6 +3,7 @@
 #include "../Test2DObj.h"
 #include "../Test3D.h"
 #include "../TestCamera.h"
+#include "../Object/SkyBox.h"
 
 // モデルテスト用シーン
 class TestScene : public SceneBase
@@ -15,4 +16,5 @@ private:
 	Test2DObj* m_pTest2D;
 	Test3D* m_pTest3D;
 	TestCamera m_camera;
+	SkyBox* m_pSky;
 };

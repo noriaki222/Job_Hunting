@@ -57,5 +57,6 @@ void SceneBase::ConstUpdate()
 
 void SceneBase::Draw()
 {
+	m_pObjMng->Sort();
 	m_pObjMng->Draw();
 }

@@ -1,7 +1,7 @@
 // 2Dƒ|ƒŠƒSƒ“ˆ—
 #pragma once
 #include "../main.h"
-#include "Shader.h"
+#include "../Core/shaderList.h"
 
 class Polygon
 {
@@ -53,4 +53,6 @@ public:
 	static void SetAlpha(float fAlpha);
 	static void SetColor(float fRed, float fGreen, float fBlue, float fAlpha);
 	static void SetColor(DirectX::XMFLOAT4 vColor);
+	static void SetVS(VertexShaderKind kind) { m_pVS = GetVS(kind); }
+	static void SetPS(PixelShaderKind kind) { m_pPS = GetPS(kind); }
 };

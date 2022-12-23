@@ -20,6 +20,7 @@ public:
 	OBJiterator AddManager(ObjectBase* obj);
 	void Release(OBJiterator it);
 	void Clear() { m_pObjlist.clear(); }
+	void Sort(){ m_pObjlist.sort(comp); }
 
 	// tag:探索するオブジェクトのTag, base:配列でbase以降のオブジェクトを探索
 	ObjectBase* FindObj(EObjTag tag, ObjectBase* base);

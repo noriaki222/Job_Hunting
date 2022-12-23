@@ -3,6 +3,7 @@
 #pragma once
 #include "../main.h"
 
+class CAssimpModel;
 class CCamera
 {
 protected:
@@ -23,6 +24,8 @@ private:
 	DirectX::XMFLOAT4X4 m_mtxView;	// ビュー マトリックス
 	DirectX::XMFLOAT4X4 m_mtxProj;	// プロジェクション マトリックス
 
+	DirectX::XMFLOAT4 m_frus[6];	// 視錐台
+	DirectX::XMFLOAT4 m_frusw[6];	// 視錐台(ワールド座標
 
 	static CCamera* m_pCamera;		// 現在のカメラ
 
@@ -50,6 +53,7 @@ public:
 	DirectX::XMFLOAT4X4& GetViewMatrix() { return m_mtxView; }
 	DirectX::XMFLOAT4X4& GetProjMatrix() { return m_mtxProj; }
 	DirectX::XMFLOAT3& GetAngle() { return m_vAngle; }
+	int CollisionViewFrustum(DirectX::XMFLOAT3* pCenter, float fRadius);
 
 	static CCamera* Get() { return m_pCamera; }
 	static void Set(CCamera* pCamera = nullptr);

@@ -141,6 +141,9 @@
     <ClCompile Include="Core\ShaderList.cpp">
       <Filter>ソース ファイル\Core</Filter>
     </ClCompile>
+    <ClCompile Include="Object\SkyBox.cpp">
+      <Filter>ソース ファイル\Object</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base\AssimpModel.h">
@@ -226,6 +229,9 @@
     </ClInclude>
     <ClInclude Include="Core\shaderList.h">
       <Filter>ヘッダー ファイル\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Object\SkyBox.h">
+      <Filter>ヘッダー ファイル\Object</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

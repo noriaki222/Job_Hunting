@@ -1,5 +1,6 @@
 #include "TestCamera.h"
 #include "Base\Input.h"
+#include "Base\Model.h"
 
 enum TestCameraKind
 {
@@ -16,11 +17,13 @@ TestCamera::TestCamera() : m_state(CAM_DCC_NONE), m_oldPos{ 0, 0 }
 
 void TestCamera::Init()
 {
+	CCamera::Init();
 }
 
 void TestCamera::Update()
 {
 	UpdateState();
+	CCamera::Update();
 	if (m_state == CAM_DCC_NONE) return;
 
 	Argument arg;

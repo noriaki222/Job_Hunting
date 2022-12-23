@@ -2,14 +2,15 @@
 
 TestScene::TestScene()
 {
-	m_pTest2D = new Test2DObj;
-	m_pTest3D = new Test3D;
-	m_pTest3D->Init();
+	m_pTest2D = CreateObj(m_pTest2D);
+	m_pTest3D = CreateObj(m_pTest3D);
+	m_pSky = CreateObj(m_pSky);
 	CCamera::Set(&m_camera);
 }
 
 TestScene::~TestScene()
 {
-	delete m_pTest2D;
-	delete m_pTest3D;
+	SAFE_DELETE(m_pSky);
+	SAFE_DELETE(m_pTest2D);
+	SAFE_DELETE(m_pTest3D);
 }
