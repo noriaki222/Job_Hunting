@@ -75,6 +75,7 @@ void SceneManager::Draw()
 #ifdef _DEBUG
 	SetBlendState(BS_ALPHABLEND);
 	SetZWrite(false);
+	SetRenderTarget(RT_GAME);
 	Debug_Collision::GetInstance()->Draw();
 	SetZWrite(true);
 	SetBlendState(BS_NONE);

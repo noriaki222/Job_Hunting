@@ -1,5 +1,6 @@
 #include "ObjectManager.h"
 #include "../Base/Camera.h"
+#include "../Core/ScereenObjectBase.h"
 
 ObjectManager *ObjectManager::pInstance = nullptr;
 
@@ -39,6 +40,9 @@ void ObjectManager::Update()
 
 void ObjectManager::Draw()
 {
+	// UIリスト
+	std::list<ObjectBase*> ui_list;
+
 	OBJiterator it;
 	it = m_pObjlist.begin();
 	while (it != m_pObjlist.end())
@@ -49,7 +53,10 @@ void ObjectManager::Draw()
 			continue;
 		}
 		if ((*it)->GetType() == TYPE_2D)
+		{
 			SetBlendState(BS_ALPHABLEND);
+			SetRenderTarget(RT_GAME);
+		}
 		if ((*it)->GetType() == TYPE_3D)
 		{
 			if (CCamera::Get()->CollisionViewFrustum(&(*it)->GetPos(), 0.0f) == 0 && (*it)->GetTag() != TAG_SKY)
@@ -58,10 +65,30 @@ void ObjectManager::Draw()
 				continue;
 			}
 			SetBlendState(BS_NONE);
+			SetRenderTarget(RT_GAME);
+		}
+		if ((*it)->GetType() == TYPE_UI)
+		{
+			SetBlendState(BS_ALPHABLEND);
+			SetRenderTarget(RT_UI);
+			ui_list.push_back((*it));
 		}
 		(*it)->Draw();
 		++it;
 		SetBlendState(BS_NONE);
+	}
+
+	// UIとゲーム自体をレンダーターゲットに描画
+	ScereenObjectBase screen;
+	SetRenderTarget(RT_GAME_AND_UI);
+	screen.SetTexture(GetRenderTexture(RT_GAME));
+	screen.Draw();
+	it = ui_list.begin();
+	while (it != ui_list.end())
+	{
+		SetBlendState(BS_ALPHABLEND);
+		(*it)->Draw();
+		++it;
 	}
 }
 

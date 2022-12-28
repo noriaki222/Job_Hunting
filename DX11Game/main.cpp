@@ -8,6 +8,7 @@
 #include "Base\Input.h"
 #include "Base\Mesh.h"
 #include "Core\shaderList.h"
+#include "Core\ScereenObjectBase.h"
 
 #include "Manager\SceneManager.h"
 #include "Core\Debug\Debug_Collision.h"
@@ -36,7 +37,9 @@ HINSTANCE					g_hInst;				// インスタンス ハンドル
 ID3D11Device*				g_pDevice;				// デバイス
 ID3D11DeviceContext*		g_pDeviceContext;		// デバイス コンテキスト
 IDXGISwapChain*				g_pSwapChain;			// スワップチェーン
-ID3D11RenderTargetView*		g_pRenderTargetView;	// フレームバッファ
+ID3D11Texture2D*			g_pRenderTextures[MAX_RENDER];	// レンダーテクスチャ
+ID3D11ShaderResourceView*	g_pRenderShaderResViews[MAX_RENDER];	// レンダーテクスチャのシェーダーリソースビュー
+ID3D11RenderTargetView*		g_pRenderTargetViews[MAX_RENDER];	// レンダーターゲット(0:バックバッファ, 1:ゲーム+UI, 2:UI, 3:ゲーム
 ID3D11Texture2D*			g_pDepthStencilTexture;	// Zバッファ用メモリ
 ID3D11DepthStencilView*		g_pDepthStencilView;	// Zバッファ
 UINT						g_uSyncInterval = 0;	// 垂直同期 (0:無, 1:有)
@@ -214,10 +217,29 @@ int OnCreate(HWND hWnd, LPCREATESTRUCT lpcs)
 // バックバッファ生成
 HRESULT CreateBackBuffer(void)
 {
-	// レンダーターゲットビュー生成
+	// レンダーターゲットテクスチャ作成
+	D3D11_TEXTURE2D_DESC rtDesc;
+	ZeroMemory(&rtDesc, sizeof(rtDesc));
+	rtDesc.Width = SCREEN_WIDTH;
+	rtDesc.Height = SCREEN_HEIGHT;
+	rtDesc.MipLevels = 1;
+	rtDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	rtDesc.SampleDesc.Count = 1;
+	rtDesc.Usage = D3D11_USAGE_DEFAULT;
+	rtDesc.ArraySize = 1;
+	rtDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+	rtDesc.CPUAccessFlags = 0;
+	for (int i = 1; i < MAX_RENDER; ++i)
+	{
+		g_pDevice->CreateTexture2D(&rtDesc, 0, &g_pRenderTextures[i]);
+		g_pDevice->CreateRenderTargetView(g_pRenderTextures[i], nullptr, &g_pRenderTargetViews[i]);
+		g_pDevice->CreateShaderResourceView(g_pRenderTextures[i], 0, &g_pRenderShaderResViews[i]);
+	}
+
+	// バックバッファを作成
 	ID3D11Texture2D* pBackBuffer = nullptr;
 	g_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer);
-	g_pDevice->CreateRenderTargetView(pBackBuffer, nullptr, &g_pRenderTargetView);
+	g_pDevice->CreateRenderTargetView(pBackBuffer, nullptr, &g_pRenderTargetViews[0]);
 	SAFE_RELEASE(pBackBuffer);
 
 	// Zバッファ用テクスチャ生成
@@ -245,7 +267,7 @@ HRESULT CreateBackBuffer(void)
 	if (FAILED(hr)) { return hr; }
 
 	// 各ターゲットビューをレンダーターゲットに設定
-	g_pDeviceContext->OMSetRenderTargets(1, &g_pRenderTargetView, g_pDepthStencilView);
+	g_pDeviceContext->OMSetRenderTargets(1, &g_pRenderTargetViews[0], g_pDepthStencilView);
 
 	// ビューポート設定
 	D3D11_VIEWPORT vp;
@@ -384,7 +406,12 @@ void ReleaseBackBuffer()
 	if (g_pDeviceContext) {	g_pDeviceContext->OMSetRenderTargets(0, nullptr, nullptr); }
 	SAFE_RELEASE(g_pDepthStencilView);
 	SAFE_RELEASE(g_pDepthStencilTexture);
-	SAFE_RELEASE(g_pRenderTargetView);
+	for (int i = 0; i < MAX_RENDER; ++i)
+	{
+		SAFE_RELEASE(g_pRenderTargetViews[i]);
+		SAFE_RELEASE(g_pRenderShaderResViews[i]);
+		SAFE_RELEASE(g_pRenderTextures[i]);
+	}
 }
 
 // 終了処理
@@ -459,6 +486,26 @@ void Draw(void)
 
 	g_pScneManager->Draw();
 
+	static ERenderTarget target = RT_GAME_AND_UI;
+#ifdef _DEBUG
+	if (IsKeyPress(VK_LCONTROL))
+	{
+		if (IsKeyPress('0'))
+			target = RT_BUCK;
+		if (IsKeyPress('1'))
+			target = RT_GAME_AND_UI;
+		if (IsKeyPress('2'))
+			target = RT_UI;
+		if (IsKeyPress('3'))
+			target = RT_GAME;
+	}
+#endif // _DEBUG
+
+
+	ScereenObjectBase screen;
+	SetRenderTarget(RT_BUCK);
+	screen.SetTexture(GetRenderTexture(target));
+	screen.Draw();
 	// バックバッファとフロントバッファの入れ替え
 	g_pSwapChain->Present(g_uSyncInterval, 0);
 }
@@ -487,9 +534,14 @@ ID3D11DeviceContext* GetDeviceContext()
 	return g_pDeviceContext;
 }
 
-ID3D11RenderTargetView * GetRenderTargetView()
+ID3D11RenderTargetView * GetRenderTargetView(int nTargetNum)
 {
-	return g_pRenderTargetView;
+	return g_pRenderTargetViews[nTargetNum];
+}
+
+ID3D11ShaderResourceView * GetRenderTexture(int nTargetNum)
+{
+	return g_pRenderShaderResViews[nTargetNum];
 }
 
 // Zバッファ有効無効制御
@@ -518,5 +570,18 @@ void SetCullMode(int nCullMode)
 {
 	if (nCullMode >= 0 && nCullMode < MAX_CULLMODE) {
 		g_pDeviceContext->RSSetState(g_pRs[nCullMode]);
+	}
+}
+
+void SetRenderTarget(int nTargetNum)
+{
+	g_pDeviceContext->OMSetRenderTargets(1, &g_pRenderTargetViews[nTargetNum], g_pDepthStencilView);
+}
+
+void ClearAllTarget(const FLOAT * color)
+{
+	for (int i = 0; i < MAX_RENDER; ++i)
+	{
+		g_pDeviceContext->ClearRenderTargetView(g_pRenderTargetViews[i], color);
 	}
 }

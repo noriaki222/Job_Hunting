@@ -14,6 +14,7 @@ public:
 	virtual void Draw();
 
 	void LoadTexture(const char* texPath);
+	void SetTexture(ID3D11ShaderResourceView* tex) { m_pTexture = tex; }
 	
 private:
 	ID3D11ShaderResourceView* m_pTexture;

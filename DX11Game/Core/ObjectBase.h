@@ -20,6 +20,7 @@ enum EObjType
 {
 	TYPE_2D = 0,
 	TYPE_3D,
+	TYPE_UI,
 
 	MAX_TYPE
 };

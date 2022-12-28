@@ -5,6 +5,7 @@
 
 Object2D::Object2D()
 {
+	m_type = TYPE_UI;	// 2Dオブジェクトがバグっているため
 	m_blendState = BS_ALPHABLEND;
 	m_pTex = nullptr;
 	m_billboard = BILLBOARD_NONE;
@@ -20,6 +21,7 @@ Object2D::Object2D()
 
 Object2D::Object2D(const LPCWSTR path)
 {
+	m_type = TYPE_UI;	// 2Dオブジェクトがバグっているため
 	m_blendState = BS_ALPHABLEND;
 	m_pTex = nullptr;
 	m_billboard = BILLBOARD_NONE;
