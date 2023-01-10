@@ -31,8 +31,10 @@ void Box::Draw()
 
 	DirectX::XMFLOAT4X4 mW;
 	DirectX::XMStoreFloat4x4(&mW, mWorld);
-	CMesh::SetWorld(&mW);
-	CMesh::Draw();
+	m_mesh.SetWorld(&mW);
+	m_mesh.SetVS(VS_3D);
+	m_mesh.SetPS(PS_BOX);
+	m_mesh.Draw();
 }
 
 HRESULT Box::Init(DirectX::XMFLOAT3*box, DirectX::XMFLOAT3 * center, DirectX::XMFLOAT4X4* world, DirectX::XMFLOAT3* scale)
@@ -98,8 +100,8 @@ HRESULT Box::Init(DirectX::XMFLOAT3*box, DirectX::XMFLOAT3 * center, DirectX::XM
 		pIndexWk[i * 6 + 4] = pIndexWk[i * 6 + 2];
 		pIndexWk[i * 6 + 5] = pIndexWk[i * 6 + 1];
 	}
-	hr = CMesh::Init(pVertexWk, 24, pIndexWk, 36);
-	CMesh::SetMaterial(&g_material);
+	hr = m_mesh.Init(pVertexWk, 24, pIndexWk, 36);
+	m_mesh.SetMaterial(&g_material);
 	delete[] pIndexWk;
 	delete[] pVertexWk;
 	return hr;
@@ -109,12 +111,12 @@ void Box::SetRed()
 {
 	CMeshMaterial mat = g_material;
 	mat.m_Diffuse = mat.m_Ambient = g_vRed;
-	SetMaterial(&mat);
+	m_mesh.SetMaterial(&mat);
 }
 
 void Box::SetGreen()
 {
 	CMeshMaterial mat = g_material;
 	mat.m_Diffuse = mat.m_Ambient = g_vGreen;
-	SetMaterial(&mat);
+	m_mesh.SetMaterial(&mat);
 }

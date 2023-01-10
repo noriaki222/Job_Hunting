@@ -54,7 +54,7 @@ Object2D::Object2D(const LPCWSTR path, XMFLOAT2 size) : m_defaultsize(size)
 	LoadTexture(path);
 
 	m_VS = VS_3D;
-	m_PS = PS_BILLBOARD;
+	m_PS = PS_3D;
 }
 
 Object2D::~Object2D()
@@ -147,22 +147,29 @@ void Object2D::MakeVertex()
 {
 	m_mesh.m_nNumVertex = 4;
 	VERTEX_3D* pVertexWk = new VERTEX_3D[m_mesh.m_nNumVertex];
-	pVertexWk[0].vtx = XMFLOAT3(-0.5f, 0.5f, 0.0f);
-	pVertexWk[1].vtx = XMFLOAT3(0.5f, 0.5f, 0.0f);
-	pVertexWk[2].vtx = XMFLOAT3(-0.5f, -0.5f, 0.0f);
-	pVertexWk[3].vtx = XMFLOAT3(0.5f, -0.5f, 0.0f);
-	pVertexWk[0].diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-	pVertexWk[1].diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-	pVertexWk[2].diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-	pVertexWk[3].diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	// 頂点座標の設定
+	pVertexWk[0].vtx = XMFLOAT3(-1.0f / 2.0f, 0.0f, 0.0f);
+	pVertexWk[1].vtx = XMFLOAT3(-1.0f / 2.0f, 1.0f, 0.0f);
+	pVertexWk[2].vtx = XMFLOAT3(1.0f / 2.0f, 0.0f, 0.0f);
+	pVertexWk[3].vtx = XMFLOAT3(1.0f / 2.0f, 1.0f, 0.0f);
+
+	// 法線の設定
 	pVertexWk[0].nor = XMFLOAT3(0.0f, 0.0f, -1.0f);
 	pVertexWk[1].nor = XMFLOAT3(0.0f, 0.0f, -1.0f);
 	pVertexWk[2].nor = XMFLOAT3(0.0f, 0.0f, -1.0f);
 	pVertexWk[3].nor = XMFLOAT3(0.0f, 0.0f, -1.0f);
-	pVertexWk[0].tex = XMFLOAT2(0.0f, 0.0f);
-	pVertexWk[1].tex = XMFLOAT2(1.0f, 0.0f);
-	pVertexWk[2].tex = XMFLOAT2(0.0f, 1.0f);
-	pVertexWk[3].tex = XMFLOAT2(1.0f, 1.0f);
+
+	// 反射光の設定
+	pVertexWk[0].diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	pVertexWk[1].diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	pVertexWk[2].diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	pVertexWk[3].diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+
+	// テクスチャ座標の設定
+	pVertexWk[0].tex = XMFLOAT2(0.0f, 1.0f);
+	pVertexWk[1].tex = XMFLOAT2(0.0f, 0.0f);
+	pVertexWk[2].tex = XMFLOAT2(1.0f, 1.0f);
+	pVertexWk[3].tex = XMFLOAT2(1.0f, 0.0f);
 
 	m_mesh.m_nNumIndex = 4;
 	int* pIndexWk = new int[m_mesh.m_nNumIndex];
@@ -172,7 +179,7 @@ void Object2D::MakeVertex()
 	pIndexWk[2] = 2;
 	pIndexWk[3] = 3;
 
-	HRESULT hr = m_mesh.Init(pVertexWk, 4, pIndexWk, 4);
+	HRESULT hr = m_mesh.MakeMeshVertex(pVertexWk, pIndexWk);
 	delete[] pIndexWk;
 	delete[] pVertexWk;
 }

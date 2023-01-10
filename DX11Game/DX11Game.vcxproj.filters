@@ -301,7 +301,7 @@
     <FxCompile Include="..\Asset\Shader\Vertex.hlsl">
       <Filter>Shader</Filter>
     </FxCompile>
-    <FxCompile Include="..\Asset\Shader\BillboardPS.hlsl">
+    <FxCompile Include="..\Asset\Shader\BoxPS.hlsl">
       <Filter>Shader</Filter>
     </FxCompile>
   </ItemGroup>

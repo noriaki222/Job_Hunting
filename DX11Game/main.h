@@ -80,8 +80,8 @@ typedef struct
 {
 	DirectX::XMFLOAT3 vtx;		// 頂点座標
 	DirectX::XMFLOAT3 nor;		// 法線ベクトル
-	DirectX::XMFLOAT2 tex;		// テクスチャ座標
 	DirectX::XMFLOAT4 diffuse;	// 拡散反射光
+	DirectX::XMFLOAT2 tex;		// テクスチャ座標
 } VERTEX_3D;
 
 struct Transform

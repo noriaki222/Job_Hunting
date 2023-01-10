@@ -12,7 +12,7 @@ const char* PixelShaderFile[] =
 	"data/shader/AssimpPixel.cso",
 	"data/shader/Pixel2D.cso",
 	"data/shader/Pixel.cso",
-	"data/shader/BillboardPS.cso",
+	"data/shader/BoxPS.cso",
 };
 
 

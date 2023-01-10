@@ -93,6 +93,8 @@ HRESULT CMesh::InitShader()
 // シェーダ終了処理
 void CMesh::FinShader()
 {
+	SAFE_RELEASE(m_pSamplerState);
+
 	// 定数バッファの解放
 	for (int i = 0; i < _countof(m_pConstantBuffer); ++i) {
 		SAFE_RELEASE(m_pConstantBuffer[i]);
@@ -175,7 +177,7 @@ void CMesh::Draw()
 	cb.mWVP = XMMatrixTranspose(mtxWorld * XMLoadFloat4x4(&pCamera->GetViewMatrix()) * XMLoadFloat4x4(&pCamera->GetProjMatrix()));
 	cb.mW = XMMatrixTranspose(mtxWorld);
 	XMFLOAT4X4 mTex(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0);
-	XMMATRIX mtxTex = XMLoadFloat4x4(&mTex);
+	XMMATRIX mtxTex = XMMatrixIdentity(); // XMLoadFloat4x4(&mTex);
 	cb.mTex = XMMatrixTranspose(mtxTex);
 	pDeviceContext->UpdateSubresource(m_pConstantBuffer[0], 0, nullptr, &cb, 0, 0);
 	pDeviceContext->VSSetConstantBuffers(0, 1, &m_pConstantBuffer[0]);

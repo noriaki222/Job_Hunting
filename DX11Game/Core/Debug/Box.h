@@ -14,6 +14,7 @@ public:
 	void SetGreen();
 
 private:
+	CMesh m_mesh;
 	DirectX::XMFLOAT3* m_center;
 	DirectX::XMFLOAT4X4* m_world;
 };
