@@ -9,6 +9,8 @@ namespace
 		"data/model/Sword And Shield.fbx",
 		"data/model/flyModel.x",
 		"data/model/sky.fbx",
+		"data/model/land2.fbx",
+		"data/model/Artorias_Sword.fbx",
 	};
 }
 

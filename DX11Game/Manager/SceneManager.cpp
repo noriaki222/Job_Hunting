@@ -2,6 +2,8 @@
 #include "../Base/Camera.h"
 #include "../Scene/TestScene.h"
 #include "../Scene/CollisionScene.h"
+#include "../Scene/Title.h"
+
 #include "../Core/Debug/Debug_Collision.h"
 
 SceneManager* SceneManager::pInstance = nullptr;
@@ -54,6 +56,9 @@ void SceneManager::Update()
 				break;
 			case SCENE_COLLISION:
 				m_pActiceScene = new CollisionScene;
+				break;
+			case SCENE_TITLE:
+				m_pActiceScene = new Title;
 				break;
 			case SCENE_NONE:
 				break;

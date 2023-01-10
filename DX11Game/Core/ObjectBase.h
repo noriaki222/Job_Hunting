@@ -12,6 +12,7 @@ enum EObjTag
 	TAG_COLLTEST = -1,
 	TAG_NONE = 0,
 	TAG_SKY,
+	TAG_LAND,
 
 	MAX_TAG
 };

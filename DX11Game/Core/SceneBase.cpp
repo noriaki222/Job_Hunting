@@ -28,7 +28,7 @@ void SceneBase::ConstUpdate()
 	{
 		if (IsKeyPress('0'))
 		{
-			SceneManager::GetInstance()->SetSecne(SCENE_TEST);
+			SceneManager::GetInstance()->SetSecne(SCENE_TITLE);
 		}
 		if (IsKeyPress('1'))
 		{

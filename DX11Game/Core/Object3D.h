@@ -17,9 +17,10 @@ public:
 	virtual void Update();
 	virtual void Draw();
 
-	void UpdateMatrix();
+	virtual void UpdateMatrix();
 
 	void SetModel(CAssimpModel* model);
+	CAssimpModel* GetModel() { return m_model; }
 	void SetVS(VertexShaderKind kind) { m_model->SetVS(GetVS(kind)); }
 	void SetPS(PixelShaderKind kind) { m_model->SetPS(GetPS(kind)); }
 protected:

@@ -15,6 +15,7 @@ enum PixelShaderKind
 	PS_ASSIMP,
 	PS_2D,
 	PS_3D,
+	PS_BILLBOARD,
 	PS_MAX
 };
 

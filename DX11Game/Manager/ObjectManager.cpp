@@ -59,7 +59,7 @@ void ObjectManager::Draw()
 		}
 		if ((*it)->GetType() == TYPE_3D)
 		{
-			if (CCamera::Get()->CollisionViewFrustum(&(*it)->GetPos(), 0.0f) == 0 && (*it)->GetTag() != TAG_SKY)
+			if (CCamera::Get()->CollisionViewFrustum(&(*it)->GetPos(), 0.0f) == 0 && (*it)->GetTag() != TAG_SKY && (*it)->GetTag() != TAG_LAND)
 			{
 				++it;
 				continue;

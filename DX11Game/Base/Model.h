@@ -7,6 +7,8 @@ enum EModel
 	MODEL_TEST = 0,	// テストモデル
 	MODE_TEST2,
 	MODEL_SKY,		// スカイボックス
+	MODEL_LAND,
+	MODEL_SWORD,
 	MAX_MODEL
 };
 

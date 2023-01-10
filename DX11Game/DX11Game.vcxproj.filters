@@ -58,6 +58,12 @@
     <Filter Include="ソース ファイル\Core\Debug">
       <UniqueIdentifier>{b930e0b1-ab02-48aa-b86d-440afc794a77}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\Object\Title">
+      <UniqueIdentifier>{31eb5efd-76c6-432d-b496-6e5577fe52e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Object\Title">
+      <UniqueIdentifier>{f085cecf-3d17-4d06-b035-e7cdcfb6322c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Base\AssimpModel.cpp">
@@ -143,6 +149,27 @@
     </ClCompile>
     <ClCompile Include="Object\SkyBox.cpp">
       <Filter>ソース ファイル\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Object\Land.cpp">
+      <Filter>ソース ファイル\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Object\Charactor.cpp">
+      <Filter>ソース ファイル\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="TestPlayer.cpp">
+      <Filter>ソース ファイル\Test</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\Title.cpp">
+      <Filter>ソース ファイル\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Object\Title\Sword.cpp">
+      <Filter>ソース ファイル\Object\Title</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\ObjectUI.cpp">
+      <Filter>ソース ファイル\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="TestBillBoard.cpp">
+      <Filter>ソース ファイル\Test</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -233,6 +260,27 @@
     <ClInclude Include="Object\SkyBox.h">
       <Filter>ヘッダー ファイル\Object</Filter>
     </ClInclude>
+    <ClInclude Include="Object\Land.h">
+      <Filter>ヘッダー ファイル\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Object\Charactor.h">
+      <Filter>ヘッダー ファイル\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="TestPlayer.h">
+      <Filter>ヘッダー ファイル\Test</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\Title.h">
+      <Filter>ヘッダー ファイル\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Object\Title\Sword.h">
+      <Filter>ヘッダー ファイル\Object\Title</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\ObjectUI.h">
+      <Filter>ヘッダー ファイル\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="TestBillBoard.h">
+      <Filter>ヘッダー ファイル\Test</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Asset\Shader\Pixel2D.hlsl">
@@ -251,6 +299,9 @@
       <Filter>Shader</Filter>
     </FxCompile>
     <FxCompile Include="..\Asset\Shader\Vertex.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Asset\Shader\BillboardPS.hlsl">
       <Filter>Shader</Filter>
     </FxCompile>
   </ItemGroup>

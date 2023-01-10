@@ -58,6 +58,14 @@ enum ERenderTarget {
 	RT_GAME_AND_UI,							// ゲーム+UI
 	RT_UI,									// UIのみ
 	RT_GAME,								// ゲームのみ
+	RT_DEBUG,								// デバック
+};
+
+enum EBillbordType
+{
+	BILLBOARD_NONE,
+	BILLBOARD_ALL,
+	BILLBOARD_NOT_Y,
 };
 
 // 構造体定義
@@ -72,8 +80,8 @@ typedef struct
 {
 	DirectX::XMFLOAT3 vtx;		// 頂点座標
 	DirectX::XMFLOAT3 nor;		// 法線ベクトル
-	DirectX::XMFLOAT4 diffuse;	// 拡散反射光
 	DirectX::XMFLOAT2 tex;		// テクスチャ座標
+	DirectX::XMFLOAT4 diffuse;	// 拡散反射光
 } VERTEX_3D;
 
 struct Transform

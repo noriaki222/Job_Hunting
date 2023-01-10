@@ -498,6 +498,8 @@ void Draw(void)
 			target = RT_UI;
 		if (IsKeyPress('3'))
 			target = RT_GAME;
+		if (IsKeyPress('0'))
+			target = RT_DEBUG;
 	}
 #endif // _DEBUG
 

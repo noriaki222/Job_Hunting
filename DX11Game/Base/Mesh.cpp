@@ -46,6 +46,7 @@ CMesh::CMesh()
 {
 	m_pVertexBuffer = nullptr;
 	m_pIndexBuffer = nullptr;
+	m_pTexture = nullptr;
 	m_pVS = GetVS(VS_3D);
 	m_pPS = GetPS(PS_3D);
 }
@@ -144,6 +145,8 @@ HRESULT CMesh::Init(const VERTEX_3D vertexWk[], int nVertex, const int indexWk[]
 // 終了処理
 void CMesh::Fin()
 {
+	if(m_pTexture)
+		SAFE_RELEASE(m_pTexture);
 	SAFE_RELEASE(m_pVertexBuffer);
 	SAFE_RELEASE(m_pIndexBuffer);
 }
@@ -164,7 +167,7 @@ void CMesh::Draw()
 	pDeviceContext->IASetIndexBuffer(m_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
 
 	pDeviceContext->PSSetSamplers(0, 1, &m_pSamplerState);
-	//pDeviceContext->PSSetShaderResources(0, 1, &m_pTexture);
+	pDeviceContext->PSSetShaderResources(0, 1, &m_pTexture);
 
 	SHADER_GLOBAL cb;
 	XMMATRIX mtxWorld = XMLoadFloat4x4(&m_mWorld);
@@ -191,10 +194,42 @@ void CMesh::Draw()
 	pDeviceContext->PSSetConstantBuffers(1, 1, &m_pConstantBuffer[1]);
 
 	// プリミティブ形状をセット
-	pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	if (m_nNumVertex == 4)
+	{
+		pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+	}
+	else
+	{
+		pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	}
 
 	// ポリゴンの描画
 	pDeviceContext->DrawIndexed(m_nNumIndex, 0, 0);
+}
+
+HRESULT CMesh::MakeMeshVertex(VERTEX_3D vertexWk[], int indexWk[])
+{
+	D3D11_BUFFER_DESC vbd;
+	ZeroMemory(&vbd, sizeof(vbd));
+	vbd.Usage = D3D11_USAGE_DYNAMIC;
+	vbd.ByteWidth = sizeof(VERTEX_3D) * m_nNumVertex;
+	vbd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	vbd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	vbd.MiscFlags = 0;
+	D3D11_SUBRESOURCE_DATA initData;
+	ZeroMemory(&initData, sizeof(initData));
+	initData.pSysMem = vertexWk;
+	HRESULT hr = GetDevice()->CreateBuffer(&vbd, &initData, &m_pVertexBuffer);
+	if (FAILED(hr)) {
+		return hr;
+	}
+
+	CD3D11_BUFFER_DESC ibd(m_nNumIndex * sizeof(int), D3D11_BIND_INDEX_BUFFER);
+	ZeroMemory(&initData, sizeof(initData));
+	initData.pSysMem = indexWk;
+	hr = GetDevice()->CreateBuffer(&ibd, &initData, &m_pIndexBuffer);
+
+	return hr;
 }
 
 // マテリアル設定

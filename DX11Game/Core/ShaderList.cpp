@@ -12,6 +12,7 @@ const char* PixelShaderFile[] =
 	"data/shader/AssimpPixel.cso",
 	"data/shader/Pixel2D.cso",
 	"data/shader/Pixel.cso",
+	"data/shader/BillboardPS.cso",
 };
 
 
@@ -22,10 +23,6 @@ void InitShaderList()
 	for (int i = 0; i < VS_MAX; ++i)
 	{
 		g_pVertexShader[i] = new VertexShader;
-		if (i == VS_2D)
-		{
-			int t = 0;
-		}
 		if (FAILED(g_pVertexShader[i]->Load(VetexShaderFile[i])))
 		{
 			PostQuitMessage(0);
