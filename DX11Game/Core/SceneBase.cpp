@@ -11,11 +11,19 @@ SceneBase::SceneBase()
 
 SceneBase::~SceneBase()
 {
+	for (int i = 0; i < m_pDeleter.size(); ++i)
+	{
+		delete m_pDeleter[i];
+	}
 	ObjectManager::Destory();
 }
 
 void SceneBase::Update()
 {
+	if (m_pDeleter.size() != 0)
+	{
+		int test = 0;
+	}
 }
 
 void SceneBase::ConstUpdate()

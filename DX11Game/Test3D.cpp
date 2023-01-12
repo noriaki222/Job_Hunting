@@ -10,7 +10,7 @@ Test3D::Test3D()
 	m_animNo = 2;
 	m_isAnim = true;
 	m_coll.isCollision = true;
-	m_drawOrder = DEFAULT_3D_ORDER + 1;
+	m_drawOrder = DEFAULT_3D_ORDER + 1;;
 }
 
 Test3D::~Test3D()
@@ -18,7 +18,7 @@ Test3D::~Test3D()
 }
 
 void Test3D::Update()
-{
+{	
 	if (IsKeyPress(VK_SPACE))
 	{
 		m_animNo = 3;

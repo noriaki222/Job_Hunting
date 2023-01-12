@@ -142,6 +142,7 @@
       <ConformanceMode>true</ConformanceMode>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <AdditionalIncludeDirectories>$(SolutionDir)Library\DirectXTex;$(SolutionDir)Library\Assimp\include</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -176,6 +177,8 @@
     <ClCompile Include="Object\Land.cpp" />
     <ClCompile Include="Object\SceneFade.cpp" />
     <ClCompile Include="Object\SkyBox.cpp" />
+    <ClCompile Include="Object\Title\fog.cpp" />
+    <ClCompile Include="Object\Title\logo.cpp" />
     <ClCompile Include="Object\Title\Sword.cpp" />
     <ClCompile Include="Scene\CollisionScene.cpp" />
     <ClCompile Include="Scene\TestScene.cpp" />
@@ -214,6 +217,8 @@
     <ClInclude Include="Object\Land.h" />
     <ClInclude Include="Object\SceneFade.h" />
     <ClInclude Include="Object\SkyBox.h" />
+    <ClInclude Include="Object\Title\fog.h" />
+    <ClInclude Include="Object\Title\Logo.h" />
     <ClInclude Include="Object\Title\Sword.h" />
     <ClInclude Include="Scene\CollisionScene.h" />
     <ClInclude Include="Scene\TestScene.h" />

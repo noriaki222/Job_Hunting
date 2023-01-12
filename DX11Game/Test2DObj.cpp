@@ -12,6 +12,5 @@ Test2DObj::~Test2DObj()
 
 void Test2DObj::Draw()
 {
-	//SetRenderTarget(RT_DEBUG);
 	ObjectUI::Draw();
 }

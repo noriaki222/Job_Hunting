@@ -171,6 +171,12 @@
     <ClCompile Include="TestBillBoard.cpp">
       <Filter>ソース ファイル\Test</Filter>
     </ClCompile>
+    <ClCompile Include="Object\Title\fog.cpp">
+      <Filter>ソース ファイル\Object\Title</Filter>
+    </ClCompile>
+    <ClCompile Include="Object\Title\logo.cpp">
+      <Filter>ソース ファイル\Object\Title</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base\AssimpModel.h">
@@ -280,6 +286,12 @@
     </ClInclude>
     <ClInclude Include="TestBillBoard.h">
       <Filter>ヘッダー ファイル\Test</Filter>
+    </ClInclude>
+    <ClInclude Include="Object\Title\fog.h">
+      <Filter>ヘッダー ファイル\Object\Title</Filter>
+    </ClInclude>
+    <ClInclude Include="Object\Title\Logo.h">
+      <Filter>ヘッダー ファイル\Object\Title</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -313,7 +313,7 @@ void Polygon::SetUV(float fU, float fV)
 	m_vPosTexFrame.y = fV;
 }
 
-// テクスチャフレームサイズの設定 (0.0＜fWidth≦1.0, 0.0＜fHeight≦1.0)
+// テクスチャフレームサイズの設定(右下テクスチャ座標の設定 (0.0＜fWidth≦1.0, 0.0＜fHeight≦1.0)
 void Polygon::SetFrameSize(float fWidth, float fHeight)
 {
 	m_vSizeTexFrame.x = fWidth;

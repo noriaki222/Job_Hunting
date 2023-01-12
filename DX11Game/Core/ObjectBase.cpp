@@ -14,8 +14,8 @@ ObjectBase::ObjectBase()
 	m_color = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	m_tag = TAG_NONE;
 	m_type = TYPE_2D;
-	XMMATRIX zeroMat = XMMatrixIdentity();
-	XMStoreFloat4x4(&m_mWorld, zeroMat);
+	XMStoreFloat4x4(&m_mWorld, XMMatrixIdentity());
+	m_axisRot = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
 
 	int m_updateOrder = 0;
 	int m_drawOrder = 0;
@@ -68,7 +68,7 @@ void ObjectBase::UpdateMatrix()
 		m_transform.rot.z += 360.0f;
 	}
 
-	XMMATRIX mtxWorld, mtxRot, mtxTranslate;
+	XMMATRIX mtxWorld, mtxRot, mtxAxisRot, mtxTranslate;
 
 	// ワールドマトリックスの初期化
 	mtxWorld = XMMatrixIdentity();
@@ -86,6 +86,30 @@ void ObjectBase::UpdateMatrix()
 
 	// ワールドマトリックス設定
 	XMStoreFloat4x4(&m_mWorld, mtxWorld);
+
+	// 任意軸回転
+	XMVECTOR axis;
+	bool flg = false;
+	if (m_axisRot.x != 0.0f)
+	{
+		flg = true;
+		axis = XMVectorSet(m_mWorld._11, m_mWorld._12, m_mWorld._13, 0.0f);
+		mtxAxisRot = XMMatrixRotationAxis(axis, XMConvertToRadians(m_axisRot.x));
+	}
+	if (m_axisRot.y != 0.0f)
+	{
+		flg = true;
+		axis = XMVectorSet(m_mWorld._21, m_mWorld._22, m_mWorld._23, 0.0f);
+		mtxAxisRot = XMMatrixRotationAxis(axis, XMConvertToRadians(m_axisRot.y));
+	}
+	if (m_axisRot.z != 0.0f)
+	{
+		flg = true;
+		axis = XMVectorSet(m_mWorld._31, m_mWorld._32, m_mWorld._33, 0.0f);
+		mtxAxisRot = XMMatrixRotationAxis(axis, XMConvertToRadians(m_axisRot.z));
+	}
+	if(flg)
+		XMStoreFloat4x4(&m_mWorld, XMMatrixMultiply(XMLoadFloat4x4(&m_mWorld), mtxAxisRot));
 }
 
 bool ObjectBase::Collision(EObjTag tag, ObjectBase* null = nullptr)

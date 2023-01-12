@@ -4,6 +4,8 @@
 #include "../Object/SkyBox.h"
 #include "../Object/Land.h"
 #include "../Object/Title/Sword.h"
+#include "../Object/Title/Fog.h"
+#include "../Object/Title/Logo.h"
 
 class Title : public SceneBase
 {
@@ -16,4 +18,6 @@ private:
 	SkyBox* m_pSky;
 	Land* m_pLand;
 	Sword* m_pSword;
+	Fog* m_pFog;
+	Logo* m_pLogo;
 };

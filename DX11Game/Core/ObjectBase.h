@@ -48,6 +48,7 @@ public:
 	bool GetEnable() { return m_enable; }
 	bool GetVisible() { return m_visible; }
 	Transform GetTransform() { return m_transform; }
+	void SetPos(DirectX::XMFLOAT3 pos) { m_transform.pos = pos; }
 	DirectX::XMFLOAT3 GetPos() { return m_transform.pos; }
 	RigidBody GetRigidbody() { return m_rigidbody; }
 	Collider GetCollider() { return m_coll; }
@@ -82,6 +83,8 @@ protected:
 	Collider m_coll;				// 当たり判定
 	DirectX::XMFLOAT4 m_color;		// 色
 
+	DirectX::XMFLOAT3 m_axisRot;	// ローカル座標軸での回転(.x:xを軸としての回転の大きさ
+
 	DirectX::XMFLOAT4X4 m_mWorld;	// ワールド変換
 
 	int m_updateOrder;				// 更新順番(小さい程先に処理される)(default: 2D = 0, 3D = 10, UI = 20
@@ -90,12 +93,4 @@ protected:
 	std::list<ObjectBase*>::iterator m_it;
 };
 
-bool comp(ObjectBase* c1, ObjectBase* c2);
-
-template<class T>
-T* CreateObj(T* ptr)
-{
-	ptr = new T;
-	ptr->Init();
-	return ptr;
-}
+bool comp(ObjectBase* c1, ObjectBase* c2);	// 処理順ソート用
