@@ -20,10 +20,6 @@ SceneBase::~SceneBase()
 
 void SceneBase::Update()
 {
-	if (m_pDeleter.size() != 0)
-	{
-		int test = 0;
-	}
 }
 
 void SceneBase::ConstUpdate()
@@ -61,6 +57,10 @@ void SceneBase::ConstUpdate()
 	}
 #endif // _DEBUG
 
+}
+
+void SceneBase::LateUodate()
+{
 }
 
 void SceneBase::Draw()

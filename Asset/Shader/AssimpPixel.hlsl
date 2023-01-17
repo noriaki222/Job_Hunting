@@ -33,13 +33,27 @@ struct VS_OUTPUT {
 	float2	Tex			: TEXCOORD0;
 	float3	Normal		: TEXCOORD1;
 	float3	PosForPS	: TEXCOORD2;
+	float3  NormalPS	: TEXCOORD3;
+	float3  wPos		: TEXCOORD4;
+};
+
+struct PS_OUT {
+	float4 target0 : SV_Target0;	// RT_GAME
+	float4 target1 : SV_Target1;	// RT_NORMAL
+	float4 target2 : SV_Target2;	// RT_Z
+	float4 target3 : SV_Target3;	// RT_DEBUG
+	float4 target4 : SV_Target4;
+	float4 target5 : SV_Target5;
+	float4 target6 : SV_Target6;
+	float4 target7 : SV_Target7;
 };
 
 //
 // ピクセルシェーダ
 //
-float4 main(VS_OUTPUT input) : SV_Target0
+PS_OUT main(VS_OUTPUT input)
 {
+	PS_OUT Out;
 	float3 Diff = g_Diffuse.rgb;
 	float Alpha = g_Diffuse.a;
 	if (g_Flags.x != 0.0f) {		// テクスチャ有無
@@ -77,5 +91,18 @@ float4 main(VS_OUTPUT input) : SV_Target0
 	}
 	Diff += Emis;
 
-	return float4(Diff, Alpha);
+	float dis = length(g_vCameraPos.xyz - input.wPos.xyz);
+	float fog = dis / 250.0f;
+	fog = saturate(fog);
+	fog = 1 - fog;
+
+	Out.target0 = float4(Diff, Alpha);
+	Out.target1 = float4(input.NormalPS, 1.0f);
+	Out.target2 = float4(fog, 0.0f, 0.0f, 1.0f);
+	Out.target3 = float4(Diff, Alpha);
+	Out.target4 = float4(Diff, Alpha);
+	Out.target5 = float4(Diff, Alpha);
+	Out.target6 = float4(Diff, Alpha);
+	Out.target7 = float4(Diff, Alpha);
+	return Out;
 }

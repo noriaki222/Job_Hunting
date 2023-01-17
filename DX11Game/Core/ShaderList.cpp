@@ -5,6 +5,7 @@ const char* VetexShaderFile[] =
 	"data/shader/AssimpVertex.cso",
 	"data/shader/Vertex2D.cso",
 	"data/shader/Vertex.cso",
+	"data/shader/NormalVS.cso",
 };
 
 const char* PixelShaderFile[] =
@@ -13,6 +14,7 @@ const char* PixelShaderFile[] =
 	"data/shader/Pixel2D.cso",
 	"data/shader/Pixel.cso",
 	"data/shader/BoxPS.cso",
+	"data/shader/NormalPS.cso",
 };
 
 

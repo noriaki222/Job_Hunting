@@ -54,11 +54,13 @@ enum ECullMode {
 };
 
 enum ERenderTarget {
-	RT_BUCK = 0,							// バックバッファ
+	RT_BACK = 0,							// バックバッファ
 	RT_GAME_AND_UI,							// ゲーム+UI
 	RT_UI,									// UIのみ
 	RT_GAME,								// ゲームのみ
 	RT_DEBUG,								// デバック
+	RT_NORMAL,								// 法線マップ
+	RT_Z,									// 深度マップ
 };
 
 enum EBillbordType
@@ -139,9 +141,11 @@ ID3D11Device* GetDevice();
 ID3D11DeviceContext* GetDeviceContext();
 ID3D11RenderTargetView* GetRenderTargetView(int nTargetNum = 0);
 ID3D11ShaderResourceView* GetRenderTexture(int nTargetNum);
+ID3D11DepthStencilView* GetDepthStencilView();
 void SetZBuffer(bool bEnable);
 void SetZWrite(bool bEnable);
 void SetBlendState(int nBlendState);
 void SetCullMode(int nCullMode);
 void SetRenderTarget(int nTargetNum);
+void AllRenderTarget();
 void ClearAllTarget(const FLOAT* color);

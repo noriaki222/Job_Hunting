@@ -1,7 +1,9 @@
 // オブジェクト継承用クラス
 #pragma once
 #include "../main.h"
+#include "../Core/shaderList.h"
 #include <list>
+#include <vector>
 
 #define DEFAULT_2D_ORDER	(0)
 #define DEFAULT_3D_ORDER	(10)
@@ -38,6 +40,8 @@ public:
 	virtual void Draw() = 0;
 
 	virtual void UpdateMatrix();
+	
+	virtual void SetRendreTargets();
 
 	// OBBでの当たり判定
 	bool Collision(EObjTag tag, ObjectBase* null);	// 第二引数は使わない
@@ -73,6 +77,9 @@ public:
 	
 	void SetWorld(DirectX::XMFLOAT4X4 mtx) { m_mWorld = mtx; }
 
+	virtual void SetVS(VertexShaderKind kind) = 0;
+	virtual void SetPS(PixelShaderKind kind) = 0;
+
 protected:
 	EObjTag m_tag;					// タグ
 	EObjType m_type;				// 3Dか2Dか
@@ -89,6 +96,8 @@ protected:
 
 	int m_updateOrder;				// 更新順番(小さい程先に処理される)(default: 2D = 0, 3D = 10, UI = 20
 	int m_drawOrder;				// 描画順番(小さい程先に処理される)(default: 2D = 0, 3D = 10, UI = 20
+
+	std::vector<ERenderTarget> m_useRT;
 
 	std::list<ObjectBase*>::iterator m_it;
 };

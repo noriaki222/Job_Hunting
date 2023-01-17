@@ -14,8 +14,8 @@ namespace {
 	const float CAM_POS_R_Z = 0.0f;					// カメラの注視点初期位置(Z座標)
 	const float VIEW_ANGLE = 30.0f;					// 視野角
 	const float VIEW_ASPECT = (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT;	// アスペクト比
-	const float VIEW_NEAR_Z = 1.0f;					// NearZ値
-	const float VIEW_FAR_Z = 10000.0f;				// FarZ値
+	const float VIEW_NEAR_Z = 0.2f;					// NearZ値
+	const float VIEW_FAR_Z = 1000.0f;				// FarZ値
 
 	CCamera g_camera;								// カメラ インスタンス
 }
@@ -91,7 +91,7 @@ void CCamera::Clear()
 	// main.cppのリソース参照
 	extern ID3D11DepthStencilView* g_pDepthStencilView;
 
-	float ClearColor[4] = { 0.117647f, 0.254902f, 0.352941f, 1.0f };
+	float ClearColor[4] = { 0.117647f, 0.254902f, 0.352941f, 0.0f };
 	ID3D11DeviceContext* pDC = GetDeviceContext();
 	ClearAllTarget(ClearColor);
 	pDC->ClearDepthStencilView(g_pDepthStencilView,

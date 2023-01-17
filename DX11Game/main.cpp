@@ -359,7 +359,6 @@ HRESULT Init(HWND hWnd, BOOL bWindow)
 	BlendDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_REV_SUBTRACT;
 	g_pDevice->CreateBlendState(&BlendDesc, &g_pBlendState[3]);
 	SetBlendState(BS_ALPHABLEND);
-
 	// 深度ステンシルステート生成
 	CD3D11_DEFAULT def;
 	CD3D11_DEPTH_STENCIL_DESC dsd(def);
@@ -491,13 +490,17 @@ void Draw(void)
 	if (IsKeyPress(VK_LCONTROL))
 	{
 		if (IsKeyPress('0'))
-			target = RT_BUCK;
+			target = RT_BACK;
 		if (IsKeyPress('1'))
 			target = RT_GAME_AND_UI;
 		if (IsKeyPress('2'))
 			target = RT_UI;
 		if (IsKeyPress('3'))
 			target = RT_GAME;
+		if (IsKeyPress('4'))
+			target = RT_NORMAL;
+		if (IsKeyPress('5'))
+			target = RT_Z;
 		if (IsKeyPress('0'))
 			target = RT_DEBUG;
 	}
@@ -505,7 +508,7 @@ void Draw(void)
 
 
 	ScereenObjectBase screen;
-	SetRenderTarget(RT_BUCK);
+	SetRenderTarget(RT_BACK);
 	screen.SetTexture(GetRenderTexture(target));
 	screen.Draw();
 	// バックバッファとフロントバッファの入れ替え
@@ -546,6 +549,11 @@ ID3D11ShaderResourceView * GetRenderTexture(int nTargetNum)
 	return g_pRenderShaderResViews[nTargetNum];
 }
 
+ID3D11DepthStencilView * GetDepthStencilView()
+{
+	return g_pDepthStencilView;
+}
+
 // Zバッファ有効無効制御
 void SetZBuffer(bool bEnable)
 {
@@ -578,6 +586,11 @@ void SetCullMode(int nCullMode)
 void SetRenderTarget(int nTargetNum)
 {
 	g_pDeviceContext->OMSetRenderTargets(1, &g_pRenderTargetViews[nTargetNum], g_pDepthStencilView);
+}
+
+void AllRenderTarget()
+{
+	g_pDeviceContext->OMSetRenderTargets(MAX_RENDER, g_pRenderTargetViews, g_pDepthStencilView);
 }
 
 void ClearAllTarget(const FLOAT * color)

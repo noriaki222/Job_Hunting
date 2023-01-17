@@ -112,6 +112,25 @@ void ObjectBase::UpdateMatrix()
 		XMStoreFloat4x4(&m_mWorld, XMMatrixMultiply(XMLoadFloat4x4(&m_mWorld), mtxAxisRot));
 }
 
+void ObjectBase::SetRendreTargets()
+{
+	if (m_useRT.size() <= 0)
+	{
+		SetRenderTarget(RT_GAME);
+		return;
+	}
+	ID3D11RenderTargetView** rts = new ID3D11RenderTargetView*[m_useRT.size()];
+
+	for (int i = 0; i < m_useRT.size(); ++i)
+	{
+		rts[i] = GetRenderTargetView(m_useRT[i]);
+	}
+	GetDeviceContext()->OMSetRenderTargets(m_useRT.size(), rts, GetDepthStencilView());
+
+	delete[] rts;
+	rts = nullptr;
+}
+
 bool ObjectBase::Collision(EObjTag tag, ObjectBase* null = nullptr)
 {
 	ObjectBase* obj = ObjectManager::GetInstance()->FindObj(tag, null);

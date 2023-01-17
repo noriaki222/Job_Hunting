@@ -10,7 +10,10 @@ Test3D::Test3D()
 	m_animNo = 2;
 	m_isAnim = true;
 	m_coll.isCollision = true;
-	m_drawOrder = DEFAULT_3D_ORDER + 1;;
+	m_drawOrder = DEFAULT_3D_ORDER + 1;
+	m_useRT.push_back(RT_NORMAL);
+	m_useRT.push_back(RT_Z);
+	m_useRT.push_back(RT_DEBUG);
 }
 
 Test3D::~Test3D()

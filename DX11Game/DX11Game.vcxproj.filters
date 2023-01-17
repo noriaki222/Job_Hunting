@@ -177,6 +177,9 @@
     <ClCompile Include="Object\Title\logo.cpp">
       <Filter>ソース ファイル\Object\Title</Filter>
     </ClCompile>
+    <ClCompile Include="Base\ConstantBuff.cpp">
+      <Filter>ソース ファイル\Base</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base\AssimpModel.h">
@@ -293,6 +296,9 @@
     <ClInclude Include="Object\Title\Logo.h">
       <Filter>ヘッダー ファイル\Object\Title</Filter>
     </ClInclude>
+    <ClInclude Include="Base\ConstantBuff.h">
+      <Filter>ヘッダー ファイル\Base</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Asset\Shader\Pixel2D.hlsl">
@@ -314,6 +320,12 @@
       <Filter>Shader</Filter>
     </FxCompile>
     <FxCompile Include="..\Asset\Shader\BoxPS.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Asset\Shader\NormalPS.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Asset\Shader\NormalVS.hlsl">
       <Filter>Shader</Filter>
     </FxCompile>
   </ItemGroup>

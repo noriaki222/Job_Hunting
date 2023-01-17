@@ -32,6 +32,8 @@ public:
 
 	virtual void Update();
 	void ConstUpdate();
+	// オブジェクトの描画直前
+	virtual void LateUodate();
 	virtual void Draw();
 
 	template <class T>T* CreateObj();

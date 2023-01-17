@@ -32,6 +32,8 @@ Object2D::Object2D()
 
 	m_VS = VS_3D;
 	m_PS = PS_3D;
+
+	m_useRT.push_back(RT_GAME);
 }
 
 Object2D::Object2D(const LPCWSTR path, XMFLOAT2 size) : m_defaultsize(size)
@@ -55,6 +57,8 @@ Object2D::Object2D(const LPCWSTR path, XMFLOAT2 size) : m_defaultsize(size)
 
 	m_VS = VS_3D;
 	m_PS = PS_3D;
+
+	m_useRT.push_back(RT_GAME);
 }
 
 Object2D::~Object2D()

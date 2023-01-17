@@ -17,6 +17,8 @@ ObjectUI::ObjectUI()
 
 	m_VS = VS_2D;
 	m_PS = PS_2D;
+
+	m_useRT.push_back(RT_UI);
 }
 
 ObjectUI::ObjectUI(const LPCWSTR path)
@@ -34,6 +36,8 @@ ObjectUI::ObjectUI(const LPCWSTR path)
 
 	m_VS = VS_2D;
 	m_PS = PS_2D;
+
+	m_useRT.push_back(RT_UI);
 }
 
 ObjectUI::~ObjectUI()

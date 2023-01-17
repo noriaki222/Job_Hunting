@@ -7,6 +7,7 @@ enum VertexShaderKind
 	VS_ASSIMP,
 	VS_2D,
 	VS_3D,
+	VS_NORMAL,
 	VS_MAX
 };
 
@@ -16,6 +17,7 @@ enum PixelShaderKind
 	PS_2D,
 	PS_3D,
 	PS_BOX,
+	PS_NORMAL,
 	PS_MAX
 };
 

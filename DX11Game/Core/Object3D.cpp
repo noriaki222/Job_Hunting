@@ -12,6 +12,8 @@ Object3D::Object3D()
 	m_isAnim = false;	
 	m_animNo = 0;	
 	m_animTime = 0.0f;
+
+	m_useRT.push_back(RT_GAME);
 }
 
 Object3D::~Object3D()

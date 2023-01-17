@@ -34,6 +34,7 @@ void SceneManager::Update()
 {
 	m_pActiceScene->Update();
 	m_pActiceScene->ConstUpdate();
+	m_pActiceScene->LateUodate();
 	
 	m_pSceneFade->Update();
 	if (m_isChange)

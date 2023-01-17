@@ -40,9 +40,6 @@ void ObjectManager::Update()
 
 void ObjectManager::Draw()
 {
-	// UIリスト
-	std::list<ObjectBase*> ui_list;
-
 	OBJiterator it;
 	it = m_pObjlist.begin();
 	while (it != m_pObjlist.end())
@@ -55,7 +52,6 @@ void ObjectManager::Draw()
 		if ((*it)->GetType() == TYPE_2D)
 		{
 			SetBlendState(BS_ALPHABLEND);
-			SetRenderTarget(RT_GAME);
 		}
 		if ((*it)->GetType() == TYPE_3D)
 		{
@@ -65,31 +61,28 @@ void ObjectManager::Draw()
 				continue;
 			}
 			SetBlendState(BS_NONE);
-			SetRenderTarget(RT_GAME);
 		}
 		if ((*it)->GetType() == TYPE_UI)
 		{
 			SetBlendState(BS_ALPHABLEND);
-			SetRenderTarget(RT_UI);
-			ui_list.push_back((*it));
 		}
+		(*it)->SetRendreTargets();
 		(*it)->Draw();
 		++it;
 		SetBlendState(BS_NONE);
 	}
 
 	// UIとゲーム自体をレンダーターゲットに描画
+	SetBlendState(BS_NONE);
 	ScereenObjectBase screen;
 	SetRenderTarget(RT_GAME_AND_UI);
 	screen.SetTexture(GetRenderTexture(RT_GAME));
 	screen.Draw();
-	it = ui_list.begin();
-	while (it != ui_list.end())
-	{
-		SetBlendState(BS_ALPHABLEND);
-		(*it)->Draw();
-		++it;
-	}
+	SetBlendState(BS_ALPHABLEND);
+	SetRenderTarget(RT_GAME_AND_UI);
+	screen.SetTexture(GetRenderTexture(RT_UI));
+	screen.Draw();
+	SetBlendState(BS_NONE);
 }
 
 OBJiterator ObjectManager::AddManager(ObjectBase * obj)
