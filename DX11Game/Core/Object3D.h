@@ -3,6 +3,7 @@
 #include "../Base/AssimpModel.h"
 #include "../Base/Model.h"
 #include "../Core/ObjectBase.h"
+#include "AnimData.h"
 
 #include "../Core/Debug/Debug_Collision.h"
 
@@ -25,8 +26,10 @@ public:
 	void SetPS(PixelShaderKind kind) { m_model->SetPS(GetPS(kind)); }
 protected:
 	bool m_isAnim;		// アニメーションするか
-	int m_animNo;		// アニメーションNo.
+	ANIM_DATA m_anim;		// アニメーションNo.
+	ANIM_DATA m_nextAnim;	// 次のアニメーションNo.
 	double m_animTime;	// 再生時間
+	bool m_changeAnim;	 // アニメーションが変更できるか
 
 #ifdef _DEBUG
 	Debug_ColIT debug_collit;

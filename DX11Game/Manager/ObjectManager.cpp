@@ -72,9 +72,9 @@ void ObjectManager::Draw()
 		SetBlendState(BS_NONE);
 	}
 
-	// UIとゲーム自体をレンダーターゲットに描画
 	SetBlendState(BS_NONE);
 	ScereenObjectBase screen;
+	// UIとゲーム自体をレンダーターゲットに描画
 	SetRenderTarget(RT_GAME_AND_UI);
 	screen.SetTexture(GetRenderTexture(RT_GAME));
 	screen.Draw();

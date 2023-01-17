@@ -16,6 +16,7 @@ ObjectBase::ObjectBase()
 	m_type = TYPE_2D;
 	XMStoreFloat4x4(&m_mWorld, XMMatrixIdentity());
 	m_axisRot = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
+	m_startRot = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
 
 	int m_updateOrder = 0;
 	int m_drawOrder = 0;
@@ -225,6 +226,33 @@ bool ObjectBase::Collision(ObjectBase * obj)
 
 	return true;
 	
+}
+
+void ObjectBase::RotAxisX(float angle)
+{
+	XMVECTOR axis;
+	XMMATRIX mtxAxisRot;
+	axis = XMVectorSet(m_mWorld._11, m_mWorld._12, m_mWorld._13, 0.0f);
+	mtxAxisRot = XMMatrixRotationAxis(axis, XMConvertToRadians(angle));
+	XMStoreFloat4x4(&m_mWorld, XMMatrixMultiply(XMLoadFloat4x4(&m_mWorld), mtxAxisRot));
+}
+
+void ObjectBase::RotAxisY(float angle)
+{
+	XMVECTOR axis;
+	XMMATRIX mtxAxisRot;
+	axis = XMVectorSet(m_mWorld._21, m_mWorld._22, m_mWorld._23, 0.0f);
+	mtxAxisRot = XMMatrixRotationAxis(axis, XMConvertToRadians(angle));
+	XMStoreFloat4x4(&m_mWorld, XMMatrixMultiply(XMLoadFloat4x4(&m_mWorld), mtxAxisRot));
+}
+
+void ObjectBase::RotAxisZ(float angle)
+{
+	XMVECTOR axis;
+	XMMATRIX mtxAxisRot;
+	axis = XMVectorSet(m_mWorld._31, m_mWorld._32, m_mWorld._33, 0.0f);
+	mtxAxisRot = XMMatrixRotationAxis(axis, XMConvertToRadians(angle));
+	XMStoreFloat4x4(&m_mWorld, XMMatrixMultiply(XMLoadFloat4x4(&m_mWorld), mtxAxisRot));
 }
 
 bool comp(ObjectBase * c1, ObjectBase * c2)

@@ -65,6 +65,9 @@ public:
 	DirectX::XMFLOAT3 GetLocalX() { return DirectX::XMFLOAT3(m_mWorld._11, m_mWorld._12, m_mWorld._13); }
 	DirectX::XMFLOAT3 GetLocalY() { return DirectX::XMFLOAT3(m_mWorld._21, m_mWorld._22, m_mWorld._23); }
 	DirectX::XMFLOAT3 GetLocalZ() { return DirectX::XMFLOAT3(m_mWorld._31, m_mWorld._32, m_mWorld._33); }
+	void RotAxisX(float angle);
+	void RotAxisY(float angle);
+	void RotAxisZ(float angle);
 
 	void SetTag(EObjTag tag) { m_tag = tag; }
 	void SetType(EObjType type) { m_type = type; }
@@ -91,7 +94,7 @@ protected:
 	DirectX::XMFLOAT4 m_color;		// 色
 
 	DirectX::XMFLOAT3 m_axisRot;	// ローカル座標軸での回転(.x:xを軸としての回転の大きさ
-
+	DirectX::XMFLOAT3 m_startRot;	// 初期角度
 	DirectX::XMFLOAT4X4 m_mWorld;	// ワールド変換
 
 	int m_updateOrder;				// 更新順番(小さい程先に処理される)(default: 2D = 0, 3D = 10, UI = 20

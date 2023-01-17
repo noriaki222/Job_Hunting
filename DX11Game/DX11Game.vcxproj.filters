@@ -299,6 +299,9 @@
     <ClInclude Include="Base\ConstantBuff.h">
       <Filter>ヘッダー ファイル\Base</Filter>
     </ClInclude>
+    <ClInclude Include="Core\AnimData.h">
+      <Filter>リソース ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Asset\Shader\Pixel2D.hlsl">

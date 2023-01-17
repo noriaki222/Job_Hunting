@@ -98,7 +98,7 @@ PS_OUT main(VS_OUTPUT input)
 
 	Out.target0 = float4(Diff, Alpha);
 	Out.target1 = float4(input.NormalPS, 1.0f);
-	Out.target2 = float4(fog, 0.0f, 0.0f, 1.0f);
+	Out.target2 = float4(Diff, Alpha);
 	Out.target3 = float4(Diff, Alpha);
 	Out.target4 = float4(Diff, Alpha);
 	Out.target5 = float4(Diff, Alpha);

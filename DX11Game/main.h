@@ -142,6 +142,7 @@ ID3D11DeviceContext* GetDeviceContext();
 ID3D11RenderTargetView* GetRenderTargetView(int nTargetNum = 0);
 ID3D11ShaderResourceView* GetRenderTexture(int nTargetNum);
 ID3D11DepthStencilView* GetDepthStencilView();
+ID3D11ShaderResourceView* GetDepthTexture();
 void SetZBuffer(bool bEnable);
 void SetZWrite(bool bEnable);
 void SetBlendState(int nBlendState);

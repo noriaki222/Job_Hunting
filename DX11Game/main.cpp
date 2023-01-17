@@ -42,6 +42,7 @@ ID3D11ShaderResourceView*	g_pRenderShaderResViews[MAX_RENDER];	// レンダーテクス
 ID3D11RenderTargetView*		g_pRenderTargetViews[MAX_RENDER];	// レンダーターゲット(0:バックバッファ, 1:ゲーム+UI, 2:UI, 3:ゲーム
 ID3D11Texture2D*			g_pDepthStencilTexture;	// Zバッファ用メモリ
 ID3D11DepthStencilView*		g_pDepthStencilView;	// Zバッファ
+ID3D11ShaderResourceView*	g_pDepthShaderResViews;	// Zバッファのシェーダーリソースビュー
 UINT						g_uSyncInterval = 0;	// 垂直同期 (0:無, 1:有)
 ID3D11RasterizerState*		g_pRs[MAX_CULLMODE];	// ラスタライザ ステート
 ID3D11BlendState*			g_pBlendState[MAX_BLENDSTATE];// ブレンド ステート
@@ -249,21 +250,26 @@ HRESULT CreateBackBuffer(void)
 	td.Height = SCREEN_HEIGHT;
 	td.MipLevels = 1;
 	td.ArraySize = 1;
-	td.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	td.Format =  DXGI_FORMAT_R32_TYPELESS;
 	td.SampleDesc.Count = 1;
 	td.SampleDesc.Quality = 0;
 	td.Usage = D3D11_USAGE_DEFAULT;
-	td.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+	td.BindFlags = D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE;
 	HRESULT hr = g_pDevice->CreateTexture2D(&td, nullptr, &g_pDepthStencilTexture);
+	if (FAILED(hr)) { return hr; }
+
+	D3D11_SHADER_RESOURCE_VIEW_DESC srvd = {};
+	srvd.Format = DXGI_FORMAT_R32_FLOAT;
+	srvd.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DMS;
+	hr = g_pDevice->CreateShaderResourceView(g_pDepthStencilTexture, &srvd, &g_pDepthShaderResViews);
 	if (FAILED(hr)) { return hr; }
 
 	// Zバッファターゲットビュー生成
 	D3D11_DEPTH_STENCIL_VIEW_DESC dsvd;
 	ZeroMemory(&dsvd, sizeof(dsvd));
-	dsvd.Format = td.Format;
+	dsvd.Format = DXGI_FORMAT_D32_FLOAT;
 	dsvd.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2DMS;
-	hr = g_pDevice->CreateDepthStencilView(g_pDepthStencilTexture,
-		&dsvd, &g_pDepthStencilView);
+	hr = g_pDevice->CreateDepthStencilView(g_pDepthStencilTexture, &dsvd, &g_pDepthStencilView);
 	if (FAILED(hr)) { return hr; }
 
 	// 各ターゲットビューをレンダーターゲットに設定
@@ -404,6 +410,7 @@ void ReleaseBackBuffer()
 {
 	if (g_pDeviceContext) {	g_pDeviceContext->OMSetRenderTargets(0, nullptr, nullptr); }
 	SAFE_RELEASE(g_pDepthStencilView);
+	SAFE_RELEASE(g_pDepthShaderResViews);
 	SAFE_RELEASE(g_pDepthStencilTexture);
 	for (int i = 0; i < MAX_RENDER; ++i)
 	{
@@ -552,6 +559,11 @@ ID3D11ShaderResourceView * GetRenderTexture(int nTargetNum)
 ID3D11DepthStencilView * GetDepthStencilView()
 {
 	return g_pDepthStencilView;
+}
+
+ID3D11ShaderResourceView * GetDepthTexture()
+{
+	return g_pDepthShaderResViews;
 }
 
 // Zバッファ有効無効制御
