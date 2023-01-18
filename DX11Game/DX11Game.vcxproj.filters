@@ -180,6 +180,9 @@
     <ClCompile Include="Base\ConstantBuff.cpp">
       <Filter>ソース ファイル\Base</Filter>
     </ClCompile>
+    <ClCompile Include="TestEnemy.cpp">
+      <Filter>ソース ファイル\Test</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base\AssimpModel.h">
@@ -301,6 +304,9 @@
     </ClInclude>
     <ClInclude Include="Core\AnimData.h">
       <Filter>リソース ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="TestEnemy.h">
+      <Filter>ヘッダー ファイル\Test</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

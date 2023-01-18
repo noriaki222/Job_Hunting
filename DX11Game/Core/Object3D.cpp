@@ -70,6 +70,7 @@ void Object3D::UpdateMatrix()
 	{
 		if (m_anim.Priority <= m_nextAnim.Priority) 
 		{
+			if (m_anim.AnimNo != m_nextAnim.AnimNo) { m_animTime = 0.0f; }
 			m_anim = m_nextAnim; 
 			m_changeAnim = true; 
 		}
@@ -86,6 +87,7 @@ void Object3D::UpdateMatrix()
 			m_animTime = 0.0;
 			m_anim = m_nextAnim;
 			m_changeAnim = true;
+			m_isAttack = false;
 		}
 	}
 

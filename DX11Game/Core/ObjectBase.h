@@ -15,6 +15,8 @@ enum EObjTag
 	TAG_NONE = 0,
 	TAG_SKY,
 	TAG_LAND,
+	TAG_PLAYER,
+	TAG_ENEMY,
 
 	MAX_TAG
 };

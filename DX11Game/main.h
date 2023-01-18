@@ -122,6 +122,7 @@ struct Collider
 {
 	DirectX::XMFLOAT3 center;	// 当たり判定の中心
 	DirectX::XMFLOAT3 size;	// 当たり判定の大きさ(ローカル座標軸
+	DirectX::XMFLOAT4 color;	// 当たり判定の色
 	bool isCollision;	// 当たり判定が有効か
 
 	static Collider Zero()
@@ -129,6 +130,7 @@ struct Collider
 		Collider work;
 		work.center = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
 		work.size = DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f);
+		work.color = DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 0.3f);
 		work.isCollision = false;
 		return work;
 	}

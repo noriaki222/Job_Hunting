@@ -51,12 +51,12 @@ void Debug_Collision::ListClear()
 	denug_collision.clear();
 }
 
-Debug_ColIT Debug_Collision::AddList(Collider * col, DirectX::XMFLOAT4X4* world, Transform* tramsform)
+Debug_ColIT Debug_Collision::AddList(Collider * coll, DirectX::XMFLOAT4X4* world, Transform* tramsform)
 {
 	denug_collision.push_back(new Box);
 	Debug_ColIT it = denug_collision.end();
 	--it;
-	HRESULT hr = (*it)->Init(&col->size, &col->center, world, &tramsform->scale);
+	HRESULT hr = (*it)->Init(coll, world, &tramsform->scale);
 	if (FAILED(hr))
 	{
 		(*it)->Fin();

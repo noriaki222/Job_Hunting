@@ -7,6 +7,7 @@
 #include "../Object/Land.h"
 #include "../TestPlayer.h"
 #include "../TestBillBoard.h"
+#include "../TestEnemy.h"
 
 // モデルテスト用シーン
 class TestScene : public SceneBase
@@ -17,10 +18,10 @@ public:
 
 private:
 	Test2DObj* m_pTest2D;
-	Test3D* m_pTest3D;
 	TestCamera m_camera;
 	SkyBox* m_pSky;
 	Land* m_pLand;
 	TestPlayer* m_pPlayer;
 	TestBillBoard* m_pBillboard;
+	TestEnemy* m_pEnemy;
 };

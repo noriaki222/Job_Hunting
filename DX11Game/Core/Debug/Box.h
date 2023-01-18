@@ -9,12 +9,13 @@ public:
 
 	void Draw();
 
-	HRESULT Init(DirectX::XMFLOAT3* box, DirectX::XMFLOAT3* center, DirectX::XMFLOAT4X4* world, DirectX::XMFLOAT3* scale);
+	HRESULT Init(Collider* coll, DirectX::XMFLOAT4X4* world, DirectX::XMFLOAT3* scale);
 	void SetRed();
 	void SetGreen();
+	void SetBlue();
 
 private:
 	CMesh m_mesh;
-	DirectX::XMFLOAT3* m_center;
+	Collider* m_coll;
 	DirectX::XMFLOAT4X4* m_world;
 };

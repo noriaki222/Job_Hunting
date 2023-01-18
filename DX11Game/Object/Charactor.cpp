@@ -12,6 +12,10 @@ Charactor::Charactor()
 	m_coll.size = DirectX::XMFLOAT3(40.0f, 80.0f, 50.0f);
 	m_coll.center = DirectX::XMFLOAT3(0.0f, 80.0f, 0.0f);
 	m_coll.isCollision = true;
+
+	m_life = 1;
+	m_attack = 1;
+	m_isAttack = false;
 }
 
 Charactor::~Charactor()
@@ -27,7 +31,6 @@ void Charactor::Init()
 void Charactor::UpdateMatrix()
 {
 	Object3D::UpdateMatrix();
-
 	// ’n–Ê‚Æ‚Ì“–‚½‚è”»’è
 	XMFLOAT3 vP0;
 	vP0.x = m_transform.pos.x;

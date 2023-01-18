@@ -10,6 +10,7 @@ namespace {
 	};
 	const DirectX::XMFLOAT4 g_vRed(1.0f, 0.0f, 0.0f, 0.3f);
 	const DirectX::XMFLOAT4 g_vGreen(0.0f, 1.0f, 0.0f, 0.3f);
+	const DirectX::XMFLOAT4 g_vBlue(0.0f, 0.0f, 1.0f, 0.3f);
 }
 
 Box::Box()
@@ -22,8 +23,14 @@ Box::~Box()
 
 void Box::Draw()
 {
+	if (!m_coll->isCollision) { return; }
+	CMeshMaterial mat = g_material;
+	mat.m_Diffuse = mat.m_Ambient = m_coll->color;
+	m_mesh.SetMaterial(&mat);
+
+
 	// 平行移動マトリックス
-	DirectX::XMMATRIX mMove = DirectX::XMMatrixTranslation(m_center->x, m_center->y, m_center->z);
+	DirectX::XMMATRIX mMove = DirectX::XMMatrixTranslation(m_coll->center.x, m_coll->center.y, m_coll->center.z);
 
 	// ワールドマトリックスをかける
 	DirectX::XMMATRIX mWorld = DirectX::XMLoadFloat4x4(m_world);
@@ -37,15 +44,15 @@ void Box::Draw()
 	m_mesh.Draw();
 }
 
-HRESULT Box::Init(DirectX::XMFLOAT3*box, DirectX::XMFLOAT3 * center, DirectX::XMFLOAT4X4* world, DirectX::XMFLOAT3* scale)
+HRESULT Box::Init(Collider* coll, DirectX::XMFLOAT4X4* world, DirectX::XMFLOAT3* scale)
 {
 	HRESULT hr = S_OK;
-	m_center = center;
+	m_coll = coll;
 	m_world = world;
 	DirectX::XMFLOAT3 vSize;
-	vSize.x = box->x * 2.0f;
-	vSize.y = box->y * 2.0f;
-	vSize.z = box->z * 2.0f;
+	vSize.x = m_coll->size.x * 2.0f;
+	vSize.y = m_coll->size.y * 2.0f;
+	vSize.z = m_coll->size.z * 2.0f;
 	const static float vtx[] = {
 		-1.0f,  1.0f, -1.0f,
 		 1.0f,  1.0f, -1.0f,
@@ -84,9 +91,9 @@ HRESULT Box::Init(DirectX::XMFLOAT3*box, DirectX::XMFLOAT3 * center, DirectX::XM
 	int nIdx = 0;
 	for (int i = 0; i < 6; ++i) {
 		for (int j = 0; j < 4; ++j) {
-			pVtx->vtx.x = vtx[face[i * 6 + j] * 3 + 0] * box->x;
-			pVtx->vtx.y = vtx[face[i * 6 + j] * 3 + 1] * box->y;
-			pVtx->vtx.z = vtx[face[i * 6 + j] * 3 + 2] * box->z;
+			pVtx->vtx.x = vtx[face[i * 6 + j] * 3 + 0] * m_coll->size.x;
+			pVtx->vtx.y = vtx[face[i * 6 + j] * 3 + 1] * m_coll->size.y;
+			pVtx->vtx.z = vtx[face[i * 6 + j] * 3 + 2] * m_coll->size.z;
 			pVtx->nor.x = nor[i * 3 + 0];
 			pVtx->nor.y = nor[i * 3 + 1];
 			pVtx->nor.z = nor[i * 3 + 2];
@@ -109,14 +116,24 @@ HRESULT Box::Init(DirectX::XMFLOAT3*box, DirectX::XMFLOAT3 * center, DirectX::XM
 
 void Box::SetRed()
 {
-	CMeshMaterial mat = g_material;
-	mat.m_Diffuse = mat.m_Ambient = g_vRed;
-	m_mesh.SetMaterial(&mat);
+	m_coll->color.x = 1.0f;
+	m_coll->color.y = 0.0f;
+	m_coll->color.z = 0.0f;
+	m_coll->color.w = 0.3f;
 }
 
 void Box::SetGreen()
 {
-	CMeshMaterial mat = g_material;
-	mat.m_Diffuse = mat.m_Ambient = g_vGreen;
-	m_mesh.SetMaterial(&mat);
+	m_coll->color.x = 0.0f;
+	m_coll->color.y = 1.0f;
+	m_coll->color.z = 0.0f;
+	m_coll->color.w = 0.3f;
+}
+
+void Box::SetBlue()
+{
+	m_coll->color.x = 0.0f;
+	m_coll->color.y = 0.0f;
+	m_coll->color.z = 1.0f;
+	m_coll->color.w = 0.3f;
 }

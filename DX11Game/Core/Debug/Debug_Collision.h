@@ -18,8 +18,8 @@ public:
 	void Draw();
 	
 	void ListClear();
-
-	Debug_ColIT AddList(Collider* col, DirectX::XMFLOAT4X4* world, Transform* transform);
+	
+	Debug_ColIT AddList(Collider* col, DirectX::XMFLOAT4X4* world, Transform* transfor);
 
 	bool GetShow() { return isShow; }
 	void SetShow(bool flg) { isShow = flg; }

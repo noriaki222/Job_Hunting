@@ -14,7 +14,6 @@ Test3D::Test3D()
 	m_useRT.push_back(RT_NORMAL);
 	m_useRT.push_back(RT_Z);
 	m_useRT.push_back(RT_DEBUG);
-	m_visible = false;
 }
 
 Test3D::~Test3D()

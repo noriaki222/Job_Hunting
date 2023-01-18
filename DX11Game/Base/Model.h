@@ -9,6 +9,7 @@ enum EModel
 	MODEL_SKY,		// スカイボックス
 	MODEL_LAND,
 	MODEL_SWORD,
+	MODEL_ENEMY0,
 	MAX_MODEL
 };
 

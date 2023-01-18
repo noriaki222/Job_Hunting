@@ -5,9 +5,13 @@ using namespace DirectX;
 
 TestPlayer::TestPlayer()
 {
+	m_tag = TAG_PLAYER;
 	m_anim.Set(0, 0);
 	m_isAnim = true;
 	m_startRot.y = 180.0f;
+	m_useRT.push_back(RT_NORMAL);
+	m_useRT.push_back(RT_Z);
+	m_useRT.push_back(RT_DEBUG);
 }
 
 TestPlayer::~TestPlayer()
@@ -23,6 +27,7 @@ void TestPlayer::Update()
 	{
 		m_nextAnim.Set(3, 0);
 		m_rigidbody.spd.x = 1.0f;
+		m_rigidbody.spd.z = 0.0f;
 		input.x = 1.0f;
 		input.y = 0.0f;
 		if (IsKeyPress(VK_UP) && m_changeAnim)
@@ -40,6 +45,7 @@ void TestPlayer::Update()
 	{
 		m_nextAnim.Set(3, 0);
 		m_rigidbody.spd.x = -1.0f;
+		m_rigidbody.spd.z = 0.0f;
 		input.x = -1.0f;
 		input.y = 0.0f;
 		if (IsKeyPress(VK_UP) && m_changeAnim)
@@ -78,6 +84,14 @@ void TestPlayer::Update()
 	if (IsKeyPress(VK_SPACE))
 	{
 		m_nextAnim.Set(4, 2);
+		m_isAttack = true;
+		m_coll.color = XMFLOAT4(0.0f, 0.0f, 1.0f, 0.3f);
+		m_coll.center.z = 80.0f;
+	}
+	if (!m_isAttack)
+	{
+		m_coll.color = XMFLOAT4(0.0f, 1.0f, 0.0f, 0.3f);
+		m_coll.center.z = 0.0f;
 	}
 
 
