@@ -37,9 +37,9 @@ HINSTANCE					g_hInst;				// インスタンス ハンドル
 ID3D11Device*				g_pDevice;				// デバイス
 ID3D11DeviceContext*		g_pDeviceContext;		// デバイス コンテキスト
 IDXGISwapChain*				g_pSwapChain;			// スワップチェーン
-ID3D11Texture2D*			g_pRenderTextures[MAX_RENDER];	// レンダーテクスチャ
-ID3D11ShaderResourceView*	g_pRenderShaderResViews[MAX_RENDER];	// レンダーテクスチャのシェーダーリソースビュー
-ID3D11RenderTargetView*		g_pRenderTargetViews[MAX_RENDER];	// レンダーターゲット(0:バックバッファ, 1:ゲーム+UI, 2:UI, 3:ゲーム
+ID3D11Texture2D*			g_pRenderTextures[MAX_RT];	// レンダーテクスチャ
+ID3D11ShaderResourceView*	g_pRenderShaderResViews[MAX_RT];	// レンダーテクスチャのシェーダーリソースビュー
+ID3D11RenderTargetView*		g_pRenderTargetViews[MAX_RT];	// レンダーターゲット(0:バックバッファ, 1:ゲーム+UI, 2:UI, 3:ゲーム
 ID3D11Texture2D*			g_pDepthStencilTexture[MAX_DEPTHVIEW];	// Zバッファ用メモリ
 ID3D11DepthStencilView*		g_pDepthStencilView[MAX_DEPTHVIEW];	// Zバッファ
 ID3D11ShaderResourceView*	g_pDepthShaderResViews[MAX_DEPTHVIEW];	// Zバッファのシェーダーリソースビュー
@@ -230,7 +230,7 @@ HRESULT CreateBackBuffer(void)
 	rtDesc.ArraySize = 1;
 	rtDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
 	rtDesc.CPUAccessFlags = 0;
-	for (int i = 1; i < MAX_RENDER; ++i)
+	for (int i = 1; i < MAX_RT; ++i)
 	{
 		g_pDevice->CreateTexture2D(&rtDesc, 0, &g_pRenderTextures[i]);
 		g_pDevice->CreateRenderTargetView(g_pRenderTextures[i], nullptr, &g_pRenderTargetViews[i]);
@@ -419,7 +419,7 @@ void ReleaseBackBuffer()
 		SAFE_RELEASE(g_pDepthShaderResViews[i]);
 		SAFE_RELEASE(g_pDepthStencilTexture[i]);
 	}
-	for (int i = 0; i < MAX_RENDER; ++i)
+	for (int i = 0; i < MAX_RT; ++i)
 	{
 		SAFE_RELEASE(g_pRenderTargetViews[i]);
 		SAFE_RELEASE(g_pRenderShaderResViews[i]);
@@ -499,48 +499,6 @@ void Draw(void)
 
 	g_pScneManager->Draw();
 
-	static ERenderTarget target = RT_GAME_AND_UI;
-#ifdef _DEBUG
-	if (IsKeyPress(VK_LCONTROL))
-	{
-		if (IsKeyPress('0'))
-			target = RT_BACK;
-		if (IsKeyPress('1'))
-			target = RT_GAME_AND_UI;
-		if (IsKeyPress('2'))
-			target = RT_UI;
-		if (IsKeyPress('3'))
-			target = RT_GAME;
-		if (IsKeyPress('4'))
-			target = RT_NORMAL;
-		if (IsKeyPress('5'))
-			target = RT_Z;
-		if (IsKeyPress('0'))
-			target = RT_DEBUG;
-	}
-#endif // _DEBUG
-
-
-	ScereenObjectBase screen;
-	// Zバッファを描画
-	SetRenderTarget(RT_Z);
-	screen.SetTexture(GetDepthTexture(DSV_3D));
-	screen.SetPS(PS_Z);
-	screen.Draw();
-
-	// UIとゲーム自体をレンダーターゲットに描画
-	SetRenderTarget(RT_GAME_AND_UI);
-	screen.SetTexture(GetRenderTexture(RT_GAME));
-	screen.SetPS(PS_2D);
-	screen.Draw();
-	SetBlendState(BS_ALPHABLEND);
-	screen.SetTexture(GetRenderTexture(RT_UI));
-	screen.Draw();
-	SetBlendState(BS_NONE);
-
-	SetRenderTarget(RT_BACK);
-	screen.SetTexture(GetRenderTexture(target));
-	screen.Draw();
 	// バックバッファとフロントバッファの入れ替え
 	g_pSwapChain->Present(g_uSyncInterval, 0);
 }
@@ -618,24 +576,22 @@ void SetCullMode(int nCullMode)
 	}
 }
 
-void SetRenderTarget(int nTargetNum)
+// レンダーターゲットの指定
+void SetRenderTarget(int nTargetNum, int nDepthNum)
 {
-	g_pDeviceContext->OMSetRenderTargets(1, &g_pRenderTargetViews[nTargetNum], g_pDepthStencilView[0]);
+	g_pDeviceContext->OMSetRenderTargets(1, &g_pRenderTargetViews[nTargetNum], g_pDepthStencilView[nDepthNum]);
 }
 
-void AllRenderTarget()
-{
-	g_pDeviceContext->OMSetRenderTargets(MAX_RENDER, g_pRenderTargetViews, g_pDepthStencilView[0]);
-}
-
+// 全レンダーターゲットのクリア
 void ClearAllTarget(const FLOAT * color)
 {
-	for (int i = 0; i < MAX_RENDER; ++i)
+	for (int i = 0; i < MAX_RT; ++i)
 	{
 		g_pDeviceContext->ClearRenderTargetView(g_pRenderTargetViews[i], color);
 	}
 }
 
+// 全深度ステンシルビューのクリア
 void ClearAllDepth()
 {
 	for (int i = 0; i < MAX_DEPTHVIEW; ++i)

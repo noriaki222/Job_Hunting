@@ -26,7 +26,7 @@ float4 main(VS_OUTPUT input) : SV_Target0
 		Color = g_texture.Sample(g_sampler, input.TexCoord);
 	}
 
-	// 勉強不足:深度情報がなぜか1付近のすごく狭い範囲にしか書き込まれない
+	// 勉強不足:データが多く書き込まれている範囲でエルミート補完する方法
 	Color.r = smoothstep(0.9964f, 1.0f, Color.r);
 
 	Color.r = 1.0f - Color.r;

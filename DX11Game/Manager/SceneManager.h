@@ -3,7 +3,8 @@
 #include "../Core/SceneBase.h"
 #include "../Core/SceneData.h"
 #include "../Object/SceneFade.h"
-
+#include "../Core/ScereenObjectBase.h"
+#include "../Object/Monitor.h"
 
 class SceneManager
 {
@@ -32,5 +33,5 @@ protected:
 	SceneBase* m_pActiceScene;
 	bool m_isChange;
 	SceneFade* m_pSceneFade;
-
+	Monitor m_monitor;
 };

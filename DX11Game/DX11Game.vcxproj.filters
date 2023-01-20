@@ -189,6 +189,9 @@
     <ClCompile Include="TestEnemy.cpp">
       <Filter>ソース ファイル\Test</Filter>
     </ClCompile>
+    <ClCompile Include="Object\Monitor.cpp">
+      <Filter>ソース ファイル\Object</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base\AssimpModel.h">
@@ -313,6 +316,9 @@
     </ClInclude>
     <ClInclude Include="TestEnemy.h">
       <Filter>ヘッダー ファイル\Test</Filter>
+    </ClInclude>
+    <ClInclude Include="Object\Monitor.h">
+      <Filter>ヘッダー ファイル\Object</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

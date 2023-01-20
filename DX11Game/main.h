@@ -29,7 +29,7 @@
 #define	NUM_VERTEX		(4)					// 頂点数
 #define	NUM_POLYGON		(2)					// ポリゴン数
 
-#define MAX_RENDER		(8)					// レンダーターゲットビューの数
+#define MAX_RENDER		(8)					// 同時にレンダリングできるレンダーターゲットビューの数
 #define MAX_DEPTHVIEW	(3)					// Zバッファの数
 
 #define SinDeg(degree)	sinf(XMConvertToRadians(degree))
@@ -62,6 +62,9 @@ enum ERenderTarget {
 	RT_DEBUG,								// デバック
 	RT_NORMAL,								// 法線マップ
 	RT_Z,									// 深度マップ
+	RT_EDGE,								// 3Dモデルのエッジ
+
+	MAX_RT									// 最大数
 };
 
 enum EDepthStencilView
@@ -157,7 +160,6 @@ void SetZBuffer(bool bEnable);
 void SetZWrite(bool bEnable);
 void SetBlendState(int nBlendState);
 void SetCullMode(int nCullMode);
-void SetRenderTarget(int nTargetNum);
-void AllRenderTarget();
+void SetRenderTarget(int nTargetNum, int nDepthNum = 0);
 void ClearAllTarget(const FLOAT* color);
 void ClearAllDepth();

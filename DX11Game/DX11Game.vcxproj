@@ -176,6 +176,7 @@
     <ClCompile Include="Manager\SceneManager.cpp" />
     <ClCompile Include="Object\Charactor.cpp" />
     <ClCompile Include="Object\Land.cpp" />
+    <ClCompile Include="Object\Monitor.cpp" />
     <ClCompile Include="Object\SceneFade.cpp" />
     <ClCompile Include="Object\SkyBox.cpp" />
     <ClCompile Include="Object\Title\fog.cpp" />
@@ -219,6 +220,7 @@
     <ClInclude Include="Manager\SceneManager.h" />
     <ClInclude Include="Object\Charactor.h" />
     <ClInclude Include="Object\Land.h" />
+    <ClInclude Include="Object\Monitor.h" />
     <ClInclude Include="Object\SceneFade.h" />
     <ClInclude Include="Object\SkyBox.h" />
     <ClInclude Include="Object\Title\fog.h" />

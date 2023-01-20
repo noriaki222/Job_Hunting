@@ -37,6 +37,8 @@ void SceneManager::Update()
 	m_pActiceScene->LateUodate();
 	
 	m_pSceneFade->Update();
+	m_monitor.Update();
+
 	if (m_isChange)
 	{
 		if (m_pSceneFade->GetFadeScene() == FADESTATE_NONE)
@@ -73,12 +75,15 @@ void SceneManager::Update()
 
 void SceneManager::Draw()
 {
+	// ƒV[ƒ“‚Ì•`‰æ
 	m_pActiceScene->Draw();
 	SetBlendState(BS_ALPHABLEND);
+	// ƒtƒF[ƒh‚Ì•`‰æ
 	m_pSceneFade->Draw();
 	SetBlendState(BS_NONE);
 
 #ifdef _DEBUG
+	// “–‚½‚è”»’è‚Ì•`‰æ
 	SetBlendState(BS_ALPHABLEND);
 	SetZWrite(false);
 	SetRenderTarget(RT_GAME);
@@ -87,6 +92,7 @@ void SceneManager::Draw()
 	SetBlendState(BS_NONE);
 #endif // _DEBUG
 
+	m_monitor.Draw();
 }
 
 void SceneManager::SetSecne(EScene scene)
