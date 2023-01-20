@@ -522,9 +522,16 @@ void Draw(void)
 
 
 	ScereenObjectBase screen;
+	// Zバッファを描画
+	SetRenderTarget(RT_Z);
+	screen.SetTexture(GetDepthTexture(DSV_3D));
+	screen.SetPS(PS_Z);
+	screen.Draw();
+
 	// UIとゲーム自体をレンダーターゲットに描画
 	SetRenderTarget(RT_GAME_AND_UI);
 	screen.SetTexture(GetRenderTexture(RT_GAME));
+	screen.SetPS(PS_2D);
 	screen.Draw();
 	SetBlendState(BS_ALPHABLEND);
 	screen.SetTexture(GetRenderTexture(RT_UI));

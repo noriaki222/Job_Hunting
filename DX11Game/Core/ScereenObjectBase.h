@@ -15,9 +15,14 @@ public:
 
 	void LoadTexture(const char* texPath);
 	void SetTexture(ID3D11ShaderResourceView* tex) { m_pTexture = tex; }
+
+	void SetVS(VertexShaderKind num) { m_VSkind = num; }
+	void SetPS(PixelShaderKind num) { m_PSkind = num; }
 	
 private:
 	ID3D11ShaderResourceView* m_pTexture;
+	VertexShaderKind m_VSkind;
+	PixelShaderKind m_PSkind;
 
 protected:
 	DirectX::XMFLOAT4 m_color;

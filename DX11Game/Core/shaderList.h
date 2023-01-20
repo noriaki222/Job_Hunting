@@ -18,6 +18,7 @@ enum PixelShaderKind
 	PS_3D,
 	PS_BOX,
 	PS_NORMAL,
+	PS_Z,
 	PS_MAX
 };
 

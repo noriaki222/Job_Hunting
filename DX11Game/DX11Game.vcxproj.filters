@@ -64,6 +64,12 @@
     <Filter Include="ソース ファイル\Object\Title">
       <UniqueIdentifier>{f085cecf-3d17-4d06-b035-e7cdcfb6322c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shader\Pixel">
+      <UniqueIdentifier>{13d9597d-eb2d-46c9-9d12-f2e2e03f8358}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader\Vertex">
+      <UniqueIdentifier>{89e94e72-70f9-401e-a08e-4aefed170e86}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Base\AssimpModel.cpp">
@@ -310,32 +316,35 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="..\Asset\Shader\Pixel2D.hlsl">
-      <Filter>Shader</Filter>
-    </FxCompile>
-    <FxCompile Include="..\Asset\Shader\Vertex2D.hlsl">
-      <Filter>Shader</Filter>
-    </FxCompile>
     <FxCompile Include="..\Asset\Shader\AssimpPixel.hlsl">
-      <Filter>Shader</Filter>
+      <Filter>Shader\Pixel</Filter>
     </FxCompile>
     <FxCompile Include="..\Asset\Shader\AssimpVertex.hlsl">
-      <Filter>Shader</Filter>
-    </FxCompile>
-    <FxCompile Include="..\Asset\Shader\Pixel.hlsl">
-      <Filter>Shader</Filter>
-    </FxCompile>
-    <FxCompile Include="..\Asset\Shader\Vertex.hlsl">
-      <Filter>Shader</Filter>
+      <Filter>Shader\Vertex</Filter>
     </FxCompile>
     <FxCompile Include="..\Asset\Shader\BoxPS.hlsl">
-      <Filter>Shader</Filter>
+      <Filter>Shader\Pixel</Filter>
     </FxCompile>
     <FxCompile Include="..\Asset\Shader\NormalPS.hlsl">
-      <Filter>Shader</Filter>
+      <Filter>Shader\Pixel</Filter>
     </FxCompile>
     <FxCompile Include="..\Asset\Shader\NormalVS.hlsl">
-      <Filter>Shader</Filter>
+      <Filter>Shader\Vertex</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Asset\Shader\Pixel.hlsl">
+      <Filter>Shader\Pixel</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Asset\Shader\Pixel2D.hlsl">
+      <Filter>Shader\Pixel</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Asset\Shader\Vertex.hlsl">
+      <Filter>Shader\Vertex</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Asset\Shader\Vertex2D.hlsl">
+      <Filter>Shader\Vertex</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Asset\Shader\ZBufferPS.hlsl">
+      <Filter>Shader\Pixel</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

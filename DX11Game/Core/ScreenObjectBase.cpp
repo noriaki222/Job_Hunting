@@ -3,12 +3,16 @@
 ScereenObjectBase::ScereenObjectBase():m_pTexture(nullptr),m_color(1.0f, 1.0f, 1.0f, 1.0f), m_uv(0.0f ,0.0f)
 {
 	m_transform = Transform::Zero();
+	m_VSkind = VS_2D;
+	m_PSkind = PS_2D;
 }
 
 ScereenObjectBase::ScereenObjectBase(const char * texPath): m_color(1.0f, 1.0f, 1.0f, 1.0f), m_uv(0.0f, 0.0f)
 {
 	m_transform = Transform::Zero();
 	LoadTexture(texPath);
+	m_VSkind = VS_2D;
+	m_PSkind = PS_2D;
 }
 
 ScereenObjectBase::~ScereenObjectBase()
@@ -30,6 +34,8 @@ void ScereenObjectBase::Draw()
 	Polygon::SetTexture(m_pTexture);
 	Polygon::SetFrameSize(1.0f, 1.0f);
 	Polygon::SetUV(m_uv.x, m_uv.y);
+	Polygon::SetVS(m_VSkind);
+	Polygon::SetPS(m_PSkind);
 	Polygon::Draw(pDC);
 	SetZBuffer(true);
 }
