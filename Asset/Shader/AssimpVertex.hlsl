@@ -12,6 +12,7 @@ cbuffer global : register(b0) {
 	float4	g_vLightAmbient;	// 環境光
 	float4	g_vLightDiffuse;	// 拡散光
 	float4	g_vLightSpecular;	// 鏡面反射光
+	float4	g_vCameraDir;		// 視点方向
 };
 
 // ボーンのポーズ行列

@@ -15,4 +15,6 @@ public:
 
 private:
 	Land* m_pLand;
+	bool isGround;
+	bool startGravity;
 };

@@ -40,9 +40,9 @@ IDXGISwapChain*				g_pSwapChain;			// スワップチェーン
 ID3D11Texture2D*			g_pRenderTextures[MAX_RENDER];	// レンダーテクスチャ
 ID3D11ShaderResourceView*	g_pRenderShaderResViews[MAX_RENDER];	// レンダーテクスチャのシェーダーリソースビュー
 ID3D11RenderTargetView*		g_pRenderTargetViews[MAX_RENDER];	// レンダーターゲット(0:バックバッファ, 1:ゲーム+UI, 2:UI, 3:ゲーム
-ID3D11Texture2D*			g_pDepthStencilTexture;	// Zバッファ用メモリ
-ID3D11DepthStencilView*		g_pDepthStencilView;	// Zバッファ
-ID3D11ShaderResourceView*	g_pDepthShaderResViews;	// Zバッファのシェーダーリソースビュー
+ID3D11Texture2D*			g_pDepthStencilTexture[MAX_DEPTHVIEW];	// Zバッファ用メモリ
+ID3D11DepthStencilView*		g_pDepthStencilView[MAX_DEPTHVIEW];	// Zバッファ
+ID3D11ShaderResourceView*	g_pDepthShaderResViews[MAX_DEPTHVIEW];	// Zバッファのシェーダーリソースビュー
 UINT						g_uSyncInterval = 0;	// 垂直同期 (0:無, 1:有)
 ID3D11RasterizerState*		g_pRs[MAX_CULLMODE];	// ラスタライザ ステート
 ID3D11BlendState*			g_pBlendState[MAX_BLENDSTATE];// ブレンド ステート
@@ -255,25 +255,29 @@ HRESULT CreateBackBuffer(void)
 	td.SampleDesc.Quality = 0;
 	td.Usage = D3D11_USAGE_DEFAULT;
 	td.BindFlags = D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE;
-	HRESULT hr = g_pDevice->CreateTexture2D(&td, nullptr, &g_pDepthStencilTexture);
-	if (FAILED(hr)) { return hr; }
 
 	D3D11_SHADER_RESOURCE_VIEW_DESC srvd = {};
 	srvd.Format = DXGI_FORMAT_R32_FLOAT;
 	srvd.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DMS;
-	hr = g_pDevice->CreateShaderResourceView(g_pDepthStencilTexture, &srvd, &g_pDepthShaderResViews);
-	if (FAILED(hr)) { return hr; }
 
 	// Zバッファターゲットビュー生成
 	D3D11_DEPTH_STENCIL_VIEW_DESC dsvd;
 	ZeroMemory(&dsvd, sizeof(dsvd));
 	dsvd.Format = DXGI_FORMAT_D32_FLOAT;
 	dsvd.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2DMS;
-	hr = g_pDevice->CreateDepthStencilView(g_pDepthStencilTexture, &dsvd, &g_pDepthStencilView);
-	if (FAILED(hr)) { return hr; }
+
+	for (int i = 0; i < MAX_DEPTHVIEW; ++i)
+	{
+		HRESULT hr = g_pDevice->CreateTexture2D(&td, nullptr, &g_pDepthStencilTexture[i]);
+		if (FAILED(hr)) { return hr; }
+		hr = g_pDevice->CreateShaderResourceView(g_pDepthStencilTexture[i], &srvd, &g_pDepthShaderResViews[i]);
+		if (FAILED(hr)) { return hr; }
+		hr = g_pDevice->CreateDepthStencilView(g_pDepthStencilTexture[i], &dsvd, &g_pDepthStencilView[i]);
+		if (FAILED(hr)) { return hr; }
+	}
 
 	// 各ターゲットビューをレンダーターゲットに設定
-	g_pDeviceContext->OMSetRenderTargets(1, &g_pRenderTargetViews[0], g_pDepthStencilView);
+	g_pDeviceContext->OMSetRenderTargets(1, &g_pRenderTargetViews[0], g_pDepthStencilView[0]);
 
 	// ビューポート設定
 	D3D11_VIEWPORT vp;
@@ -409,9 +413,12 @@ HRESULT Init(HWND hWnd, BOOL bWindow)
 void ReleaseBackBuffer()
 {
 	if (g_pDeviceContext) {	g_pDeviceContext->OMSetRenderTargets(0, nullptr, nullptr); }
-	SAFE_RELEASE(g_pDepthStencilView);
-	SAFE_RELEASE(g_pDepthShaderResViews);
-	SAFE_RELEASE(g_pDepthStencilTexture);
+	for (int i = 0; i < MAX_DEPTHVIEW; ++i)
+	{
+		SAFE_RELEASE(g_pDepthStencilView[i]);
+		SAFE_RELEASE(g_pDepthShaderResViews[i]);
+		SAFE_RELEASE(g_pDepthStencilTexture[i]);
+	}
 	for (int i = 0; i < MAX_RENDER; ++i)
 	{
 		SAFE_RELEASE(g_pRenderTargetViews[i]);
@@ -515,6 +522,15 @@ void Draw(void)
 
 
 	ScereenObjectBase screen;
+	// UIとゲーム自体をレンダーターゲットに描画
+	SetRenderTarget(RT_GAME_AND_UI);
+	screen.SetTexture(GetRenderTexture(RT_GAME));
+	screen.Draw();
+	SetBlendState(BS_ALPHABLEND);
+	screen.SetTexture(GetRenderTexture(RT_UI));
+	screen.Draw();
+	SetBlendState(BS_NONE);
+
 	SetRenderTarget(RT_BACK);
 	screen.SetTexture(GetRenderTexture(target));
 	screen.Draw();
@@ -556,14 +572,14 @@ ID3D11ShaderResourceView * GetRenderTexture(int nTargetNum)
 	return g_pRenderShaderResViews[nTargetNum];
 }
 
-ID3D11DepthStencilView * GetDepthStencilView()
+ID3D11DepthStencilView * GetDepthStencilView(int num)
 {
-	return g_pDepthStencilView;
+	return g_pDepthStencilView[num];
 }
 
-ID3D11ShaderResourceView * GetDepthTexture()
+ID3D11ShaderResourceView * GetDepthTexture(int num)
 {
-	return g_pDepthShaderResViews;
+	return g_pDepthShaderResViews[num];
 }
 
 // Zバッファ有効無効制御
@@ -597,12 +613,12 @@ void SetCullMode(int nCullMode)
 
 void SetRenderTarget(int nTargetNum)
 {
-	g_pDeviceContext->OMSetRenderTargets(1, &g_pRenderTargetViews[nTargetNum], g_pDepthStencilView);
+	g_pDeviceContext->OMSetRenderTargets(1, &g_pRenderTargetViews[nTargetNum], g_pDepthStencilView[0]);
 }
 
 void AllRenderTarget()
 {
-	g_pDeviceContext->OMSetRenderTargets(MAX_RENDER, g_pRenderTargetViews, g_pDepthStencilView);
+	g_pDeviceContext->OMSetRenderTargets(MAX_RENDER, g_pRenderTargetViews, g_pDepthStencilView[0]);
 }
 
 void ClearAllTarget(const FLOAT * color)
@@ -611,4 +627,13 @@ void ClearAllTarget(const FLOAT * color)
 	{
 		g_pDeviceContext->ClearRenderTargetView(g_pRenderTargetViews[i], color);
 	}
+}
+
+void ClearAllDepth()
+{
+	for (int i = 0; i < MAX_DEPTHVIEW; ++i)
+	{
+		g_pDeviceContext->ClearDepthStencilView(g_pDepthStencilView[i], D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+	}
+
 }

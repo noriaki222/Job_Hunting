@@ -11,7 +11,7 @@ namespace
 		"data/model/sky.fbx",
 		"data/model/land2.fbx",
 		"data/model/Artorias_Sword.fbx",
-		"data/model/Teki2.fbx",
+		"data/model/Idle.fbx",
 	};
 }
 

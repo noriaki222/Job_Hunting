@@ -9,8 +9,6 @@ Land::Land()
 	m_tag = TAG_LAND;
 	m_drawOrder = DEFAULT_2D_ORDER - 1;
 	m_useRT.push_back(RT_NORMAL);
-	m_useRT.push_back(RT_Z);
-	m_useRT.push_back(RT_DEBUG);
 }
 
 Land::~Land()

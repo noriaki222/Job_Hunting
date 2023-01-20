@@ -9,9 +9,6 @@ TestPlayer::TestPlayer()
 	m_anim.Set(0, 0);
 	m_isAnim = true;
 	m_startRot.y = 180.0f;
-	m_useRT.push_back(RT_NORMAL);
-	m_useRT.push_back(RT_Z);
-	m_useRT.push_back(RT_DEBUG);
 }
 
 TestPlayer::~TestPlayer()

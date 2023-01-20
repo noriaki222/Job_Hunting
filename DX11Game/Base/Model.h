@@ -5,11 +5,11 @@
 enum EModel
 {
 	MODEL_TEST = 0,	// テストモデル
-	MODE_TEST2,
+	MODEL_TEST2,		// 飛行機
 	MODEL_SKY,		// スカイボックス
 	MODEL_LAND,
 	MODEL_SWORD,
-	MODEL_ENEMY0,
+	MODEL_ENEMY0,	// データにバグあり
 	MAX_MODEL
 };
 

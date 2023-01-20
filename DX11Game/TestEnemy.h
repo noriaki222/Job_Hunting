@@ -1,5 +1,6 @@
 #pragma once
 #include "Object\Charactor.h"
+#include "Core\Object3D.h"
 
 class TestEnemy : public Charactor
 {
@@ -9,7 +10,7 @@ public:
 
 	void Update();
 
-	void SetPlayer(Charactor* obj) { m_player = obj; }
+	void SetPlayer(Object3D* obj) { m_player = obj; }
 private:
-	Charactor* m_player;
+	Object3D* m_player;
 };

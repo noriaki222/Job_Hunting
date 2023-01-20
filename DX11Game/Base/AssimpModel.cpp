@@ -32,6 +32,7 @@ struct SHADER_GLOBAL {
 	XMVECTOR	vLa;		// 光源色(アンビエント)
 	XMVECTOR	vLd;		// 光源色(ディフューズ)
 	XMVECTOR	vLs;		// 光源色(スペキュラ)
+	XMVECTOR	vEyeDir;	// 視点方向
 };
 
 // マテリアル (シェーダ用)
@@ -526,6 +527,9 @@ void CAssimpMesh::Draw(ID3D11DeviceContext* pDC, XMFLOAT4X4& m44World, float alp
 		sg.vLd = XMLoadFloat4(&pLight->GetDiffuse());
 		sg.vLa = XMLoadFloat4(&pLight->GetAmbient());
 		sg.vLs = XMLoadFloat4(&pLight->GetSpecular());
+		XMFLOAT3 camDir = XMFLOAT3(pCamera->GetTarget().x - pCamera->GetPos().x, pCamera->GetTarget().y - pCamera->GetPos().y, pCamera->GetTarget().z - pCamera->GetPos().z);
+		sg.vEyeDir = XMLoadFloat3(&camDir);
+		sg.vEyeDir = XMVector3Normalize(sg.vEyeDir);
 		memcpy_s(pData.pData, pData.RowPitch, (void*)&sg, sizeof(sg));
 		pDC->Unmap(m_pConstantBuffer0, 0);
 	}

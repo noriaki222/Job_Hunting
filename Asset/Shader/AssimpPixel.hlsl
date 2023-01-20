@@ -10,6 +10,7 @@ cbuffer global : register(b0) {
 	float4	g_vLightAmbient;	// 環境光
 	float4	g_vLightDiffuse;	// 拡散光
 	float4	g_vLightSpecular;	// 鏡面反射光
+	float4	g_vCameraDir;		// 視点方向
 };
 
 // マテリアル
@@ -91,10 +92,6 @@ PS_OUT main(VS_OUTPUT input)
 	}
 	Diff += Emis;
 
-	float dis = length(g_vCameraPos.xyz - input.wPos.xyz);
-	float fog = dis / 250.0f;
-	fog = saturate(fog);
-	fog = 1 - fog;
 
 	Out.target0 = float4(Diff, Alpha);
 	Out.target1 = float4(input.NormalPS, 1.0f);

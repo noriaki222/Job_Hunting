@@ -73,16 +73,6 @@ void ObjectManager::Draw()
 	}
 
 	SetBlendState(BS_NONE);
-	ScereenObjectBase screen;
-	// UIとゲーム自体をレンダーターゲットに描画
-	SetRenderTarget(RT_GAME_AND_UI);
-	screen.SetTexture(GetRenderTexture(RT_GAME));
-	screen.Draw();
-	SetBlendState(BS_ALPHABLEND);
-	SetRenderTarget(RT_GAME_AND_UI);
-	screen.SetTexture(GetRenderTexture(RT_UI));
-	screen.Draw();
-	SetBlendState(BS_NONE);
 }
 
 OBJiterator ObjectManager::AddManager(ObjectBase * obj)

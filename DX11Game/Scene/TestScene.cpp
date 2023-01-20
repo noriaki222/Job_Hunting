@@ -11,7 +11,6 @@ TestScene::TestScene()
 	m_pPlayer->SetLand(m_pLand);
 	m_pBillboard = CreateObj<TestBillBoard>();
 	m_pEnemy = CreateObj<TestEnemy>();
-	m_pEnemy->SetLand(m_pLand);
 	m_pEnemy->SetPlayer(m_pPlayer);
 
 }

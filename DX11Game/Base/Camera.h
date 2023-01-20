@@ -44,6 +44,7 @@ public:
 	void SetPos(float x, float y, float z) { m_vPos.x = x, m_vPos.y = y, m_vPos.z = z; }
 	void SetTarget(DirectX::XMFLOAT3& vTarget) { m_vTarget = vTarget; }
 	void SetTarget(float x, float y, float z) { m_vTarget.x = x, m_vTarget.y = y, m_vTarget.z = z; }
+	DirectX::XMFLOAT3& GetTarget() { return m_vTarget; }
 	void SetUpVector(DirectX::XMFLOAT3& vUp) { m_vUp = vUp; }
 	void SetUpVector(float x, float y, float z) { m_vUp.x = x, m_vUp.y = y, m_vUp.z = z; }
 	void SetWorldMatrix(DirectX::XMFLOAT4X4& mtxWorld);

@@ -29,7 +29,8 @@
 #define	NUM_VERTEX		(4)					// 頂点数
 #define	NUM_POLYGON		(2)					// ポリゴン数
 
-#define MAX_RENDER		(8)					// 最大レンダーターゲットビューの数
+#define MAX_RENDER		(8)					// レンダーターゲットビューの数
+#define MAX_DEPTHVIEW	(3)					// Zバッファの数
 
 #define SinDeg(degree)	sinf(XMConvertToRadians(degree))
 #define CosDeg(degree)	cosf(XMConvertToRadians(degree))
@@ -61,6 +62,13 @@ enum ERenderTarget {
 	RT_DEBUG,								// デバック
 	RT_NORMAL,								// 法線マップ
 	RT_Z,									// 深度マップ
+};
+
+enum EDepthStencilView
+{
+	DSV_BACK = 0,				// バック
+	DSV_2D,						// 2D
+	DSV_3D,						// 3D
 };
 
 enum EBillbordType
@@ -143,8 +151,8 @@ ID3D11Device* GetDevice();
 ID3D11DeviceContext* GetDeviceContext();
 ID3D11RenderTargetView* GetRenderTargetView(int nTargetNum = 0);
 ID3D11ShaderResourceView* GetRenderTexture(int nTargetNum);
-ID3D11DepthStencilView* GetDepthStencilView();
-ID3D11ShaderResourceView* GetDepthTexture();
+ID3D11DepthStencilView* GetDepthStencilView(int num = 0);
+ID3D11ShaderResourceView* GetDepthTexture(int num);
 void SetZBuffer(bool bEnable);
 void SetZWrite(bool bEnable);
 void SetBlendState(int nBlendState);
@@ -152,3 +160,4 @@ void SetCullMode(int nCullMode);
 void SetRenderTarget(int nTargetNum);
 void AllRenderTarget();
 void ClearAllTarget(const FLOAT* color);
+void ClearAllDepth();

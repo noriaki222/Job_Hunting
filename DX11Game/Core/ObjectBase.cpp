@@ -124,9 +124,17 @@ void ObjectBase::SetRendreTargets()
 
 	for (int i = 0; i < m_useRT.size(); ++i)
 	{
+		if (m_useRT[i] == RT_UI)
+		{
+			rts[0] = GetRenderTargetView(RT_UI);
+			GetDeviceContext()->OMSetRenderTargets(1, rts, GetDepthStencilView(DSV_2D));
+			delete[] rts;
+			rts = nullptr;
+			return;
+		}
 		rts[i] = GetRenderTargetView(m_useRT[i]);
 	}
-	GetDeviceContext()->OMSetRenderTargets(m_useRT.size(), rts, GetDepthStencilView());
+	GetDeviceContext()->OMSetRenderTargets(m_useRT.size(), rts, GetDepthStencilView(DSV_3D));
 
 	delete[] rts;
 	rts = nullptr;
