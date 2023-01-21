@@ -352,5 +352,8 @@
     <FxCompile Include="..\Asset\Shader\ZBufferPS.hlsl">
       <Filter>Shader\Pixel</Filter>
     </FxCompile>
+    <FxCompile Include="..\Asset\Shader\EdgePS.hlsl">
+      <Filter>Shader\Pixel</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

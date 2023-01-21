@@ -1,50 +1,11 @@
-﻿  AssimpModel.cpp
-c:\users\mothu\onedrive\ドキュメント\github\job_hunting\dx11game\base\assimpmodel.cpp(762): warning C4244: '引数': 'EByOpacity' から 'float' への変換です。データが失われる可能性があります。
-  Camera.cpp
-  ConstantBuff.cpp
-  Input.cpp
-c:\users\mothu\onedrive\ドキュメント\github\job_hunting\dx11game\base\input.cpp(78): warning C4244: '=': 'LONG' から 'float' への変換です。データが失われる可能性があります。
-c:\users\mothu\onedrive\ドキュメント\github\job_hunting\dx11game\base\input.cpp(79): warning C4244: '=': 'LONG' から 'float' への変換です。データが失われる可能性があります。
-c:\users\mothu\onedrive\ドキュメント\github\job_hunting\dx11game\base\input.cpp(82): warning C4244: '=': 'LONG' から 'float' への変換です。データが失われる可能性があります。
-c:\users\mothu\onedrive\ドキュメント\github\job_hunting\dx11game\base\input.cpp(83): warning C4244: '=': 'LONG' から 'float' への変換です。データが失われる可能性があります。
-  Light.cpp
-  Mesh.cpp
-  Model.cpp
-  Polygon.cpp
-  Shader.cpp
-  Box.cpp
-  Debug_Collision.cpp
-  Object2D.cpp
-  Object3D.cpp
-  ObjectBase.cpp
-c:\users\mothu\onedrive\ドキュメント\github\job_hunting\dx11game\core\objectbase.cpp(143): warning C4267: '引数': 'size_t' から 'UINT' に変換しました。データが失われているかもしれません。
-  ObjectUI.cpp
-  SceneBase.cpp
-  ScreenObjectBase.cpp
-  ShaderList.cpp
-  ObjectManager.cpp
+﻿  SceneBase.cpp
   SceneManager.cpp
-  コードを生成中...
-  コンパイル中...
-  Charactor.cpp
-  Land.cpp
   Monitor.cpp
-  SceneFade.cpp
-  SkyBox.cpp
-  Sword.cpp
-  fog.cpp
-  logo.cpp
   CollisionScene.cpp
   TestScene.cpp
   Title.cpp
 c:\users\mothu\onedrive\ドキュメント\github\job_hunting\dx11game\scene\title.cpp(13): warning C4244: '引数': 'int' から 'float' への変換です。データが失われる可能性があります。
-  Test2DObj.cpp
-  Test3D.cpp
   TestBillBoard.cpp
-  TestCamera.cpp
-  TestCollision.cpp
-  TestEnemy.cpp
-  TestPlayer.cpp
   main.cpp
   コードを生成中...
   DX11Game.vcxproj -> C:\Users\mothu\OneDrive\ドキュメント\GitHub\Job_Hunting\DX11Game\DX11Game.exe

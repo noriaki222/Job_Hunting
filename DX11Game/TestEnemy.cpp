@@ -9,6 +9,8 @@ TestEnemy::TestEnemy()
 	m_coll.center = DirectX::XMFLOAT3(0.0f, 80.0f, 0.0f);
 	m_coll.size = DirectX::XMFLOAT3(40.0f, 100.0f, 50.0f);
 	m_drawOrder = DEFAULT_3D_ORDER + 1;
+
+	m_visible = false;
 }
 
 TestEnemy::~TestEnemy()
