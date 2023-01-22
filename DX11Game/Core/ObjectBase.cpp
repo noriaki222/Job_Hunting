@@ -1,4 +1,5 @@
 #include "ObjectBase.h"
+#include <algorithm>
 
 #include "../Manager/ObjectManager.h"
 
@@ -126,6 +127,9 @@ void ObjectBase::SetRendreTargets()
 		return;
 	}
 
+	// d•¡—v‘f‚Ìíœ
+	std::sort(m_useRT.begin(), m_useRT.end());
+	m_useRT.erase(std::unique(m_useRT.begin(), m_useRT.end()), m_useRT.end());
 	ID3D11RenderTargetView** rts = new ID3D11RenderTargetView*[m_useRT.size()];
 
 	for (int i = 0; i < m_useRT.size(); ++i)

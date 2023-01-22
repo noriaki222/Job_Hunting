@@ -7,7 +7,6 @@ Monitor::Monitor()
 {
 	m_target = RT_GAME_AND_UI;
 	m_useEffect = false;
-	m_postEffects.push_back(PE_EDGE);
 }
 
 Monitor::~Monitor()
@@ -50,13 +49,16 @@ void Monitor::Update()
 
 	// 特定の要素の数が奇数の場合配列に1つだけ残す
 	//             　　偶数の場合配列から削除
-	//std::sort(m_postEffects.begin(), m_postEffects.end());
-	//for (int i = 0; i < MAX_PE; ++i)
-	//{
-	//	int cnt = std::count(m_postEffects.begin(), m_postEffects.end(), i);
-	//	if(cnt % 2)
-	//}
-	//m_postEffects.erase(std::unique(m_postEffects.begin(), m_postEffects.end()), m_postEffects.end());
+	std::sort(m_postEffects.begin(), m_postEffects.end());
+	for (int i = 0; i < MAX_PE; ++i)
+	{
+		// 重複回数が偶数なら要素を削除
+		int cnt = std::count(m_postEffects.begin(), m_postEffects.end(), i);
+		if (cnt % 2 == 0)
+			m_postEffects.erase(std::remove(m_postEffects.begin(), m_postEffects.end(), i), std::cend(m_postEffects));
+	}
+	// 重複要素を削除
+	m_postEffects.erase(std::unique(m_postEffects.begin(), m_postEffects.end()), m_postEffects.end());
 #endif // _DEBUG
 }
 
@@ -81,14 +83,20 @@ void Monitor::Draw()
 	// Gameレンダーターゲットにエフェクトを加える
 	if (m_useEffect)
 	{
+		SetRenderTarget(RT_GAME);
+		SetBlendState(BS_ALPHABLEND);
 		for (int i = 0; i < m_postEffects.size(); ++i)
 		{
 			switch (m_postEffects[i])
 			{
 			case PE_EDGE:
+				screen.SetTexture(GetRenderTexture(RT_EDGE));
+				screen.SetPS(PS_2D);
+				screen.Draw();
 				break;
 			}
 		}
+		SetBlendState(BS_NONE);
 	}
 
 	// UIとゲーム自体を1つのレンダーターゲットに描画
