@@ -1,13 +1,5 @@
-﻿  ObjectBase.cpp
-c:\users\mothu\onedrive\ドキュメント\github\job_hunting\dx11game\core\objectbase.cpp(147): warning C4267: '引数': 'size_t' から 'UINT' に変換しました。データが失われているかもしれません。
-  SceneBase.cpp
-  SceneManager.cpp
-  Monitor.cpp
-c:\users\mothu\onedrive\ドキュメント\github\job_hunting\dx11game\object\monitor.cpp(56): warning C4244: '初期化中': '__int64' から 'int' への変換です。データが失われる可能性があります。
-  CollisionScene.cpp
-  TestScene.cpp
-  Title.cpp
-c:\users\mothu\onedrive\ドキュメント\github\job_hunting\dx11game\scene\title.cpp(13): warning C4244: '引数': 'int' から 'float' への変換です。データが失われる可能性があります。
-  main.cpp
-  コードを生成中...
+﻿C:\Users\mothu\OneDrive\�h�L�������`EGitHub\Job_Hunting\Asset\Shader\LightingPS.hlsl(58,9-34): warning X3206: implicit truncation of vector type
+C:\Users\mothu\OneDrive\�h�L�������`EGitHub\Job_Hunting\Asset\Shader\LightingPS.hlsl(72,9-36): warning X3206: implicit truncation of vector type
+  
+  compilation object save succeeded; see C:\Users\mothu\OneDrive\ドキュメント\GitHub\Job_Hunting\DX11Game\data\shader\LightingPS.cso
   DX11Game.vcxproj -> C:\Users\mothu\OneDrive\ドキュメント\GitHub\Job_Hunting\DX11Game\DX11Game.exe

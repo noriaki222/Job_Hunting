@@ -44,7 +44,7 @@ void SceneBase::ConstUpdate()
 		}
 		if (IsKeyPress('3'))
 		{
-			SceneManager::GetInstance()->SetSecne(SCENE_TEST);
+			SceneManager::GetInstance()->SetSecne(SCENE_LIGHT);
 		}
 		if (IsKeyPress('4'))
 		{

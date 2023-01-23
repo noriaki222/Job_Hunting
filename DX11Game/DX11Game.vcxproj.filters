@@ -70,6 +70,12 @@
     <Filter Include="Shader\Vertex">
       <UniqueIdentifier>{89e94e72-70f9-401e-a08e-4aefed170e86}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\Object\LightScene">
+      <UniqueIdentifier>{82bddbe2-238a-4ec8-86ea-21e154256884}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Object\LightScene">
+      <UniqueIdentifier>{f067eaf1-dca0-4aa5-925c-9960cb060ce2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Base\AssimpModel.cpp">
@@ -191,6 +197,15 @@
     </ClCompile>
     <ClCompile Include="Object\Monitor.cpp">
       <Filter>ソース ファイル\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\LightScene.cpp">
+      <Filter>ソース ファイル\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Object\LightScene\LightModel.cpp">
+      <Filter>ソース ファイル\Object\LightScene</Filter>
+    </ClCompile>
+    <ClCompile Include="Object\LightScene\TestLight.cpp">
+      <Filter>ソース ファイル\Object\LightScene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -320,6 +335,15 @@
     <ClInclude Include="Object\Monitor.h">
       <Filter>ヘッダー ファイル\Object</Filter>
     </ClInclude>
+    <ClInclude Include="Scene\LightScene.h">
+      <Filter>ヘッダー ファイル\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Object\LightScene\LightModel.h">
+      <Filter>ヘッダー ファイル\Object\LightScene</Filter>
+    </ClInclude>
+    <ClInclude Include="Object\LightScene\TestLight.h">
+      <Filter>ヘッダー ファイル\Object\LightScene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Asset\Shader\AssimpPixel.hlsl">
@@ -353,6 +377,9 @@
       <Filter>Shader\Pixel</Filter>
     </FxCompile>
     <FxCompile Include="..\Asset\Shader\EdgePS.hlsl">
+      <Filter>Shader\Pixel</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Asset\Shader\LightingPS.hlsl">
       <Filter>Shader\Pixel</Filter>
     </FxCompile>
   </ItemGroup>

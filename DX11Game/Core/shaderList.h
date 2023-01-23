@@ -20,6 +20,7 @@ enum PixelShaderKind
 	PS_NORMAL,
 	PS_Z,
 	PS_EDGE,
+	PS_LIGHTING,
 	PS_MAX
 };
 

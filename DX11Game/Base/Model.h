@@ -10,6 +10,7 @@ enum EModel
 	MODEL_LAND,
 	MODEL_SWORD,
 	MODEL_ENEMY0,	// データにバグあり
+	MODEL_TEAPOT,	// ライト確認用
 	MAX_MODEL
 };
 

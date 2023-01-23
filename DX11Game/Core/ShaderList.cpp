@@ -17,6 +17,7 @@ const char* PixelShaderFile[] =
 	"data/shader/NormalPS.cso",
 	"data/shader/ZBufferPS.cso",
 	"data/shader/EdgePS.cso",
+	"data/shader/LightingPS.cso",
 };
 
 

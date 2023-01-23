@@ -12,6 +12,7 @@ namespace
 		"data/model/land2.fbx",
 		"data/model/Artorias_Sword.fbx",
 		"data/model/Idle.fbx",
+		"data/model/teapot.x",
 	};
 }
 

@@ -176,6 +176,8 @@
     <ClCompile Include="Manager\SceneManager.cpp" />
     <ClCompile Include="Object\Charactor.cpp" />
     <ClCompile Include="Object\Land.cpp" />
+    <ClCompile Include="Object\LightScene\LightModel.cpp" />
+    <ClCompile Include="Object\LightScene\TestLight.cpp" />
     <ClCompile Include="Object\Monitor.cpp" />
     <ClCompile Include="Object\SceneFade.cpp" />
     <ClCompile Include="Object\SkyBox.cpp" />
@@ -183,6 +185,7 @@
     <ClCompile Include="Object\Title\logo.cpp" />
     <ClCompile Include="Object\Title\Sword.cpp" />
     <ClCompile Include="Scene\CollisionScene.cpp" />
+    <ClCompile Include="Scene\LightScene.cpp" />
     <ClCompile Include="Scene\TestScene.cpp" />
     <ClCompile Include="Scene\Title.cpp" />
     <ClCompile Include="Test2DObj.cpp" />
@@ -220,6 +223,8 @@
     <ClInclude Include="Manager\SceneManager.h" />
     <ClInclude Include="Object\Charactor.h" />
     <ClInclude Include="Object\Land.h" />
+    <ClInclude Include="Object\LightScene\LightModel.h" />
+    <ClInclude Include="Object\LightScene\TestLight.h" />
     <ClInclude Include="Object\Monitor.h" />
     <ClInclude Include="Object\SceneFade.h" />
     <ClInclude Include="Object\SkyBox.h" />
@@ -227,6 +232,7 @@
     <ClInclude Include="Object\Title\Logo.h" />
     <ClInclude Include="Object\Title\Sword.h" />
     <ClInclude Include="Scene\CollisionScene.h" />
+    <ClInclude Include="Scene\LightScene.h" />
     <ClInclude Include="Scene\TestScene.h" />
     <ClInclude Include="Scene\Title.h" />
     <ClInclude Include="Test2DObj.h" />
@@ -276,6 +282,16 @@
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)data\shader\%(Filename).cso</ObjectFileOutput>
     </FxCompile>
     <FxCompile Include="..\Asset\Shader\EdgePS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)data\shader\%(Filename).cso</ObjectFileOutput>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)data\shader\%(Filename).cso</ObjectFileOutput>
+    </FxCompile>
+    <FxCompile Include="..\Asset\Shader\LightingPS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>

@@ -4,7 +4,7 @@
 
 class CLight
 {
-private:
+protected:
 	DirectX::XMFLOAT4 m_diffuse;
 	DirectX::XMFLOAT4 m_ambient;
 	DirectX::XMFLOAT4 m_specular;
